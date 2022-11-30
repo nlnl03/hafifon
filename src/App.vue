@@ -21,7 +21,7 @@ export default {
  }
  .main-container{
     width: 100vw;
-    height: 100vh;
+    height: 200vh;
 }
 
 </style>

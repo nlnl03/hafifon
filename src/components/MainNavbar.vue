@@ -1,8 +1,11 @@
 <template>
 <div class="navbar">
-     <h1 class="home-title">חפיפה</h1>
+    <router-link :to="{ name: 'HomePage'}" style="color: black" >
+        <h1 class="home-title">חפיפה</h1>
+    </router-link> 
+
     <ul class="navbar-headers" v-for="header in headers" :key="header">
-        <li>
+        <li class="headers">
             <div class="headers-hover" >
                 <div>
                     <router-link :to= header.path> {{header.name}}</router-link>
@@ -76,7 +79,7 @@ a.router-link-exact-active{
 }
 
 @media (max-width: 1024px) {
-    .header{
+    .headers{
         font-size: 18px;
     }
     .home-title{

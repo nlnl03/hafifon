@@ -1,10 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
+ import HomePage from '../views/HomePage.vue'
  import Practice from '../views/Practice.vue'
  import Exams from '../views/Exams.vue'
  import FinalExam from '../views/FinalExam.vue'
  import User from '../views/User.vue'
 
 const routes = [
+  {
+    path: '/HomePage',
+    name: 'HomePage',
+    component: HomePage
+  },
   {
     path: '/Practice',
     name: 'Practice',
