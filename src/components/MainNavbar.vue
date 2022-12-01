@@ -4,8 +4,8 @@
         <h1 class="home-title">חפיפה</h1>
     </router-link> 
 
-    <ul class="navbar-headers" v-for="header in headers" :key="header">
-        <li class="headers">
+    <ul class="navbar-headers" >
+        <li class="headers" v-for="header in headers" :key="header">
             <div class="headers-hover" >
                 <div>
                     <router-link :to= header.path> {{header.name}}</router-link>
@@ -23,10 +23,11 @@ export default {
     data(){
         return{
              headers:[
-                 {name:"תרגול", path:'/Practice' },
-                 {name:"בחנים", path:'/Exams' },
+                 {name:"האיזור האישי", path:'/User' },
                  {name:"המבחן הסופי", path:'/FinalExam' },
-                 {name:"האיזור האישי", path:'/User' }
+                 {name:"חוברת חפיפה", path:'/dfdfd' },
+                 {name:"בחנים", path:'/Exams' },
+                 {name:"תרגול", path:'/Practice' }
              ]
         }
     }
@@ -44,19 +45,19 @@ export default {
 .home-title{
     margin-right: 90px;
     cursor: pointer;
-    width: 55vw;
+    width: 43vw;
     text-align: right;
 }
 a{
     text-decoration: none;
     color: black;
-    padding: 0 35px;
+    padding: 0 50px;
     
 }
 a.router-link-exact-active{
     text-decoration: none;
     color: green;
-    padding: 0 35px;
+    padding: 0 50px;
 }
 .navbar-headers{
     list-style-type:none;
@@ -77,13 +78,27 @@ a.router-link-exact-active{
     font-size: 20px;
     text-align: center;
 }
-
-@media (max-width: 1024px) {
-    .headers{
-        font-size: 18px;
+@media (max-width: 1280px){
+      .headers{
+        font-size: 17px;
     }
     .home-title{
-        width: 34vw;
+        width: 38vw;
+        margin-right: 70px;
+    }
+    a{
+        padding: 0 30px;
+    }
+    a.router-link-exact-active{
+        padding: 0 30px;
+    }
+}
+@media (max-width: 1024px) {
+    .headers{
+        font-size: 17px;
+    }
+    .home-title{
+        width: 25vw;
         margin-right: 70px;
     }
 }
