@@ -4,6 +4,8 @@ import { createRouter, createWebHistory } from 'vue-router'
  import Exams from '../views/Exams.vue'
  import FinalExam from '../views/FinalExam.vue'
  import User from '../views/User.vue'
+ import HafifaBook from '../views/HafifaBook.vue'
+
 
 const routes = [
   {
@@ -30,6 +32,11 @@ const routes = [
     path: '/User',
     name: 'User',
     component: User
+  },
+  {
+    path: '/HafifaBook',
+    name: 'HafifaBook',
+    component: HafifaBook
   }
   
 ]
