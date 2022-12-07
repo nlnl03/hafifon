@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div>
       <MainNavbar/>
        <router-view/>
   </div>
@@ -16,19 +16,21 @@ export default {
 </script>
 
 <style>
+:root{
+  --main-background-color: rgb(0, 162, 243);
+}
 @font-face {
   src: url(./assets/Assistant-Regular.ttf);
   font-family: Assistant-Regular ;
 
 }
- body{
+*, body{
    margin: 0;
+   padding: 0;
      font-family: Assistant-Regular ;
-
- }
+  }
  .main-container{
-    width: 100vw;
-    height: 200vh;
+     height: 200vh;
 }
 
 </style>

@@ -1,49 +1,57 @@
 <template>
-<div class="navbar">
-    <router-link :to="{ name: 'HomePage'}" style="color: black" >
-        <h1 class="home-title">חפיפה</h1>
-    </router-link> 
+   <div class="main-nav">
+       <div class="main-cover"></div>
+           <div class="menu">
+               <router-link :to="{ name: 'HomePage'}" class="home-title" >
+                    חפיפה
+               </router-link> 
+               <router-link :to="{ name: 'User'}"  class="user-title" >
+                   לאיזור אישי
+               </router-link> 
 
-    <ul class="navbar-headers-list" >
-        <li class="headers" >
-            <div class="headers-hover" >
-                     <router-link :to="{path: 'User'} ">האיזור האישי</router-link>
-              </div>
-        </li>
-        <li class="headers" >
-            <div class="headers-hover" >
-                     <router-link :to="{path: 'FinalExam'}">המבחן הסופי</router-link>
-              </div>
-        </li>
-        <li class="headers" >
-            <div class="headers-hover" >
-                     <router-link :to="{path: 'HafifaBook'}">חוברת חפיפה</router-link>
-              </div>
-        </li>
+            <div class="nav-bar">
+                     <ul>
+                        <li>
+                            <div>
+                                <router-link :to="{path: 'Statistics'} ">סטטיסטיקה ונתונים</router-link>
+                            </div>
+                        </li>
 
+                        <li >
+                            <div>
+                                <router-link :to="{path: 'FinalExam'}">המבחן הסופי</router-link>
+                            </div>
+                        </li>
 
-        <li class="headers"  @mouseleave="isOpen=false">
-            <div class="headers-hover">
-                <li class="exams-btn" @mouseover="isOpen = true" >
-                    <router-link :to="{path: 'Exams'}">בחנים</router-link>
-                </li>
-                <div v-if="isOpen" class="drop-down">
-                    <ul class="dropdown-items">
-                         <router-link class="exams" :to="{path: 'test1'}">מבחן 1</router-link>
-                         <router-link class="exams" :to="{path: 'test2'}">מבחן 2</router-link>
-                         <router-link class="exams" :to="{path: 'test3'}">מבחן 3</router-link>
+                        <li>
+                            <div>
+                                <router-link :to="{path: 'HafifaBook'}">חוברת חפיפה</router-link>
+                            </div>
+                        </li>
+
+                        <li @mouseleave="isOpen=false" >
+                            <div @mouseover="isOpen = true" >
+                                <span class="exams-header-nav" >בחנים</span>
+                                    <div v-if="isOpen" class="dropdown-menu">
+                                        <ul class="dropdown-items">
+                                            <router-link class="exams" :to="{path: 'test1'}">מבחן 1</router-link>
+                                            <router-link class="exams" :to="{path: 'test2'}">מבחן 2</router-link>
+                                            <router-link class="exams" :to="{path: 'test3'}">מבחן 3</router-link>
+                                        </ul>
+                                    </div>
+                            </div>
+                        </li>
+
+                        <li class="headers" >
+                            <div class="headers-hover" >
+                                <router-link :to="{path: 'Practice'}">תרגול</router-link>
+                            </div>
+                        </li>
                     </ul>
-                </div>
               </div>
+        </div>
+    </div>
 
-        </li>
-        <li class="headers" >
-            <div class="headers-hover" >
-                     <router-link :to="{path: 'Practice'}">תרגול</router-link>
-              </div>
-        </li>
-    </ul>
-</div>
  
 </template>
 
@@ -57,7 +65,7 @@ export default {
                  {name:"המבחן הסופי", path:'/FinalExam' },
                  {name:"חוברת חפיפה", path:'/HafifaBook' },
                  {name:"בחנים", path:'/Exams' },
-                 {name:"תרגול", path:'/Practice' }
+                 {name:"תרגול", path:'/Practice'}
              ],
              isOpen: false
         }
@@ -66,84 +74,187 @@ export default {
 </script>
 
 <style scoped>
-.navbar{
+
+.main-nav{
+    height: 300px;
+    width: 100%;
+    background-color: var(--main-background-color);
+    direction: rtl;
+ }
+.main-cover{
+    width: 100%;
+    height: 125px;
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+}
+.menu{
+    width: 80%;
+    height: 125px;
+    margin: 0 auto;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+}
+.nav-bar{
+     width: 750px;
+    height: 100%;
+ }
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
     flex-direction: row-reverse;
-    height: 80px;
-    background-color: rgb(244,244,244);
+    align-items: center;
+    font-size: 22px;
+    color: #ffffff;
+
+}
+li{
+    position: relative;
+    height: 50%;
+    display: flex;
+    align-items: center;
+
+}
+a{
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    height: 125px;
+
 }
 .home-title{
-    margin-right: 90px;   
-}
-/* .drop-down{
+    font-weight: bold;
     position: absolute;
-    
+    font-size: 35px;
+    top: 35px;
+    height: 60px;
+    right: 0;
+}
+ 
+.user-title{
+    width: 110px;
+    height: 40px;
+    display: flex;
+    line-height: 38px;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    top: 43px;
+    text-decoration: none;
+    font-size: 22px;
+    padding: 2px 0;
+    color: gray;
+    border-radius: 25px;
+    border: none;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+    -webkit-appearance: none;
+}
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .main-navbar{
+    display: flex;
+    flex-direction: row-reverse;
+    height: 200px;
+    background-color: var(--main-color);
+     justify-content: center;
+ } */
+/* .home-title{
+      margin-right: 90px;
+      position: absolute;
+      top: 6%;
+       left: 88%;
+     font-size: 35px;
 } */
+.dropdown-menu{
+    position: absolute;
+    z-index: 1;
+    left: 68%;
+    width: 18%;
+    transform-origin: top center;
+    animation: slideDown 300ms ease-in-out forwards;
+ }
+/* @keyframes slideDown{
+    0%{
+        opacity: 0;
+     }
+    100%{
+        opacity: 1;
+     }    
+} */
+
 .dropdown-items{
-    padding: 0;
+     padding: 0;
      display: flex;
      flex-direction: column;
      align-items: center;
-     background-color: rgb(105, 100, 100);
-     position: absolute;
-     top: calc(100% + 15px);
-     left: 70%;
-     width: 120px;
-     border-radius:  2px 2px 16px 16px;
-       
+     background-color: rgba(38, 124, 110, 0.856);
+     border-radius: 3px 3px 15px 15px;      
 }
-a{
+ 
+/* a{
     display: flex;
     height: 80px;
     align-items: center;
     text-decoration: none;
     color: black;
     padding: 0 30px;
-    
-}
-a.router-link-exact-active{
-    text-decoration: none;
-    height: 80px;
-    color: green;
-    padding: 0 30px;
-}
- a[class="exams"]{
+} */
+
+ 
+
+ /* a[class="exams"]{
     color: #fff;
-    text-align: center;
-    
-    }
-   a[class="exams"]:hover{
-    background-color: rgb(226, 226, 226);
-      
-   }
-.navbar-headers-list{
+} */
+
+/* .exams-header-nav{
+    display: flex;
+    height: 80px;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    padding: 0 30px;
+    cursor: pointer;
+   } */
+ 
+
+/* .navbar-headers-list{
     list-style-type:none;
     display: flex;
     position: relative;
-    right: 50%;
-    align-items: center;
-    flex-shrink: 0;
-}
+     flex-shrink: 0;
+     align-items: center;
+ } */
  
-/* .headers-hover:hover{
-    background-color: rgb(229,227,227);
-} */
-.headers{
+/* .headers{
      font-size: 20px;
- }
-@media (max-width: 1280px){
-    .navbar-headers-list{
-        right: 30%;
-    }
-      .headers{
-        font-size: 17px;
-    }
-    
+ } */
+ 
+/* @media (max-width: 1024px) {
      
-}
-@media (max-width: 1024px) {
-    .navbar-headers-list{
-        right: 13%;
-    }
-}
+} */
 </style>

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
  import Practice from '../views/Practice.vue'
  import Exams from '../views/Exams.vue'
  import FinalExam from '../views/FinalExam.vue'
+ import Statistics from '../views/Statistics.vue'
  import User from '../views/User.vue'
  import HafifaBook from '../views/HafifaBook.vue'
 
@@ -37,6 +38,11 @@ const routes = [
     path: '/HafifaBook',
     name: 'HafifaBook',
     component: HafifaBook
+  },
+  {
+    path: '/Statistics',
+    name: 'Statistics',
+    component: Statistics
   }
   
 ]
