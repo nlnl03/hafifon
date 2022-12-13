@@ -18,6 +18,14 @@ export default {
 <style>
 :root{
   --main-background-color: rgb(0, 162, 243);
+  --user-link-pos: 100px;
+}
+
+
+@media  (max-width:1280px) {
+    :root{
+      --user-link-pos:30px ;
+    }
 }
 @font-face {
   src: url(./assets/Assistant-Regular.ttf);

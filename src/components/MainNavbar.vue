@@ -1,21 +1,21 @@
 <template>
    <div class="main-nav">
        <div class="main-cover"></div>
-           <div class="menu">
-               <router-link :to="{ name: 'HomePage'}" class="home-title" >
-                    חפיפה
-               </router-link> 
-               <router-link :to="{ name: 'User'}"  class="user-title" >
-                   לאיזור אישי
-               </router-link> 
-
+            <router-link :to="{ name: 'HomePage'}" class="home-title" >
+                חפיפה
+            </router-link>  
+            <router-link :to="{ name: 'User'}"  class="user-title" >
+                לאיזור אישי
+            </router-link>
+             
+        <div class="menu">
             <div class="nav-bar">
                      <ul>
-                        <li>
+                        <!-- <li>
                             <div>
                                 <router-link :to="{path: 'Statistics'} ">סטטיסטיקה ונתונים</router-link>
                             </div>
-                        </li>
+                        </li> -->
 
                         <li >
                             <div>
@@ -31,19 +31,19 @@
 
                         <li @mouseleave="isOpen=false" >
                             <div @mouseover="isOpen = true" >
-                                <span class="exams-header-nav" >בחנים</span>
-                                    <div v-if="isOpen" class="dropdown-menu">
-                                        <ul class="dropdown-items">
-                                            <router-link class="exams" :to="{path: 'test1'}">מבחן 1</router-link>
-                                            <router-link class="exams" :to="{path: 'test2'}">מבחן 2</router-link>
-                                            <router-link class="exams" :to="{path: 'test3'}">מבחן 3</router-link>
+                                <span >בחנים</span>
+                                    <div v-if="isOpen" class="drop-down-menu">
+                                        <ul class="drop-down-items">
+                                            <router-link  :to="{path: 'test1'}" class="exams">מבחן 1</router-link>
+                                            <router-link  :to="{path: 'test2'}" class="exams">מבחן 2</router-link>
+                                            <router-link  :to="{path: 'test3'}" class="exams">מבחן 3</router-link>
                                         </ul>
                                     </div>
                             </div>
                         </li>
 
-                        <li class="headers" >
-                            <div class="headers-hover" >
+                        <li>
+                            <div >
                                 <router-link :to="{path: 'Practice'}">תרגול</router-link>
                             </div>
                         </li>
@@ -88,23 +88,23 @@ export default {
     position: absolute;
 }
 .menu{
-    width: 80%;
+    width: 60%;
     height: 125px;
     margin: 0 auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     position: relative;
-
+ 
 }
-.nav-bar{
-     width: 750px;
-    height: 100%;
+.nav-bar{ 
+     width: 600px;
+     height: 100%;
  }
 ul {
     padding: 0;
     margin: 0;
-    list-style-type: none;
+     list-style-type: none;
     width: 100%;
     height: 100%;
     display: flex;
@@ -113,7 +113,7 @@ ul {
     align-items: center;
     font-size: 22px;
     color: #ffffff;
-
+        
 }
 li{
     position: relative;
@@ -129,14 +129,22 @@ a{
     height: 125px;
 
 }
+.exams{
+    display: flex;
+    align-items: center;
+    color: gray;
+    padding: 10px;
+    font-size: 20px;
+    border-bottom: 1px solid #dddbdb ;
+    }
 .home-title{
     font-weight: bold;
     position: absolute;
     font-size: 35px;
     top: 35px;
     height: 60px;
-    right: 0;
-}
+    right: 100px;
+ }
  
 .user-title{
     width: 110px;
@@ -145,59 +153,35 @@ a{
     line-height: 38px;
     justify-content: center;
     position: absolute;
-    left: 0;
-    top: 43px;
+    left:var(--user-link-pos);
+    top: 40px;
     text-decoration: none;
-    font-size: 22px;
-    padding: 2px 0;
+    font-size: 20px;
+    padding: 0.2em 1em;
     color: gray;
     border-radius: 25px;
     border: none;
     font-weight: bold;
     background-color: rgb(255, 255, 255);
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
-    -webkit-appearance: none;
-}
+ }
   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* .main-navbar{
-    display: flex;
-    flex-direction: row-reverse;
-    height: 200px;
-    background-color: var(--main-color);
-     justify-content: center;
- } */
-/* .home-title{
-      margin-right: 90px;
-      position: absolute;
-      top: 6%;
-       left: 88%;
-     font-size: 35px;
-} */
-.dropdown-menu{
+.drop-down-menu{
     position: absolute;
+    height: 200px;
     z-index: 1;
-    left: 68%;
-    width: 18%;
+    top: 60px;
+    left: -50%;
+    width: 100px;
     transform-origin: top center;
-    animation: slideDown 300ms ease-in-out forwards;
- }
+  }
+ .drop-down-items{
+    flex-direction: column;
+    background-color:aliceblue;
+    border-radius: 5px 5px 15px 15px;      
+}
+
 /* @keyframes slideDown{
     0%{
         opacity: 0;
@@ -207,54 +191,5 @@ a{
      }    
 } */
 
-.dropdown-items{
-     padding: 0;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     background-color: rgba(38, 124, 110, 0.856);
-     border-radius: 3px 3px 15px 15px;      
-}
- 
-/* a{
-    display: flex;
-    height: 80px;
-    align-items: center;
-    text-decoration: none;
-    color: black;
-    padding: 0 30px;
-} */
 
- 
-
- /* a[class="exams"]{
-    color: #fff;
-} */
-
-/* .exams-header-nav{
-    display: flex;
-    height: 80px;
-    align-items: center;
-    text-decoration: none;
-    color: black;
-    padding: 0 30px;
-    cursor: pointer;
-   } */
- 
-
-/* .navbar-headers-list{
-    list-style-type:none;
-    display: flex;
-    position: relative;
-     flex-shrink: 0;
-     align-items: center;
- } */
- 
-/* .headers{
-     font-size: 20px;
- } */
- 
-/* @media (max-width: 1024px) {
-     
-} */
 </style>
