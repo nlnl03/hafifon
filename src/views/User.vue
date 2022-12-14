@@ -20,14 +20,20 @@
       </div>
     </div>
 
-    <div class="grades-info">
-      <div class="progress-circle">
-          <!-- <v-progress-circular value="70" color="red">
-
-          </v-progress-circular> -->
-          <!-- <v-btn> </v-btn> -->
-      </div>
-    </div>
+    <div class="progress-info">
+         <div class="progress-item">
+           <div class="title">כמה עברתי מהחפיפה</div> 
+        <div class="progress-circle">
+          <circle-progress 
+          :percent="70"
+          :show-percent="true"
+           fill-color="#00a2f3"
+           :viewport="true"
+           :transition="600"
+          />
+        </div>
+        </div>
+     </div>
 
   </div> 
 </div>
@@ -35,9 +41,12 @@
 </template>
 
 <script>
+import CircleProgress from 'vue3-circle-progress'
+import "vue3-circle-progress/dist/circle-progress.css"
 import axios from 'axios';
 export default {
   components:{
+    CircleProgress
    },
   data(){
     return{
@@ -70,7 +79,7 @@ export default {
 }
 h5{
   color:grey;
- }
+}
  
 .personal-info-items{
     display: flex;
@@ -84,7 +93,7 @@ h5{
     width: 50%;
     height: 80%;
     display: flex;
-    margin-top: 30px;
+    margin-top: 10px;
     flex-direction: column;
     justify-content:flex-start;
 }
@@ -97,21 +106,21 @@ h5{
     flex-direction: column;
   }
 .main{
-  height: 90vh;
-  direction: rtl;
-  margin-right: 70px;
+   direction: rtl;
+  margin-right: 100px;
 }
+
 .personal-info{
     background-color: #fff  ;
     width: 500px;
     height: 250px;
     border-radius: 20px 20px 20px 20px;
-    margin-bottom: 80px 
+    margin-bottom: 30px 
 }
- .grades-info{
+ .progress-info{
     background-color: #fff  ;
-    width: 500px;
-    height: 250px;
+    width: 420px;
+    height: 290px;
     border-radius: 20px 20px 20px 20px;
     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
  }
@@ -128,5 +137,25 @@ h5{
     justify-content: center;
     align-items:center;
   }
+   .all-progress {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+   }
+   .progress-item{
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    align-items: center;
+    justify-content: space-evenly;
+
+   }
+   .title{
+      width: 45%;
+      padding-bottom: 7px;
+      font-size: 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--main-background-color)  ;
+    }
  
 </style>

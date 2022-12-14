@@ -16,8 +16,18 @@ export default {
 </script>
 
 <style>
+.vue3-circular-progressbar .current-counter{
+   font-size: 45px;
+   font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}.vue3-circular-progressbar .current-counter::after{
+   font-size: 35px;
+      font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+   content: '%' ;
+}
 :root{
-  --main-background-color: rgb(0, 162, 243);
+  --main-background-color: #00a2f3;
   --user-link-pos: 100px;
 }
 
