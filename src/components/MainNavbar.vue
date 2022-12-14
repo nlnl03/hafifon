@@ -37,6 +37,7 @@
                                             <router-link  :to="{path: 'test1'}" class="exams">מבחן 1</router-link>
                                             <router-link  :to="{path: 'test2'}" class="exams">מבחן 2</router-link>
                                             <router-link  :to="{path: 'test3'}" class="exams">מבחן 3</router-link>
+                                            <router-link  :to="{path: 'test4'}" class="exams">מבחן 4</router-link>
                                         </ul>
                                     </div>
                             </div>
@@ -132,11 +133,16 @@ a{
 .exams{
     display: flex;
     align-items: center;
+    width: 75%;
+    justify-content: center;
     color: gray;
-    padding: 10px;
+    padding: 25px 0;
     font-size: 20px;
     border-bottom: 1px solid #dddbdb ;
     }
+ .exams:last-child{
+     border-bottom: none;
+ }
 .home-title{
     font-weight: bold;
     position: absolute;
@@ -169,7 +175,7 @@ a{
 
 .drop-down-menu{
     position: absolute;
-    height: 200px;
+    height: 250px;
     z-index: 1;
     top: 60px;
     left: -50%;
@@ -179,8 +185,8 @@ a{
  .drop-down-items{
     flex-direction: column;
     background-color:aliceblue;
-    border-radius: 5px 5px 15px 15px;      
-}
+    border-radius: 5px 5px 15px 15px;    
+ }
 
 /* @keyframes slideDown{
     0%{

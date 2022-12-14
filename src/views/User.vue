@@ -1,58 +1,85 @@
 <template>
 <div class="main">
   <div class="right-side-flex"> 
-  <div class="personal-info">
-      <div class="inner-right-flex"> 
-        <div class="name-detail">
-            <h2>נעם לביא</h2>  
-            <h5>מרתף הקסמים</h5>
-              
+    <div class="personal-info">
+      <div class="personal-info-items">
+        <div class="inner-right-flex"> 
+          <div v-if="finished" class="name-detail">
+              <h2 >{{userDetails[0].name}}</h2>  
+              <h5>{{userDetails[0].mahlaka}}</h5>
+          </div>
+
+          <div class="hafifa-nickname"> 
+                חפיפון מתחיל
+          </div>
         </div>
-        <div class="hafifa-nickname"> 
 
-          </div>
-          </div>
-  <div class="inner-left-flex">
-    <img src=""> 
-  </div>
-  </div>
-  <div class="grades-info">
-        <!-- <div class="name-detail">
-            שם:   
-            מחלקה: 
-        </div> -->
- </div>
- </div> 
-   </div>
-   <div class="drer">
-     <vue-ellipse-progress />
-   </div>
+        <div class="inner-left-flex">
+              <img class="user-image" :src="require('@/assets/KioskServlet.jpg')"  > 
+        </div>
+      </div>
+    </div>
 
+    <div class="grades-info">
+      <div class="progress-circle">
+          <!-- <v-progress-circular value="70" color="red">
+
+          </v-progress-circular> -->
+          <!-- <v-btn> </v-btn> -->
+      </div>
+    </div>
+
+  </div> 
+</div>
+ 
 </template>
 
 <script>
- import axios from 'axios';
+import axios from 'axios';
 export default {
   components:{
    },
   data(){
     return{
+      finished:false,
       userDetails:[]
     }
   },
+
   async beforeMount(){
-   const res = await axios.get('http://localhost:3000/users');
-      this.userDetails = res.data;
-      console.log(this.userDetails)
+    const res = await axios.get('http://localhost:3000/users');
+    this.userDetails = res.data;
+    this.finished = true;
+    console.log(this.userDetails)
   }
 }
 </script>
 
 <style scoped>
-
+.hafifa-nickname{
+  text-align: center;
+  font-size: 20px;
+  background:var(--main-background-color);
+  color:white;
+  border-radius: 20px;
+}
+.user-image{
+  height:150px;
+  border-radius: 50%;
+  width: 150px;
+}
 h5{
   color:grey;
-}
+ }
+ 
+.personal-info-items{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+
 .right-side-flex{
     width: 50%;
     height: 80%;
@@ -61,39 +88,45 @@ h5{
     flex-direction: column;
     justify-content:flex-start;
 }
+  .inner-right-flex{
+    display: flex;
+    width: 40%;
+    height: 100%;
+    margin-right: 10px;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
 .main{
-  /* display: flex; */
-  /* flex-direction: column; */
-  height: 95vh;
+  height: 90vh;
   direction: rtl;
   margin-right: 70px;
 }
 .personal-info{
-   /* background-color: #fff  ; */
-   width: 32vw;
-   height: 250px;
-   border-radius: 20px 20px 20px 20px;
-   /* box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2); */
-   margin-bottom: 80px 
+    background-color: #fff  ;
+    width: 500px;
+    height: 250px;
+    border-radius: 20px 20px 20px 20px;
+    margin-bottom: 80px 
 }
  .grades-info{
-   background-color: #fff  ;
-   width: 32vw;
-   height: 250px;
-   border-radius: 20px 20px 20px 20px;
-   box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
+    background-color: #fff  ;
+    width: 500px;
+    height: 250px;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
  }
 .name-detail{
-   padding:  0px 10px;
-   /* margin-top: 40px;
-   margin-right: 40px;
-   margin-bottom: 70px ; */
-   position: relative;
-   font-size: 25px;
-   display: flex;
-   border-right: 2px solid var(--main-background-color);
-   flex-direction: column;
-   text-align: right;
- }
+    padding:  0px 10px;
+    font-size: 25px;
+    border-right: 2px solid var(--main-background-color);
+  }
+
+ .inner-left-flex{
+    display: flex;
+    height: 100%;
+    width: 50%;
+    justify-content: center;
+    align-items:center;
+  }
  
 </style>

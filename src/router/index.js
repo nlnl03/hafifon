@@ -6,6 +6,10 @@ import { createRouter, createWebHistory } from 'vue-router'
  import Statistics from '../views/Statistics.vue'
  import User from '../views/User.vue'
  import HafifaBook from '../views/HafifaBook.vue'
+//  import test1 from '../views/test1.vue'
+//  import test2 from '../views/test2.vue'
+//  import test3 from '../views/test3.vue'
+//  import test4 from '../views/test4.vue'
 
 
 const routes = [
@@ -43,7 +47,27 @@ const routes = [
     path: '/Statistics',
     name: 'Statistics',
     component: Statistics
-  }
+  },
+  // {
+  //   path: '/test1',
+  //   name: 'test1',
+  //   component: test1
+  // },
+  // {
+  //   path: '/test2',
+  //   name: 'test2',
+  //   component: test2
+  // },
+  // {
+  //   path: '/test3',
+  //   name: 'test3',
+  //   component: test3
+  // },
+  // {
+  //   path: '/test4',
+  //   name: 'test4',
+  //   component: test4
+  // },
   
 ]
 
