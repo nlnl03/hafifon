@@ -34,10 +34,10 @@
                                 <span >בחנים</span>
                                     <div v-if="isOpen" class="drop-down-menu">
                                         <ul class="drop-down-items">
-                                            <router-link  :to="{path: 'test1'}" class="exams">מבחן 1</router-link>
-                                            <router-link  :to="{path: 'test2'}" class="exams">מבחן 2</router-link>
-                                            <router-link  :to="{path: 'test3'}" class="exams">מבחן 3</router-link>
-                                            <router-link  :to="{path: 'test4'}" class="exams">מבחן 4</router-link>
+                                            <router-link  :to="{path: 'test1'}" class="exams">בוחן 1</router-link>
+                                            <router-link  :to="{path: 'test2'}" class="exams">בוחן 2</router-link>
+                                            <router-link  :to="{path: 'test3'}" class="exams">בוחן 3</router-link>
+                                            <router-link  :to="{path: 'test4'}" class="exams">בוחן 4</router-link>
                                         </ul>
                                     </div>
                             </div>
@@ -175,7 +175,8 @@ a{
 
 .drop-down-menu{
     position: absolute;
-    height: 250px;
+    box-shadow: 1px 3px 5px 3px rgba(0, 0, 0, 0.2);
+    height: 260px;
     z-index: 1;
     top: 60px;
     left: -50%;
