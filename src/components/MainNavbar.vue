@@ -1,7 +1,6 @@
 <template>
    <div class="main-nav">
-       <div class="main-cover"></div>
-            <router-link :to="{ name: 'HomePage'}" class="home-title" >
+             <router-link :to="{ name: 'HomePage'}" class="home-title" >
                 חפיפה
             </router-link>  
             <router-link :to="{ name: 'User'}"  class="user-title" >
@@ -34,10 +33,10 @@
                                 <span >בחנים</span>
                                     <div v-if="isOpen" class="drop-down-menu">
                                         <ul class="drop-down-items">
-                                            <router-link  :to="{path: 'test1'}" class="exams">בוחן 1</router-link>
-                                            <router-link  :to="{path: 'test2'}" class="exams">בוחן 2</router-link>
-                                            <router-link  :to="{path: 'test3'}" class="exams">בוחן 3</router-link>
-                                            <router-link  :to="{path: 'test4'}" class="exams">בוחן 4</router-link>
+                                            <router-link  :to="{path: 'exam1'}" class="exams">בוחן 1</router-link>
+                                            <router-link  :to="{path: 'exam2'}" class="exams">בוחן 2</router-link>
+                                            <router-link  :to="{path: 'exam3'}" class="exams">בוחן 3</router-link>
+                                            <router-link  :to="{path: 'exam4'}" class="exams">בוחן 4</router-link>
                                         </ul>
                                     </div>
                             </div>
@@ -45,7 +44,7 @@
 
                         <li>
                             <div >
-                                <router-link :to="{path: 'Practice'}">תרגול</router-link>
+                                <router-link :to="{path: 'Practices'}">תרגולים</router-link>
                             </div>
                         </li>
                     </ul>
@@ -77,17 +76,17 @@ export default {
 <style scoped>
 
 .main-nav{
-    height: 300px;
+    height: 125px;
     width: 100%;
     background-color: var(--main-background-color);
     direction: rtl;
  }
-.main-cover{
+/* .main-cover{
     width: 100%;
     height: 125px;
     background-color: rgba(0, 0, 0, 0.3);
     position: absolute;
-}
+} */
 .menu{
     width: 60%;
     height: 125px;
@@ -175,7 +174,7 @@ a{
 
 .drop-down-menu{
     position: absolute;
-    box-shadow: 1px 3px 5px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, 0.2);
     height: 260px;
     z-index: 1;
     top: 60px;
@@ -185,7 +184,7 @@ a{
   }
  .drop-down-items{
     flex-direction: column;
-    background-color:aliceblue;
+    background-color:rgb(255, 255, 255);
     border-radius: 5px 5px 15px 15px;    
  }
 

@@ -17,17 +17,19 @@ export default {
 
 <style>
 .vue3-circular-progressbar .current-counter{
-   font-size: 45px;
-   font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 45px;
+       top: 47%;
+    left: 52%;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
 }.vue3-circular-progressbar .current-counter::after{
-   font-size: 35px;
-      font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
-   content: '%' ;
+    font-size: 35px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    content: '%' ;
 }
+ 
 :root{
-  --main-background-color: #00a2f3;
+  --main-background-color: rgb(2, 138, 206);
   --user-link-pos: 100px;
 }
 
@@ -46,6 +48,8 @@ export default {
    margin: 0;
    padding: 0;
      font-family: Assistant-Regular ;
+         direction: rtl;
+
   }
  .main-container{
      height: 200vh;

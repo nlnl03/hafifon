@@ -1,4 +1,6 @@
 <template>
+<h1>האיזור האישי</h1>
+<div class="under-line"></div>
 <div class="main">
   <div class="right-side-flex">
     <div class="fff"> 
@@ -39,11 +41,26 @@
   </div> 
         <div class="left-side-flex">
             <div class="grid-container">
-              <div class="average"><span>בוחן 1:  </span></div>
-              <div class="test-1-score" >sddsd</div>
-              <div class="test-2-score">sdsdsd</div>
-              <div class="test-3-score">sddsdsw</div>
-              <div class="test-4-score">wewewew</div>
+              <div class="average">
+                <span class="items-title">ממוצע ציונים </span>
+                   <span class="gradeAv">{{gradesAvera[0]}}</span>
+              </div>
+              <div class="test-1-score" >
+                <span class="items-title">מבחן 1</span>
+                    <span class="the-grades">{{userDetails[0].grades.test1}}</span>
+              </div>
+              <div class="test-2-score">
+                 <span class="items-title">מבחן 2</span>
+                    <span class="the-grades">{{userDetails[0].grades.test2}}</span>
+              </div>
+              <div class="test-3-score">
+                 <span class="items-title">מבחן 3</span>
+                    <span class="the-grades">{{userDetails[0].grades.test3}}</span>
+              </div>
+              <div class="test-4-score">
+                 <span class="items-title">מבחן 4</span>
+                    <span class="the-grades">{{userDetails[0].grades.test4}}</span>
+              </div>
             </div>
         </div>
 </div>
@@ -75,16 +92,15 @@ export default {
     this.userDetails = res.data;
     this.finished = true;
     console.log(this.userDetails)
-    for(let i in this.userDetails.grades){
-      var exam1 = parseInt(this.userDetails.grades.test1);
-          var exam2 = parseInt(this.userDetails[i].grades.test2);
-          var exam3 = parseInt(this.userDetails[i].grades.test2);
-          var exam4 = parseInt(this.userDetails[i].grades.test2);
-          var sum = (exam1 + exam2 + exam3 + exam4)/4;
+    for(let i in this.userDetails){
+        var exam1 = parseInt(this.userDetails[i].grades.test1);
+        var exam2 = parseInt(this.userDetails[i].grades.test2);
+        var exam3 = parseInt(this.userDetails[i].grades.test3);
+        var exam4 = parseInt(this.userDetails[i].grades.test4);
+        var sum = (exam1 + exam2 + exam3 + exam4)/4;
           this.gradesAvera.push(sum)
     }
-               console.log(this.gradesAvera)
-
+           console.log(this.gradesAvera)
   }
 }
 </script>
@@ -105,6 +121,22 @@ export default {
   justify-content: space-evenly;
     
 }
+h1{
+  font-size: 60px;
+  color: var(--main-background-color);
+  position: relative;
+  margin-bottom: 50px;
+   top: 30px ;
+  text-align: center;
+}
+.under-line{
+  position: relative;
+  top: -5px;
+  width: 160px;
+  height: 2px;
+  background-color:var(--main-background-color) ;
+  margin: 0 auto;
+}
 
 .hafifa-nickname{
   text-align: center;
@@ -114,6 +146,7 @@ export default {
   border-radius: 20px;
 }
 .user-image{
+  z-index: 0;
   height:150px;
   border-radius: 50%;
   width: 150px;
@@ -127,7 +160,8 @@ h5{
     flex-direction: row;
     height: 100%;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
+
   }
 
 .right-side-flex{
@@ -151,17 +185,21 @@ h5{
     display: flex;
     width: 40%;
     height: 100%;
-    margin-right: 10px;
-    justify-content: space-evenly;
+     justify-content: space-evenly;
     flex-direction: column;
   }
+.gradeAv{
+    font-size:45px;
+    display: block;
+    margin-top: 25px;
 
+    }
 .personal-info{
     background-color: #fff  ;
     width: 500px;
     height: 250px;
     border-radius: 20px 20px 20px 20px;
-    margin-bottom: 65px 
+    /* margin-bottom: 65px  */
 }
  .progress-info{
     background-color: #fff  ;
@@ -171,7 +209,7 @@ h5{
     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
  }
 .name-detail{
-    padding:  0px 10px;
+    /* padding: 0px 10px; */
     font-size: 25px;
     border-right: 2px solid var(--main-background-color);
   }
@@ -197,11 +235,12 @@ h5{
 
   }
  .title{
-    width: 45%;
-    padding-bottom: 7px;
-    font-size: 20px;
-    text-align: center;
-    border-bottom: 1px solid var(--main-background-color)  ;
+      width: 45%;
+      margin-top: 5px;  
+      padding-bottom: 7px;
+      font-size: 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--main-background-color)  ;
   }
   
  .average-title{
@@ -215,59 +254,79 @@ h5{
  .grid-container{
     display: grid;   
     justify-content: end;
-    grid-auto-columns: 1fr;
-    grid-auto-rows: 1fr;
-    grid-template-columns: 0.1fr 0.1fr 0.1fr;
-    grid-template-rows: 0.4fr 0.4fr 0.4fr;
-    gap: 5px 5px;
+     grid-template-columns: 0.9fr 0.2fr 0.2fr;
+    grid-template-rows: 0.6fr 0.6fr 0.6fr;
+    gap: 15px 15px;
       grid-template-areas:
       "test-1-score . test-3-score"
       ". average ."
       "test-2-score . test-4-score";
  }
  .average{
-    grid-area: average;
-    width: 200px;
-    height: 200px;
-    background-color: var(--main-background-color);
-    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
+   border-top:6px solid var(--main-background-color);
+     /* background-color: var(--main-background-color); */
+      /* color:white; */
+     grid-area: average;
+    width: 150px;
+    height: 150px;
+     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
     border-radius: 30px 30px;
 
 
  }
  .test{
     grid-area: var(--grid-area);
-    width: 160px;
-    height: 160px;
+    width: 130px;
+    height: 130px;
     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
     border-radius: 30px 30px;
+ }
+ .items-title{
+    font-size: 22px;
+    position: relative;
+    top: 13px;
+     
  }
  .test-1-score{
+   /* background-image: linear-gradient(to bottom,#ec9F05,#ff4e00); */
+    border-top:6px solid #ff4e00;
     grid-area: test-1-score;
-    width: 160px;
-    height: 160px;
+    width: 130px;
+    height: 130px;
     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
-    border-radius: 30px 30px;
+    border-radius: 20px 20px;
  }
  .test-3-score{
+      /* background-image: linear-gradient(to bottom,#ff0000,#990000); */
+        border-top:6px solid rgb(155, 16, 155);
+
     grid-area: test-3-score;
-    width: 160px;
-    height: 160px;
+    width: 130px;
+    height: 130px;
     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
-    border-radius: 30px 30px;
+    border-radius: 20px 20px;
  }
  .test-4-score{
+      border-top:6px solid #ec9F05;
+
     grid-area: test-4-score;
-    width: 160px;
-    height: 160px;
+    width: 130px;
+    height: 130px;
     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
-    border-radius: 30px 30px;
+    border-radius: 20px 20px;
  }
  .test-2-score{
+      border-top:6px solid teal;
+
     grid-area: test-2-score;
-    width: 160px;
-    height: 160px;
+    width: 130px;
+    height: 130px;
     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
-    border-radius: 30px 30px;
+    border-radius:20px 20px;
  }
+ .the-grades{
+   display: block;
+   font-size: 43px;
+    margin-top: 20px;
+  }
 </style>
