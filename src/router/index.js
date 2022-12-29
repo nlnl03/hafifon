@@ -1,8 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
  import HomePage from '../views/HomePage.vue'
  import PracticeInfo from '../views/PracticeInfo.vue'
  import Practice from '../views/Practice.vue'
- import Exams from '../views/Exams.vue'
  import FinalExam from '../views/FinalExam.vue'
  import User from '../views/User.vue'
  import HafifaBook from '../views/HafifaBook.vue'
@@ -22,11 +21,6 @@ const routes = [
     path: '/Practices',
     name: 'Practices',
     component: PracticeInfo
-  },
-  {
-    path: '/Exams',
-    name: 'Exams',
-    component: Exams
   },
   {
     path: '/FinalExam',
@@ -69,12 +63,12 @@ const routes = [
     name: 'title',
     component: Practice,
     props: (route)=>({...route.params})
-  },
-  
+  }
+
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes
 })
 

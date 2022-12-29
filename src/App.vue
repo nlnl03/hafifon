@@ -1,7 +1,7 @@
 <template>
   <div>
-      <MainNavbar/>
-       <router-view/>
+    <MainNavbar/>
+    <router-view/>
   </div>
 </template>
 
@@ -11,8 +11,10 @@ export default {
     name: 'App',
     components:{
         MainNavbar
+    },
+     
     }
-}
+
 </script>
 
 <style>

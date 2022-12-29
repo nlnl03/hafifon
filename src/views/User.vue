@@ -80,9 +80,9 @@ export default {
       finished:false,
       userDetails:[],
       gradesAvera: [],
-      tests:[{
-      class:"",color:"" 
-      }]
+      // tests:[{
+      // class:"",color:"" 
+      // }]
     }
   },
    

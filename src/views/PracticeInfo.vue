@@ -6,9 +6,12 @@
       <div class="items" v-for="practice in practices" :key="practice">
         <router-link class="router-text" :to="{name:'title', params:{practices:JSON.stringify(practice),title:practice.routerTitle}}">
           <img class="image-of-items" :src="require(`@/assets/${practice.image}`)">
+          <div class="inner-flex">
             <h4 class="text">
                 {{practice.subject}}
             </h4>
+            <span class="num-of-que">מספר שאלות: {{practice.numOfQue}}</span>
+            </div>
         </router-link>
       </div>
     </div>
@@ -27,7 +30,6 @@ export default {
   data(){
     return{
       practices:[],
-      
      }
   },
   async beforeMount(){
@@ -39,6 +41,13 @@ export default {
 </script>
 
 <style scoped>
+.inner-flex{
+  display:flex;
+  height: 40%;
+  flex-direction:column;
+  justify-content: space-between; 
+  align-items: center;
+}
 h1{
     font-size: 60px;
     text-align: center;
@@ -58,16 +67,17 @@ h1{
 }
 .container-cards{
     margin-top: 100px;
-    width: 1300px;
+    width: 1180px;
     margin-left: auto;
     margin-right: auto;
-}
+ }
 .flex-cards{
     position: relative;
     flex-wrap: wrap;
-    right:140px;
+    right:80px;
     display: flex;
     justify-content: flex-start;
+    width: 95%;
 
 }
 .items{
@@ -77,7 +87,7 @@ h1{
     align-items: center;
     vertical-align: middle;
     position: relative;
-    height: 380px;
+    height: 390px;
     width: 290px;
     margin-left: 4vw;
      margin-bottom: 7vh;
@@ -91,16 +101,18 @@ h1{
   box-shadow: 0px 15px 30px 0px rgba(0,0,0,.2);
 
 }
-/* .items:nth-child(5n-4){
-  margin-right: 0;
- } */
  h4{
    font-size: 25px;
    padding: 10px;
    position: relative;
     color: black;
   text-align: center;
-
+ }
+ .num-of-que{
+    font-size:22px;
+    margin-bottom: 30px;
+    display: inline-block;
+    color:#666;
  }
  .router-text{
    text-decoration: none;
@@ -109,6 +121,6 @@ h1{
  }
  .image-of-items{
   width: 100%;
-  height: 70%;
+  height: 60%;
    }
 </style>

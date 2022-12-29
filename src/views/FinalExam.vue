@@ -1,5 +1,7 @@
 <template>
-  <h1></h1>
+<div class="final">
+  מבחן סופי
+</div>
 </template>
 
 <script>
@@ -8,6 +10,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>

@@ -18,13 +18,13 @@
 
                         <li >
                             <div>
-                                <router-link :to="{path: 'FinalExam'}">המבחן הסופי</router-link>
+                                <router-link :to="{name: 'FinalExam'}">המבחן הסופי</router-link>
                             </div>
                         </li>
 
                         <li>
                             <div>
-                                <router-link :to="{path: 'HafifaBook'}">חוברת חפיפה</router-link>
+                                <router-link :to="{name: 'HafifaBook'}">חוברת חפיפה</router-link>
                             </div>
                         </li>
 
@@ -33,10 +33,10 @@
                                 <span >בחנים</span>
                                     <div v-if="isOpen" class="drop-down-menu">
                                         <ul class="drop-down-items">
-                                            <router-link  :to="{path: 'exam1'}" class="exams">בוחן 1</router-link>
-                                            <router-link  :to="{path: 'exam2'}" class="exams">בוחן 2</router-link>
-                                            <router-link  :to="{path: 'exam3'}" class="exams">בוחן 3</router-link>
-                                            <router-link  :to="{path: 'exam4'}" class="exams">בוחן 4</router-link>
+                                            <router-link  :to="{name: 'exam1'}" class="exams">בוחן 1</router-link>
+                                            <router-link  :to="{name: 'exam2'}" class="exams">בוחן 2</router-link>
+                                            <router-link  :to="{name: 'exam3'}" class="exams">בוחן 3</router-link>
+                                            <router-link  :to="{name: 'exam4'}" class="exams">בוחן 4</router-link>
                                         </ul>
                                     </div>
                             </div>
@@ -44,7 +44,7 @@
 
                         <li>
                             <div >
-                                <router-link :to="{path: 'Practices'}">תרגולים</router-link>
+                                <router-link :to="{name: 'Practices'}">תרגולים</router-link>
                             </div>
                         </li>
                     </ul>
@@ -60,14 +60,7 @@ export default {
     name: 'MainNavbar',
     data(){
         return{
-             headers:[
-                 {name:"האיזור האישי", path:'/User' },
-                 {name:"המבחן הסופי", path:'/FinalExam' },
-                 {name:"חוברת חפיפה", path:'/HafifaBook' },
-                 {name:"בחנים", path:'/Exams' },
-                 {name:"תרגול", path:'/Practice'}
-             ],
-             isOpen: false
+            isOpen: false
         }
     }
 }
@@ -175,17 +168,18 @@ a{
 .drop-down-menu{
     position: absolute;
     box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, 0.2);
-    height: 260px;
+    height: 270px;
     z-index: 1;
     top: 60px;
-    left: -50%;
-    width: 100px;
+    transform: translateX(30%);
+    width: 120px;
     transform-origin: top center;
   }
  .drop-down-items{
     flex-direction: column;
     background-color:rgb(255, 255, 255);
-    border-radius: 5px 5px 15px 15px;    
+    border-radius: 5px 5px 5px 3px;   
+ 
  }
 
 /* @keyframes slideDown{

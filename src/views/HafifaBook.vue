@@ -1,6 +1,6 @@
 <template>
   <h1>
-      
+      חוברת חפיפה
   </h1>
 </template>
 
@@ -10,6 +10,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
