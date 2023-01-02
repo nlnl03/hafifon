@@ -1,11 +1,15 @@
 <template>
-  <h2>{{title}}</h2>
+<Quiz :subject="practiceObject.subject" :exam="practiceObject.exam"/>
 </template>
 
 <script>
+import Quiz from '@/components/Quiz.vue'
 export default {
 name:"Practice",
-props:["title","redirect"],
+components:{
+Quiz
+},
+props:["title"],
  data(){
     return{
       title:"",

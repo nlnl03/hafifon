@@ -10,7 +10,7 @@
             <h4 class="text">
                 {{practice.subject}}
             </h4>
-            <span class="num-of-que">מספר שאלות: {{practice.numOfQue}}</span>
+            <span class="num-of-que">מספר שאלות: {{practice.exam.length}}</span>
             </div>
         </router-link>
       </div>
