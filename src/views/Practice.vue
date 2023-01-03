@@ -1,5 +1,5 @@
 <template>
-<Quiz :subject="practiceObject.subject" :exam="practiceObject.exam"/>
+<Quiz :subject="practiceObject.subject" :exam="practiceObject.exam" />
 </template>
 
 <script>

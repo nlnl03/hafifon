@@ -13,21 +13,16 @@
           </div>
       </div>
 
-      <div class="quiz-box" v-if="isShow">
-        <div class="title">נושא: {{subject}}</div>
-            <div class="questions" v-for="(item,i) in exam" :key="i">
-               <div class="show" v-if="show(i)" >
-                    {{item.title}}
-               <div class="answers-list" v-for="(ans,index) in exam" :key="index">
-                   <span>
-                       {{item.answer[index]}}
-                   </span>
-                    </div>
-                </div>
-            
+    <div class="show" v-if="isShow">
+        <form class="quiz-box" v-for="question in exam" :key="question.title" >
+            {{question.title}}
+            <div v-for="answer in question.answer"  :key="answer"> 
+                <input type="radio" v-model="userData[question.title]" :value="answer" @change="checkData" :name="question.title"  :id="answer"  />
+                <label :for="answer" >{{answer}}</label>
             </div>
-            <button @click="isClicked(show)">fdfdf</button>
-      </div>
+        </form>
+    </div>
+    
   </div>
 </template>
 
@@ -36,32 +31,42 @@ export default {
 name:'Quiz',
 props:{
     subject:String,
-    exam:Object
+    exam:Object,
 },
 data(){
     return{
+        userData:{},
         isShow:false,
+        counter: 0
     }
 },
 methods:{
+    checkData(){
+        console.log(this.userData)
+    },
     startQuiz(){
         this.isShow=true;
     },
     goBack(){
         this.$router.go(-1)
     },
-    show(i){
-        if(i==0){
-            return true
-        }
+    show(){
+        if(this.counter==0){
+
+         }
         else{
-            return false
-        }
+         }
         
     },
 },
-beforeMount(){
-    console.log(this.exam.length)
+    mounted(){
+        this.exam.forEach((question)=>{
+            this.userData[question.title] =""
+        })
+        console.log(this.userData)
+        
+    },
+  beforeMount(){
 }
 }
 </script>
