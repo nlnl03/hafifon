@@ -2,72 +2,37 @@
   <div class="main-container">
       <div class="about-quiz" v-if="!isShow">
           <div class="quiz-subject">
-              {{subject}}
+              {{title}}
           </div>
           <div class="quiz-info">
               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui nesciunt eius corrupti expedita necessitatibus voluptatum cumque odit deleniti aspernatur ex, pariatur assumenda labore. Vitae quasi et esse at doloremque ut aliquam, voluptate ab totam aspernatur eius earum reiciendis iste dolor aperiam saepe error eos culpa nobis nisi repellendus inventore quis, temporibus odit? Recusandae autem repellat vitae tempore repudiandae accusantium in illo quidem? Impedit, perspiciatis dignissimos. At numquam non corporis architecto quidem quaerat, ad accusantium ab fuga voluptas minima quam cupiditate ipsam, accusamus praesentium tenetur assumenda, quasi sunt adipisci aliquid necessitatibus? Doloribus ipsum praesentium, ipsa sapiente cumque voluptatem iure error repellendus.
           </div>
           <div class="start-back-buttons">
               <button class="back-btn" @click="goBack()">בחזרה לתרגולים</button>
-              <button class="start-btn" @click="startQuiz()">התחל תרגול</button>
+              <router-link :to="{name:'quiz'}"> התחל תרגול</router-link>
           </div>
       </div>
-
-    <div class="show" v-if="isShow">
-        <form class="quiz-box" v-for="question in exam" :key="question.title" >
-            {{question.title}}
-            <div v-for="answer in question.answer"  :key="answer"> 
-                <input type="radio" v-model="userData[question.title]" :value="answer" @change="checkData" :name="question.title"  :id="answer"  />
-                <label :for="answer" >{{answer}}</label>
-            </div>
-        </form>
-    </div>
-    
-  </div>
+     </div>
+     <h2>dfdf</h2>
 </template>
 
 <script>
 export default {
-name:'Quiz',
-props:{
-    subject:String,
-    exam:Object,
-},
+name:'beforeEnterQuiz',
+ props:["title"],
 data(){
     return{
-        userData:{},
-        isShow:false,
-        counter: 0
-    }
+       
+     }
 },
 methods:{
-    checkData(){
-        console.log(this.userData)
-    },
-    startQuiz(){
-        this.isShow=true;
-    },
-    goBack(){
+      goBack(){
         this.$router.go(-1)
     },
-    show(){
-        if(this.counter==0){
-
-         }
-        else{
-         }
-        
-    },
+      
 },
-    mounted(){
-        this.exam.forEach((question)=>{
-            this.userData[question.title] =""
-        })
-        console.log(this.userData)
-        
-    },
-  beforeMount(){
-}
+    
+     
 }
 </script>
 
