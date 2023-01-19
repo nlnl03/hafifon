@@ -20,7 +20,7 @@ export default {
 <style>
 .vue3-circular-progressbar .current-counter{
     font-size: 45px;
-       top: 47%;
+    top: 47%;
     left: 52%;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
@@ -33,6 +33,8 @@ export default {
 :root{
   --main-background-color: rgb(2, 138, 206);
   --user-link-pos: 100px;
+  --table-width: 950px;
+  --table-header-width: calc(var(--table-width)/3)
 }
 
 

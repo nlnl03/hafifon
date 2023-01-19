@@ -9,46 +9,40 @@
              
         <div class="menu">
             <div class="nav-bar">
-                     <ul>
-                        <!-- <li>
-                            <div>
-                                <router-link :to="{path: 'Statistics'} ">סטטיסטיקה ונתונים</router-link>
-                            </div>
-                        </li> -->
+                <ul>
+                   <li >
+                      <div>
+                            <router-link :to="{name: 'FinalExam'}">המבחן הסופי</router-link>
+                      </div>
+                   </li>
 
-                        <li >
-                            <div>
-                                <router-link :to="{name: 'FinalExam'}">המבחן הסופי</router-link>
-                            </div>
-                        </li>
+                   <li>
+                      <div>
+                            <router-link :to="{name: 'HafifaBook'}">חוברת חפיפה</router-link>
+                      </div>
+                   </li>
 
-                        <li>
-                            <div>
-                                <router-link :to="{name: 'HafifaBook'}">חוברת חפיפה</router-link>
-                            </div>
-                        </li>
+                    <li @mouseleave="isOpen=false" >
+                         <div @mouseover="isOpen = true" >
+                             <span >בחנים</span>
+                                 <div v-if="isOpen" class="drop-down-menu">
+                                     <ul class="drop-down-items">
+                                        <router-link  :to="{name: 'exam1'}" class="exams">בוחן 1</router-link>
+                                        <router-link  :to="{name: 'exam2'}" class="exams">בוחן 2</router-link>
+                                        <router-link  :to="{name: 'exam3'}" class="exams">בוחן 3</router-link>
+                                        <router-link  :to="{name: 'exam4'}" class="exams">בוחן 4</router-link>
+                                     </ul>
+                                 </div>
+                         </div>
+                    </li>
 
-                        <li @mouseleave="isOpen=false" >
-                            <div @mouseover="isOpen = true" >
-                                <span >בחנים</span>
-                                    <div v-if="isOpen" class="drop-down-menu">
-                                        <ul class="drop-down-items">
-                                            <router-link  :to="{name: 'exam1'}" class="exams">בוחן 1</router-link>
-                                            <router-link  :to="{name: 'exam2'}" class="exams">בוחן 2</router-link>
-                                            <router-link  :to="{name: 'exam3'}" class="exams">בוחן 3</router-link>
-                                            <router-link  :to="{name: 'exam4'}" class="exams">בוחן 4</router-link>
-                                        </ul>
-                                    </div>
-                            </div>
-                        </li>
-
-                        <li>
-                            <div >
-                                <router-link :to="{name: 'Practices'}">תרגולים</router-link>
-                            </div>
-                        </li>
-                    </ul>
-              </div>
+                     <li>
+                        <div>
+                            <router-link :to="{name: 'PracticesList'}">תרגולים</router-link>
+                        </div>
+                     </li>
+                </ul>
+            </div>
         </div>
     </div>
 

@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
  import HomePage from '../views/HomePage.vue'
- import PracticeInfo from '../views/PracticeInfo.vue'
- import Practice from '../views/Practice.vue'
+ import PracticesList from '../views/PracticesList.vue'
+ import beforeEnterQuiz from '../views/beforeEnterQuiz.vue'
  import FinalExam from '../views/FinalExam.vue'
  import User from '../views/User.vue'
  import HafifaBook from '../views/HafifaBook.vue'
@@ -10,6 +10,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import exam2 from '../views/exam2.vue'
  import exam3 from '../views/exam3.vue'
  import exam4 from '../views/exam4.vue'
+ import practiceResult from '../views/practiceResult'
 
 
 const routes = [
@@ -20,8 +21,8 @@ const routes = [
   },
   {
     path: '/Practices',
-    name: 'Practices',
-    component: PracticeInfo
+    name: 'PracticesList',
+    component: PracticesList
   },
   {
     path: '/FinalExam',
@@ -61,14 +62,20 @@ const routes = [
   },
   {
     path: '/Practices/:title',
-    name: 'title',
-    component: Practice,
+    name: 'beforeEnterQuiz',
+    component: beforeEnterQuiz,
     props: (route)=>({...route.params})
   },
   {
     path: '/Practices/:title/quiz',
     name: 'quiz',
     component: Quiz,
+    props: (route)=>({...route.params})
+  },
+  {
+    path: '/Practices/:title/result',
+    name: 'result',
+    component: practiceResult,
     props: (route)=>({...route.params})
   }
 
