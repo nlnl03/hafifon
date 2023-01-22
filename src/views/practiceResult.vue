@@ -95,7 +95,7 @@ tbody{
     display:block;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 275 px;
+    max-height: 275px;
     direction: ltr;
  }
  thead{
