@@ -1,8 +1,7 @@
 <template>
 <div class="results-card">
   <div class="score">
-  
-      <h1></h1>
+      {{score}}
   </div>
   <div class="results-table" v-if="isShow" >
     <table>
@@ -22,8 +21,11 @@
         </tr>
        </tbody>
     </table>
-        <router-link :to="{name:'PracticesList'}">dfdfdf</router-link>
-    </div>
+    <div class="btn">
+        <router-link class="back-btn" :to="{name:'PracticesList'}">חזרה לתרגולים</router-link>
+        <router-link class="video-btn" :to="{name:'PracticesList'}">לסרטון בנושא</router-link>
+        </div>
+     </div>
    <div class="perfect-results" v-if="!isShow">
       כל התשבות נכונות, עבודה מעולה !
     </div>
@@ -42,7 +44,6 @@ import "vue3-circle-progress/dist/circle-progress.css"
     return{
         userResults:[],
         score:"",
-        pointsInPerc:'',
         isShow: false, 
         value:[]
     }
@@ -51,16 +52,13 @@ async beforeMount(){
     console.log(score)
      var score = localStorage.getItem("score")
       this.score =score
-      var pointsInPerc =localStorage.getItem("pointsInPerc")
-      this.pointsInPerc = pointsInPerc
-      console.log(this.pointsInPerc)
-    console.log(this.score)
-    var data = localStorage.getItem("results")
-    this.userResults = JSON.parse(data)
-    this.userResults.forEach(result => {
-      Object.values(result).forEach(val=> {
-        this.value.push(val)
-        console.log(this.value)
+       console.log(this.score)
+      var data = localStorage.getItem("results")
+      this.userResults = JSON.parse(data)
+      this.userResults.forEach(result => {
+        Object.values(result).forEach(val=> {
+          this.value.push(val)
+          console.log(this.value)
         if(val != '')
         {
           this.isShow = true
@@ -97,7 +95,7 @@ tbody{
     display:block;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 270px;
+    max-height: 275 px;
     direction: ltr;
  }
  thead{
@@ -108,7 +106,7 @@ tbody{
   }
   th{
     padding-bottom: 5px ;
-    font-size: 20px ;
+    font-size: 22px ;
   }
    td{
       height: 50px;
@@ -116,26 +114,23 @@ tbody{
       padding: 0.5em;
      text-align: center;
    }
-tr{
-    border-bottom: 1px solid gray;
-}
-tbody tr:last-child{
-  border-bottom:none;
-}
-table{
-    border-collapse: collapse;
- }
- .score{
-   position: relative;
+  tr{
+      border-bottom: 1px solid gray;
   }
+  tbody tr:last-child{
+    border-bottom:none;
+  }
+  table{
+      border-collapse: collapse;
+  }
+  
   .results-table{
     position: relative;
-    top:135px;
+    top:170px;
     right: 50%;
     transform:translateX(50%) ;
-    width: var(--table-width);
-     max-height: 300px;
-   }
+     width: var(--table-width);
+    }
 .results-card{
     position: relative;
     left: 50%;
@@ -147,4 +142,49 @@ table{
     height: 700px;
     width: 1200px;
 }
+.btn{
+    position: absolute;
+    top:210px;
+    transform: translateY(100%);
+    display: flex;
+    width: 100%;
+    height: 120px;
+    align-items: center;
+    justify-content: center;
+  }
+.back-btn{
+    position: relative;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    height: 40px;
+    width: 110px;
+    border: 1px solid #007bff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:30px;
+    }
+  .video-btn{
+      position: relative;
+      color: #007bff;
+      text-decoration: none;
+      height: 40px;
+      width: 110px;
+      background-color: #fff;
+      border: 1px solid #007bff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .score{
+      display: flex;
+      justify-content: center;
+      position: relative;
+      top:60px;
+      font-size:50px;
+     }
+  
  </style>
