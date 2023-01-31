@@ -29,6 +29,21 @@ export default {
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     content: '%' ;
 }
+  ::-webkit-scrollbar{
+  width: 10px;
+}
+::-webkit-scrollbar-track{
+  background-color: #c5c2c2;
+    border-radius: 5px;
+
+ }
+::-webkit-scrollbar-thumb{
+  background: #888;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover{
+  background: rgb(117, 116, 116);
+}
  
 :root{
   --main-background-color: rgb(2, 138, 206);
@@ -38,7 +53,7 @@ export default {
 }
 
 
-@media  (max-width:1280px) {
+@media (max-width:1280px) {
     :root{
       --user-link-pos:30px ;
     }

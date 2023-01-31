@@ -58,8 +58,7 @@ async beforeMount(){
       this.userResults.forEach(result => {
         Object.values(result).forEach(val=> {
           this.value.push(val)
-          console.log(this.value)
-        if(val != '')
+         if(val != '')
         {
           this.isShow = true
         }
@@ -73,21 +72,6 @@ async beforeMount(){
 </script>
 
 <style scoped>
-  ::-webkit-scrollbar{
-  width: 10px;
-}
-::-webkit-scrollbar-track{
-  background-color: #c5c2c2;
-    border-radius: 5px;
-
- }
-::-webkit-scrollbar-thumb{
-  background: #888;
-  border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover{
-  background: rgb(117, 116, 116);
-}
  td:first-child{
    border-left: none;
 }

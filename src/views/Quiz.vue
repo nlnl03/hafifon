@@ -1,5 +1,5 @@
 <template> 
-    <div v-if="isFinished"  class="quiz-box">  
+    <div class="quiz-box" ref="quiz">  
         <form v-for="(question,index) in examData" :key="index" >
           <div class="show" v-if="index==ite">
               <div class="question"> 
@@ -7,14 +7,15 @@
                   <div class="current-que">{{ite+1}}/{{examData.length}}</div> 
               </div> 
 
-              <div class="answer-options">
-                <div class="answer-items" :style="`--cursor:${inputsCursor}`"   v-for="answer in question.answers"  :key="answer"> 
-                  <input type="radio" v-model="userData[question.Title]" :ref="answer+index" :value="answer" @change="clickHandler($event,index)"  :name="question.Title"  :id="answer" :disabled="userData[question.Title]"  />
+              <div class="answer-options" :ref="question['Title']">
+                <div class="answer-items" :style="`--cursor:${inputsCursor}`" v-for="answer in question.answers"  :key="answer"> 
+                  <input type="radio" v-model="userData[question.Title]" :ref="answer" :value="answer" @change="clickHandler($event,index,question['Title'])"  :name="question.Title"  :id="answer" :disabled="userData[question.Title]"  />
                   <label :for="answer"><span class="answers-text"> {{answer}}</span></label>
                 </div>
+                
               </div>
 
-                <button class="next-button" @click="nextQue" :disabled="!userData[question.Title]" v-if="ite!=examData.length-1" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
+                <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]" v-if="ite!=examData.length-1" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
           </div>
         </form>  
             <!-- <button class="buttons" @click="backQue"  v-if="examData.exam.length!=ite &&ite!=0" >הקודם</button> -->
@@ -46,33 +47,52 @@ export default {
        wrongAns:'',
        wrongQue:'',
        theCorrectAns:'',
-       results:[]
+       results:[],
+       parseAns:[],
     }
   },
   methods:{
-    clickHandler(event,index){
+    clickHandler(event,index,titleOfQuestion){
           this.inputsCursor = 'not-allowed' 
           this.nextBtnCursor = 'pointer'
-          const pressedAnwser = event.target;
-          const rightAnswer = this.$refs[this.examData[index]["correctAnswer"]+index]
-          console.log(pressedAnwser)
-          console.log(rightAnswer)
-          console.log(this.examData[index]["correctAnswer"]+index)
-          pressedAnwser.classList.add("input-answer-right")
-
-          if(pressedAnwser.value != rightAnswer.value){ 
-                pressedAnwser.classList.add("input-answer-wrong")
-                rightAnswer.classList.add("input-answer-right")  
-            }          
+           const pressedAnswer = event.target;
+           const pressedAnswerValue = pressedAnswer.value
+          const indexOfCorrectAnswer = this.examData[index]["correctAnswer"]
+        
+        console.log(this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input"))
+         const rightAnswer = this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input")
+            const rightAnswerValue = rightAnswer.value
+               
+          if(pressedAnswerValue != rightAnswerValue){ 
+                pressedAnswer.classList.add("input-answer-wrong")
+            }
+                  rightAnswer.classList.add("input-answer-right")
+             
+              if(this.ite!=this.examData.length-1){
+                 var nextBtn = this.$refs["nextBtn"]
+                   nextBtn.classList.add("next-btn-on") 
+              }         
       },
-   
-    checkIfDone(){
-      console.log(this.userData)
+      asyncParse(str){
+        return new Promise((resolve)=>{
+          resolve(JSON.parse(str))
+        })
+      },
+      async getLocalData(){
+            const res = await axios.get(this.url)
+            this.examData = res.data.value
+             this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
+             this.examData = this.examData.exam
+             console.log(this.examData)
+          },
+           
+      checkIfDone(){
+        console.log(this.userData)
         let isFinished = true;
         this.isFinishedButton = isFinished;
         console.log(this.ite)
         console.log(this.isFinishedButton)
-    },
+      },
     nextQue(){
         this.inputsCursor='pointer',
         this.nextBtnCursor= 'not-allowed'
@@ -85,25 +105,24 @@ export default {
    
     submit(){
         this.examData.forEach(que => {
-            if(this.userData[que.Title]== que.correctAnswer)
+          console.log(this.userData)
+            console.log(que.answers[que.correctAnswer])
+            if(this.userData[que.Title]== que.answers[que.correctAnswer])
             {
               this.grades++      
             }
             else{
                this.wrongQue = que.Title
                this.wrongAns = this.userData[que.Title]
-               this.theCorrectAns = que.correctAnswer
+               this.theCorrectAns = que.answers[que.correctAnswer]
                this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns})              
             }
             
         })
-        console.log(this.wrongQue)//השאלה שהוא טעה בא
-        console.log(this.wrongAns)// התשובה השגויה שהוא בחר
-        console.log(this.theCorrectAns)
-        console.log(this.results)
+         console.log(this.results)
          this.score = this.grades+"/"+this.examData.length
          var pointsInPerc =  Math.round((this.grades/this.examData.length)*100)
-        console.log(this.score)
+         console.log(this.score)
           localStorage.setItem("score",this.score)
           localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
          localStorage.setItem("results", JSON.stringify(this.results))
@@ -112,36 +131,31 @@ export default {
   
     async beforeMount(){
       if(this.url == `https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`){
-       const res = await axios.get(this.url)
-       this.examData = res.data.value;
-       this.examData.forEach(que => {
-         try{
-           que.answers =  JSON.parse(que.answers)
-         }
-         catch(error){
-           console.log('error:',error ,  que.answers)
-         }
-        });
-          this.isFinished = true
-          console.log(this.examData)
-        }
+        const res = await axios.get(this.url)
+        this.examData = res.data.value;
+
+           const promiseResult = await Promise.all(this.examData.map((item)=>{
+             return this.asyncParse(item.answers).then((inner)=>{
+                  item['answers'] = inner
+               return {item}
+             })
+          }))
+                console.log(this.examData)
+       }
 
         else{
-          this.isFinished = true
-             const res = await axios.get(this.url)
-            this.examData = res.data.value
-             this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
-             this.examData = this.examData.exam
-             console.log(this.examData)
-        }
+            this.getLocalData()
+
+          }
       },
 
       mounted(){
           this.examData.forEach((question)=>{
-            this.userData[question.Title] = ""
+          this.userData[question.Title] = ""
         })
         console.log(this.userData)
-      }  
+      },
+         
 }
 </script>
 
@@ -158,11 +172,16 @@ button{
 .next-button{
   position: absolute;
   bottom: 24px;
-   cursor: var(--next-btn-cusror);
+  cursor: var(--next-btn-cusror);
   right: 670px;
 }
+.next-btn-on{
+    border: 1px solid #007bff;
+    color: #fff;
+    background-color: #007bff;
+}
 .submit-btn{
-  position: absolute;
+    position: absolute;
     text-decoration: none;
      height: 40px;
     width: 110px;
@@ -187,6 +206,10 @@ button{
     height: 500px;
     width: 850px;
 }
+.quiz-box-large{
+      height: 700px;
+
+}
 .question{
     height: 70px;
     padding: 8px 32px;
@@ -200,6 +223,9 @@ button{
 .answer-options{
     padding: 25px 30px 20px 30px;
     margin-top:20px;
+    max-height: 295px;
+    overflow-y: auto;
+    direction: ltr;
 }
 .answer-items{
     height: 35px;
@@ -228,8 +254,7 @@ button{
     content:"❌";   
     font-size: 20px;
   }
- 
-input{
+ input{
   appearance: none;
   font-size:27px;
   display: flex;
