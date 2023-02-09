@@ -1,8 +1,15 @@
 <template>
 <div class="results-card">
   <div class="score">
-      {{score}}
-  </div>
+    <!-- {{score}} -->
+    <circle-progress 
+           :percent="score"
+          :show-percent="true"
+           fill-color="#00a2f3"
+           :viewport="true"
+           :transition="700"
+          />
+   </div>
   <div class="results-table" v-if="isShow" >
     <table>
       <thead>
@@ -15,19 +22,30 @@
 
       <tbody>
         <tr v-for="result in userResults" :key="result">
-          <td>{{result.theCorrectAns}}</td>
+          <!-- <td >{{result.theCorrectAns}}</td>
           <td>{{result.wrongAns}}</td>
-          <td>{{result.wrongQue}}</td>
-        </tr>
-       </tbody>
-    </table>
+          <td>{{result.wrongQue}}</td> -->
+          <td>
+            <div v-for="(item,key,index) in result.theCorrectBankAns" :key="index">
+              {{key}}: {{item}}
+            </div>
+           </td>
+          <td  >
+            <div v-for="(i,k,wrongIndex) in result.wrongBankAns" :key="wrongIndex">
+                  {{k}}: {{i}}
+            </div>
+            </td>
+          <td>{{result.wrongBankQue}}</td>
+        </tr>        
+       </tbody> 
+     </table>
     <div class="btn">
         <router-link class="back-btn" :to="{name:'PracticesList'}">חזרה לתרגולים</router-link>
         <router-link class="video-btn" :to="{name:'PracticesList'}">לסרטון בנושא</router-link>
         </div>
      </div>
    <div class="perfect-results" v-if="!isShow">
-      כל התשבות נכונות, עבודה מעולה !
+     <span>כל התשבות נכונות, עבודה מעולה !</span> 
     </div>
   </div>
 </template>
@@ -45,25 +63,29 @@ import "vue3-circle-progress/dist/circle-progress.css"
         userResults:[],
         score:"",
         isShow: false, 
-        value:[]
+        isBankQue:false
     }
 },
 async beforeMount(){
-    console.log(score)
-     var score = localStorage.getItem("score")
-      this.score =score
+     var score = localStorage.getItem("pointsInPerc")
+      this.score =JSON.parse(score)
        console.log(this.score)
       var data = localStorage.getItem("results")
       this.userResults = JSON.parse(data)
       this.userResults.forEach(result => {
+        if(this.userResults.type=='BankQue'){
+          this.isBankQue=true
+        }
+        console.log(result.theCorrectAns)
+
         Object.values(result).forEach(val=> {
-          this.value.push(val)
-         if(val != '')
+          if(val != '')
         {
           this.isShow = true
         }
-      })
+       })
      });
+     console.log(this.isAmerQue)
          console.log(this.isShow)
 
   },
@@ -72,6 +94,9 @@ async beforeMount(){
 </script>
 
 <style scoped>
+.perfect-results{
+  width: 300px;
+ }
  td:first-child{
    border-left: none;
 }
@@ -110,7 +135,7 @@ tbody{
   
   .results-table{
     position: relative;
-    top:170px;
+    top: 85px;
     right: 50%;
     transform:translateX(50%) ;
      width: var(--table-width);
@@ -123,7 +148,7 @@ tbody{
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
-    height: 700px;
+    height: 710px;
     width: 1200px;
 }
 .btn{
@@ -167,8 +192,16 @@ tbody{
       display: flex;
       justify-content: center;
       position: relative;
-      top:60px;
-      font-size:50px;
+      top:40px;
+      /* height: 170px; */
+       font-size: 60px;
      }
+    /* .score::before{
+      content: '%';
+      position: relative;
+      left:3px;
+      top: 23px;
+      font-size:35px
+    } */
   
  </style>

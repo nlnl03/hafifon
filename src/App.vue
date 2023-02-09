@@ -64,10 +64,10 @@ export default {
 
 }
 *, body{
-   margin: 0;
-   padding: 0;
-     font-family: Assistant-Regular ;
-         direction: rtl;
+      margin: 0;
+      padding: 0;
+      font-family: Assistant-Regular ;
+      direction: rtl;
 
   }
  .main-container{

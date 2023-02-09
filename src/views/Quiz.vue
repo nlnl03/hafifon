@@ -1,25 +1,35 @@
 <template> 
-    <div class="quiz-box" ref="quiz">  
-        <form v-for="(question,index) in examData" :key="index" >
+    <div class="quiz-box" v-if="isFinished" >  
+        <form v-for="(question,index) in examData" :key="index"  >
           <div class="show" v-if="index==ite">
               <div class="question"> 
                   <span class="questions-text">{{question.Title}}</span> 
                   <div class="current-que">{{ite+1}}/{{examData.length}}</div> 
               </div> 
 
-              <div class="answer-options" :ref="question['Title']">
-                <div class="answer-items" :style="`--cursor:${inputsCursor}`" v-for="answer in question.answers"  :key="answer"> 
-                  <input type="radio" v-model="userData[question.Title]" :ref="answer" :value="answer" @change="clickHandler($event,index,question['Title'])"  :name="question.Title"  :id="answer" :disabled="userData[question.Title]"  />
-                  <label :for="answer"><span class="answers-text"> {{answer}}</span></label>
+              <div class="answer-options" :ref="question['Title']" v-if="question.type == 'american' " >
+                <div class="answer-items" :style="`--cursor:${inputsCursor}`" v-for="(answer,inner) in question.answers"  :key="inner"> 
+                  <input type="radio" v-model="userData[question.Title]" :ref="answer" :value="answer" @click="clickHandler($event,index,question['Title'])"  :name="question.Title"  :id="answer" :disabled="userData[question.Title]"  />
+                  <label :for="answer"><div class="answers-text"> {{answer}}</div></label>
                 </div>
-                
               </div>
-
-                <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]" v-if="ite!=examData.length-1" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
+              
+              <div class="bank-quiz" v-if=" question.type == 'bankQue' ">
+                <div class="bank-quiz-que"  v-for="(option,midIndex) in Object.keys(question.bankOptions)" :key="option+midIndex" >
+                        <div class="option-title" >{{option}}</div>
+                        <div class="VX" :ref="option"></div>
+                    <div class="bank-options">
+                        <div class="bank-words-items"  v-for="(item,indexInner) in question.bankCorrect" :key="item+indexInner">
+                           <input type="radio" v-model=" bankUserData[question.Title][option]"  :id="item+midIndex" :value="item" @click="clickBankHandler($event,option,bankUserData[question.Title],index)" :disabled="bankUserData[question.Title][option]!=''"/>
+                           <label :for="item+midIndex" > {{item}}  </label>  
+                        </div>
+                    </div>
+                </div>
+              </div>
+                <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]&&isDisabled" v-if="ite!=examData.length-1" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
           </div>
         </form>  
-            <!-- <button class="buttons" @click="backQue"  v-if="examData.exam.length!=ite &&ite!=0" >הקודם</button> -->
-             <router-link class="submit-btn" :to="{name:'result'}" v-if="examData.length==ite+1"
+              <router-link class="submit-btn" :to="{name:'result'}" v-if="examData.length==ite+1"
                @click="submit"> <span class="finish-btn-text"> סיים </span></router-link>
      </div>
 </template>
@@ -33,12 +43,13 @@ export default {
   },
   data(){
     return{
+      isFinished:false,
        routerName:"",
        examData:[],
        url: process.env.NODE_ENV =='development'? `http://localhost:3000/practice/`:`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`,
        userData:{},
+       bankUserData:{},
        grades: 0,
-       score:"",
        isFinished:false,
        isFinishedButton: false,
        ite: 0,
@@ -48,8 +59,11 @@ export default {
        wrongQue:'',
        theCorrectAns:'',
        results:[],
+       bankWrongAns:[],
        parseAns:[],
-    }
+       isDisabled:true,
+        bankQuePoints:0
+     }
   },
   methods:{
     clickHandler(event,index,titleOfQuestion){
@@ -58,10 +72,9 @@ export default {
            const pressedAnswer = event.target;
            const pressedAnswerValue = pressedAnswer.value
           const indexOfCorrectAnswer = this.examData[index]["correctAnswer"]
-        
-        console.log(this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input"))
+         console.log(this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input"))
          const rightAnswer = this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input")
-            const rightAnswerValue = rightAnswer.value
+           const rightAnswerValue = rightAnswer.value
                
           if(pressedAnswerValue != rightAnswerValue){ 
                 pressedAnswer.classList.add("input-answer-wrong")
@@ -73,19 +86,58 @@ export default {
                    nextBtn.classList.add("next-btn-on") 
               }         
       },
+      clickBankHandler(event,option,modelData,index){
+          this.nextBtnCursor = 'pointer'
+          this.checkIfcorrectBank(event,option,modelData,index)
+             this.disableNextBtn(modelData)
+             console.log(modelData)
+            console.log(this.bankUserData)
+        },
+        checkIfcorrectBank(event,option,modelData,index){
+          const pressedBankAnswer = event.target;
+          const val = pressedBankAnswer.value 
+          const addVX = this.$refs[option]
+          console.log(modelData)
+          console.log(val)
+          console.log(option)
+           console.log(this.examData[index].bankOptions[option])
+           var bankOptionLen = 0
+               Object.keys(this.examData[index].bankOptions).forEach(key =>{
+                    bankOptionLen++
+
+               })
+           if(val==this.examData[index].bankOptions[option]){
+                console.log("correct")
+                addVX.classList.add("input-bank-right")
+                this.bankQuePoints += (100/this.examData.length)/bankOptionLen
+                console.log(this.bankQuePoints)
+              }
+            else{
+              console.log("not correct")
+              addVX.classList.add("input-bank-wrong")
+              }
+          },
+           disableNextBtn(modelData){
+           
+             var wrongCounter = 0;
+              Object.values(modelData).forEach(val => {
+                console.log(val)
+                if(val == ''){
+                     wrongCounter++ ;
+                }
+              });
+              if (wrongCounter >1){
+                   this.isDisabled = true;
+              }else{
+                this.isDisabled = false;
+              }
+            },
       asyncParse(str){
         return new Promise((resolve)=>{
           resolve(JSON.parse(str))
         })
       },
-      async getLocalData(){
-            const res = await axios.get(this.url)
-            this.examData = res.data.value
-             this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
-             this.examData = this.examData.exam
-             console.log(this.examData)
-          },
-           
+            
       checkIfDone(){
         console.log(this.userData)
         let isFinished = true;
@@ -94,6 +146,7 @@ export default {
         console.log(this.isFinishedButton)
       },
     nextQue(){
+      this.isDisabled =true
         this.inputsCursor='pointer',
         this.nextBtnCursor= 'not-allowed'
         this.ite++
@@ -102,35 +155,64 @@ export default {
     backQue(){
          this.ite--
     },
-   
-    submit(){
-        this.examData.forEach(que => {
-          console.log(this.userData)
-            console.log(que.answers[que.correctAnswer])
-            if(this.userData[que.Title]== que.answers[que.correctAnswer])
-            {
-              this.grades++      
-            }
-            else{
-               this.wrongQue = que.Title
-               this.wrongAns = this.userData[que.Title]
-               this.theCorrectAns = que.answers[que.correctAnswer]
-               this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns})              
-            }
-            
+    updateVmodelAmerican(){
+            this.examData.forEach((question)=>{ 
+             if(question.type=="american"){
+                console.log("american")
+                  this.userData[question.Title] = ""  
+             }         
+       })
+    },
+
+    updateVmodelBank(){
+            this.examData.forEach((question)=>{ 
+            if(question.type=="bankQue"){
+               console.log("bank")
+              this.bankUserData[question.Title] = {}
+             Object.keys(question.bankOptions).forEach((ans)=>{
+               this.bankUserData[question.Title][ans] = ""
+            })
+          } 
         })
+           console.log(this.bankUserData)
+              console.log(this.userData)
+               this.isFinished = true;
+    },
+     submit(){
+       //    console.log(this.userData)
          console.log(this.results)
-         this.score = this.grades+"/"+this.examData.length
-         var pointsInPerc =  Math.round((this.grades/this.examData.length)*100)
-         console.log(this.score)
-          localStorage.setItem("score",this.score)
-          localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
+         this.examData.forEach(que => {
+           if(que.type=='american'){
+               console.log(this.userData)
+              if(this.userData[que.Title]== que.answers[que.correctAnswer])
+              {
+                this.grades++
+                console.log(this.grades) 
+              }
+              else{
+                this.wrongQue = que.Title
+                this.wrongAns = this.userData[que.Title]
+                this.theCorrectAns = que.answers[que.correctAnswer]
+                this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns})     
+                }
+           } 
+           else{
+             this.wrongQue = que.Title
+             this.wrongAns = this.bankUserData[que.Title]
+             this.theCorrectAns = que.bankOptions
+             this.results.push({wrongBankQue:this.wrongQue,wrongBankAns:this.wrongAns,theCorrectBankAns:this.theCorrectAns,type:'BankQue'})
+           }  
+      })
+          var pointsInPerc =  Math.round((this.grades/this.examData.length)*100+this.bankQuePoints)
+           localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
          localStorage.setItem("results", JSON.stringify(this.results))
-    }
+
+    },
+     
   },
   
     async beforeMount(){
-      if(this.url == `https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`){
+        if(this.url == `https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`){
         const res = await axios.get(this.url)
         this.examData = res.data.value;
 
@@ -138,22 +220,23 @@ export default {
              return this.asyncParse(item.answers).then((inner)=>{
                   item['answers'] = inner
                return {item}
-             })
-          }))
+              })
+            }))
                 console.log(this.examData)
        }
 
         else{
-            this.getLocalData()
-
+            const res = await axios.get(this.url)
+            this.examData = res.data.value
+             this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
+             this.examData = this.examData.exam
+             console.log(this.examData)
           }
-      },
+              this.updateVmodelBank()
+       },
 
       mounted(){
-          this.examData.forEach((question)=>{
-          this.userData[question.Title] = ""
-        })
-        console.log(this.userData)
+          this.updateVmodelAmerican()
       },
          
 }
@@ -171,9 +254,10 @@ button{
 }
 .next-button{
   position: absolute;
-  bottom: 24px;
+  bottom: 45px;
   cursor: var(--next-btn-cusror);
-  right: 670px;
+    right: 50%;
+    transform: translateX(50%);
 }
 .next-btn-on{
     border: 1px solid #007bff;
@@ -183,7 +267,7 @@ button{
 .submit-btn{
     position: absolute;
     text-decoration: none;
-     height: 40px;
+    height: 40px;
     width: 110px;
     border: 1px solid #007bff;
     border-radius: 10px;
@@ -193,22 +277,17 @@ button{
     cursor: pointer;
     color: #fff;
     background-color: #007bff;
-    
 }
 .quiz-box{
     position: relative;
     left: 50%;
     right: 50%;
-    transform: translate(50%,25%);
+    transform: translate(50%,15%);
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
-    height: 500px;
-    width: 850px;
-}
-.quiz-box-large{
-      height: 700px;
-
+    height: 580px;
+    width: 950px;
 }
 .question{
     height: 70px;
@@ -223,7 +302,7 @@ button{
 .answer-options{
     padding: 25px 30px 20px 30px;
     margin-top:20px;
-    max-height: 295px;
+    max-height: 340px;
     overflow-y: auto;
     direction: ltr;
 }
@@ -233,14 +312,59 @@ button{
     background-color: aliceblue;
     border: 1px solid #84c5fe;
     border-radius: 5px;
+    padding: 0.8em 15px;
+    margin-bottom: 20px;
+    cursor: var(--cursor);
+ }
+ 
+.bank-quiz{
+    padding: 25px 30px 20px 30px;
+    margin-top:20px;
+    max-height: 295px;
+    overflow-y: auto;
+    direction: ltr;
+}
+.bank-quiz-que{
+    display: flex;
+    align-items: center;
+    min-height: 35px;
+    justify-content: space-around;
+    position: relative;
+    background-color: aliceblue;
+    border: 1px solid #84c5fe;
+    border-radius: 5px;
     padding: 8px 15px;
     margin-bottom: 20px;
-      cursor: var(--cursor);
+    cursor: var(--cursor);
  }
-  
+ .bank-options{
+    position: relative;
+    display: flex;
+    width: 50%;
+    min-height: 35px;
+    text-align: center;
+ }
+ .bank-words-items{
+    border-left: 1px solid rgba(0,0,0,.1);
+    position: relative;
+    padding: 0 15px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+   }
+   .items-text{
+     height: 100%;
+   }
+   .bank-words-items:first-child{
+     border-right: 1px solid rgba(0,0,0,.1);
+   }
+   .option-title{
+     margin-left: 2em;
+   }
+   
  .input-answer-right::before{
-   margin-right: 2px;
-     content: '✔';
+    margin-right: 2px;
+    content: '✔';
     bottom: 2px;
     color: green;
     position: relative;
@@ -254,6 +378,24 @@ button{
     content:"❌";   
     font-size: 20px;
   }
+  .input-bank-right::before{
+      content: '✔';
+      margin-left:30px;
+      right:20px;
+      font-size:24px;
+      color: green;
+      position: absolute;    
+      top:7px;
+    }
+    
+    .input-bank-wrong::before{
+      content:"❌";
+       right:18px;
+      font-size:18px;
+      color: green;
+      position: absolute;    
+      top:13px;
+    }
  input{
   appearance: none;
   font-size:27px;
@@ -278,6 +420,8 @@ label{
   align-items: center;
   cursor: var(--cursor);
 }
+/* .num-of-options{
+ } */
 .questions-text{
   width: 80%;
 }
