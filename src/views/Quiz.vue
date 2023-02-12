@@ -59,6 +59,7 @@ export default {
        wrongQue:'',
        theCorrectAns:'',
        results:[],
+       bankResults:[],
        bankWrongAns:[],
        parseAns:[],
        isDisabled:true,
@@ -115,6 +116,7 @@ export default {
             else{
               console.log("not correct")
               addVX.classList.add("input-bank-wrong")
+              this.bankResults.push({wrongBankQue:this.examData[index].Title,wrongBankAns:val+": "+option,theCorrectBankAns:this.examData[index].bankOptions[option]+": "+option,type:"bankQue"})
               }
           },
            disableNextBtn(modelData){
@@ -193,19 +195,20 @@ export default {
                 this.wrongQue = que.Title
                 this.wrongAns = this.userData[que.Title]
                 this.theCorrectAns = que.answers[que.correctAnswer]
-                this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns})     
+                this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns,type:"AmerQue"})     
                 }
            } 
-           else{
-             this.wrongQue = que.Title
-             this.wrongAns = this.bankUserData[que.Title]
-             this.theCorrectAns = que.bankOptions
-             this.results.push({wrongBankQue:this.wrongQue,wrongBankAns:this.wrongAns,theCorrectBankAns:this.theCorrectAns,type:'BankQue'})
-           }  
+          //  else{
+          //    this.wrongQue = que.Title
+          //    this.wrongAns = this.bankUserData[que.Title]
+          //    this.theCorrectAns = que.bankOptions
+          //    this.results.push({wrongBankQue:this.wrongQue,wrongBankAns:this.wrongAns,theCorrectBankAns:this.theCorrectAns,type:'BankQue'})
+          //  }  
       })
           var pointsInPerc =  Math.round((this.grades/this.examData.length)*100+this.bankQuePoints)
            localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
          localStorage.setItem("results", JSON.stringify(this.results))
+         localStorage.setItem("bankResults",JSON.stringify(this.bankResults))
 
     },
      

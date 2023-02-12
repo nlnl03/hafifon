@@ -1,7 +1,6 @@
 <template>
 <div class="results-card">
   <div class="score">
-    <!-- {{score}} -->
     <circle-progress 
            :percent="score"
           :show-percent="true"
@@ -10,7 +9,7 @@
            :transition="700"
           />
    </div>
-  <div class="results-table" v-if="isShow" >
+  <div class="results-table" v-if="!showMassaAllCorrect" >
     <table>
       <thead>
         <tr>
@@ -21,33 +20,31 @@
       </thead>
 
       <tbody>
-        <tr v-for="result in userResults" :key="result">
-          <!-- <td >{{result.theCorrectAns}}</td>
-          <td>{{result.wrongAns}}</td>
-          <td>{{result.wrongQue}}</td> -->
-          <td>
-            <div v-for="(item,key,index) in result.theCorrectBankAns" :key="index">
-              {{key}}: {{item}}
-            </div>
-           </td>
-          <td  >
-            <div v-for="(i,k,wrongIndex) in result.wrongBankAns" :key="wrongIndex">
-                  {{k}}: {{i}}
-            </div>
-            </td>
-          <td>{{result.wrongBankQue}}</td>
-        </tr>        
-       </tbody> 
-     </table>
+          <tr v-for="result in userResults" :key="result">
+              <td >{{result.theCorrectAns}}</td>
+              <td>{{result.wrongAns}}</td>
+              <td>{{result.wrongQue}}</td>
+          </tr>
+
+          <tr v-for="bankResult in userBankResults" :key="bankResult">
+              <td> {{bankResult.theCorrectBankAns}}</td>
+              <td>{{bankResult.wrongBankAns}}</td>      
+              <td>{{bankResult.wrongBankQue}} </td>
+          </tr>
+      </tbody> 
+    </table>
+    
     <div class="btn">
         <router-link class="back-btn" :to="{name:'PracticesList'}">חזרה לתרגולים</router-link>
         <router-link class="video-btn" :to="{name:'PracticesList'}">לסרטון בנושא</router-link>
-        </div>
-     </div>
-   <div class="perfect-results" v-if="!isShow">
-     <span>כל התשבות נכונות, עבודה מעולה !</span> 
     </div>
   </div>
+
+
+   <div class="all-correct" v-if="showMassaAllCorrect">
+     <span>כל התשבות נכונות, עבודה מעולה !</span> 
+   </div>
+</div>
 </template>
 
 <script>
@@ -61,8 +58,9 @@ import "vue3-circle-progress/dist/circle-progress.css"
  data(){
     return{
         userResults:[],
+        userBankResults:[],
         score:"",
-        isShow: false, 
+        showMassaAllCorrect: false, 
         isBankQue:false
     }
 },
@@ -72,31 +70,25 @@ async beforeMount(){
        console.log(this.score)
       var data = localStorage.getItem("results")
       this.userResults = JSON.parse(data)
-      this.userResults.forEach(result => {
-        if(this.userResults.type=='BankQue'){
-          this.isBankQue=true
-        }
-        console.log(result.theCorrectAns)
-
-        Object.values(result).forEach(val=> {
-          if(val != '')
-        {
-          this.isShow = true
-        }
-       })
-     });
-     console.log(this.isAmerQue)
-         console.log(this.isShow)
-
-  },
+      var bankData = localStorage.getItem("bankResults")
+      this.userBankResults = JSON.parse(bankData)
+      console.log(this.userResults)
+           if(this.userResults.length==0&&this.userBankResults.length==0){
+            this.showMassaAllCorrect=true
+          } 
+    },
   
 }
 </script>
 
 <style scoped>
-.perfect-results{
-  width: 300px;
- }
+.all-correct{
+  font-size:50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  top:20%;
+   }
  td:first-child{
    border-left: none;
 }
@@ -203,5 +195,4 @@ tbody{
       top: 23px;
       font-size:35px
     } */
-  
- </style>
+  </style>
