@@ -43,8 +43,7 @@ export default {
   },
   data(){
     return{
-      isFinished:false,
-       routerName:"",
+        routerName:"",
        examData:[],
        url: process.env.NODE_ENV =='development'? `http://localhost:3000/practice/`:`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`,
        userData:{},
@@ -88,25 +87,25 @@ export default {
               }         
       },
       clickBankHandler(event,option,modelData,index){
-          this.nextBtnCursor = 'pointer'
+          // this.nextBtnCursor = 'pointer'
           this.checkIfcorrectBank(event,option,modelData,index)
              this.disableNextBtn(modelData)
-             console.log(modelData)
-            console.log(this.bankUserData)
+            //  console.log(modelData)
+            // console.log(this.bankUserData)
         },
         checkIfcorrectBank(event,option,modelData,index){
           const pressedBankAnswer = event.target;
           const val = pressedBankAnswer.value 
           const addVX = this.$refs[option]
-          console.log(modelData)
-          console.log(val)
-          console.log(option)
-           console.log(this.examData[index].bankOptions[option])
+          // console.log(modelData)
+          // console.log(val)
+          // console.log(option)
+          //  console.log(this.examData[index].bankOptions[option])
            var bankOptionLen = 0
                Object.keys(this.examData[index].bankOptions).forEach(key =>{
                     bankOptionLen++
-
                })
+
            if(val==this.examData[index].bankOptions[option]){
                 console.log("correct")
                 addVX.classList.add("input-bank-right")
@@ -119,8 +118,8 @@ export default {
               this.bankResults.push({wrongBankQue:this.examData[index].Title,wrongBankAns:val+": "+option,theCorrectBankAns:this.examData[index].bankOptions[option]+": "+option,type:"bankQue"})
               }
           },
+
            disableNextBtn(modelData){
-           
              var wrongCounter = 0;
               Object.values(modelData).forEach(val => {
                 console.log(val)
@@ -134,19 +133,13 @@ export default {
                 this.isDisabled = false;
               }
             },
+
       asyncParse(str){
         return new Promise((resolve)=>{
           resolve(JSON.parse(str))
         })
       },
             
-      checkIfDone(){
-        console.log(this.userData)
-        let isFinished = true;
-        this.isFinishedButton = isFinished;
-        console.log(this.ite)
-        console.log(this.isFinishedButton)
-      },
     nextQue(){
       this.isDisabled =true
         this.inputsCursor='pointer',
@@ -164,6 +157,8 @@ export default {
                   this.userData[question.Title] = ""  
              }         
        })
+        console.log(this.userData)
+        this.isFinished = true;
     },
 
     updateVmodelBank(){
@@ -177,7 +172,6 @@ export default {
           } 
         })
            console.log(this.bankUserData)
-              console.log(this.userData)
                this.isFinished = true;
     },
      submit(){
@@ -198,17 +192,12 @@ export default {
                 this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns,type:"AmerQue"})     
                 }
            } 
-          //  else{
-          //    this.wrongQue = que.Title
-          //    this.wrongAns = this.bankUserData[que.Title]
-          //    this.theCorrectAns = que.bankOptions
-          //    this.results.push({wrongBankQue:this.wrongQue,wrongBankAns:this.wrongAns,theCorrectBankAns:this.theCorrectAns,type:'BankQue'})
-          //  }  
+           
       })
           var pointsInPerc =  Math.round((this.grades/this.examData.length)*100+this.bankQuePoints)
-           localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
-         localStorage.setItem("results", JSON.stringify(this.results))
-         localStorage.setItem("bankResults",JSON.stringify(this.bankResults))
+          localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
+          localStorage.setItem("results", JSON.stringify(this.results))
+          localStorage.setItem("bankResults",JSON.stringify(this.bankResults))
 
     },
      
@@ -219,13 +208,38 @@ export default {
         const res = await axios.get(this.url)
         this.examData = res.data.value;
 
-           const promiseResult = await Promise.all(this.examData.map((item)=>{
+           const promiseAnswers = await Promise.all(this.examData.map((item)=>{
              return this.asyncParse(item.answers).then((inner)=>{
                   item['answers'] = inner
                return {item}
               })
             }))
-                console.log(this.examData)
+             
+            const promiseBankAnswer = Promise.all(this.examData.map((item)=>{
+              if(item.type=='bankQue'){
+                  return this.asyncParse(item.bankCorrect).then((corr)=>{
+                  item['bankCorrect'] = corr
+                  return {item}
+                })
+              }
+          })) 
+
+            const promiseBankOptions =  Promise.all(this.examData.map((bankOption)=>{
+               if(bankOption.type=='bankQue'){
+                 try{
+                   return this.asyncParse(bankOption.bankOptions).then((opt)=>{
+                    bankOption['bankOptions'] = opt
+                    return {bankOption}
+                  })
+                 }
+
+                 catch(error){
+                   console.error(error)
+                 }
+               }
+            }))
+                 console.log(this.examData)
+
        }
 
         else{
