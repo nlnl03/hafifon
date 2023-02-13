@@ -162,9 +162,9 @@ export default {
     },
 
     updateVmodelBank(){
-            this.examData.forEach((question)=>{ 
+          setTimeout(()=>{
+          this.examData.forEach((question)=>{ 
             if(question.type=="bankQue"){
-               console.log("bank")
               this.bankUserData[question.Title] = {}
              Object.keys(question.bankOptions).forEach((ans)=>{
                this.bankUserData[question.Title][ans] = ""
@@ -173,6 +173,8 @@ export default {
         })
            console.log(this.bankUserData)
                this.isFinished = true;
+          },2000)
+         
     },
      submit(){
        //    console.log(this.userData)
