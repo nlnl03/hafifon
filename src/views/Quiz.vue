@@ -18,10 +18,10 @@
                 <div class="bank-quiz-que"  v-for="(option,midIndex) in Object.keys(question.bankOptions)" :key="option+midIndex" >
                         <div class="option-title" >{{option}}</div>
                         <div class="VX" :ref="option"></div>
-                    <div class="bank-options">
+                    <div class="bank-options" :ref="option+midIndex">
                         <div class="bank-words-items"  v-for="(item,indexInner) in question.bankCorrect" :key="item+indexInner">
-                           <input type="radio" v-model=" bankUserData[question.Title][option]"  :id="item+midIndex" :value="item" @click="clickBankHandler($event,option,bankUserData[question.Title],index)" :disabled="bankUserData[question.Title][option]!=''"/>
-                           <label :for="item+midIndex" > {{item}}  </label>  
+                           <input type="radio" v-model=" bankUserData[question.Title][option]"  :id="item+midIndex" :value="item" @click="clickBankHandler($event,option,bankUserData[question.Title],index,midIndex)" :disabled="bankUserData[question.Title][option]!=''"/>
+                           <label class="bank-options-text" :for="item+midIndex" > {{item}}  </label>  
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,6 @@ export default {
   },
   data(){
     return{
-        routerName:"",
        examData:[],
        url: process.env.NODE_ENV =='development'? `http://localhost:3000/practice/`:`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`,
        userData:{},
@@ -86,22 +85,17 @@ export default {
                    nextBtn.classList.add("next-btn-on") 
               }         
       },
-      clickBankHandler(event,option,modelData,index){
-          // this.nextBtnCursor = 'pointer'
-          this.checkIfcorrectBank(event,option,modelData,index)
+      clickBankHandler(event,option,modelData,index,midIndex){
+        var inputsCursor = this.$refs[option+midIndex]
+        inputsCursor.classList.add("bank-input-cursor")
+             this.checkIfcorrectBank(event,option,modelData,index)
              this.disableNextBtn(modelData)
-            //  console.log(modelData)
-            // console.log(this.bankUserData)
-        },
+         },
         checkIfcorrectBank(event,option,modelData,index){
           const pressedBankAnswer = event.target;
           const val = pressedBankAnswer.value 
           const addVX = this.$refs[option]
-          // console.log(modelData)
-          // console.log(val)
-          // console.log(option)
-          //  console.log(this.examData[index].bankOptions[option])
-           var bankOptionLen = 0
+            var bankOptionLen = 0
                Object.keys(this.examData[index].bankOptions).forEach(key =>{
                     bankOptionLen++
                })
@@ -131,6 +125,9 @@ export default {
                    this.isDisabled = true;
               }else{
                 this.isDisabled = false;
+                  const nextBtnActive = this.$refs["nextBtn"]
+                   nextBtnActive.classList.add("next-btn-on")
+                   this.nextBtnCursor = 'pointer'
               }
             },
 
@@ -162,8 +159,7 @@ export default {
     },
 
     updateVmodelBank(){
-          setTimeout(()=>{
-          this.examData.forEach((question)=>{ 
+           this.examData.forEach((question)=>{ 
             if(question.type=="bankQue"){
               this.bankUserData[question.Title] = {}
              Object.keys(question.bankOptions).forEach((ans)=>{
@@ -173,8 +169,7 @@ export default {
         })
            console.log(this.bankUserData)
                this.isFinished = true;
-          },2000)
-         
+          
     },
      submit(){
        //    console.log(this.userData)
@@ -217,7 +212,7 @@ export default {
               })
             }))
              
-            const promiseBankAnswer = Promise.all(this.examData.map((item)=>{
+            const promiseBankAnswer = await Promise.all(this.examData.map((item)=>{
               if(item.type=='bankQue'){
                   return this.asyncParse(item.bankCorrect).then((corr)=>{
                   item['bankCorrect'] = corr
@@ -226,18 +221,12 @@ export default {
               }
           })) 
 
-            const promiseBankOptions =  Promise.all(this.examData.map((bankOption)=>{
+            const promiseBankOptions = await Promise.all(this.examData.map((bankOption)=>{
                if(bankOption.type=='bankQue'){
-                 try{
-                   return this.asyncParse(bankOption.bankOptions).then((opt)=>{
+                    return this.asyncParse(bankOption.bankOptions).then((opt)=>{
                     bankOption['bankOptions'] = opt
                     return {bankOption}
                   })
-                 }
-
-                 catch(error){
-                   console.error(error)
-                 }
                }
             }))
                  console.log(this.examData)
@@ -357,6 +346,7 @@ button{
     cursor: var(--cursor);
  }
  .bank-options{
+  cursor: pointer;
     position: relative;
     display: flex;
     width: 50%;
@@ -370,6 +360,15 @@ button{
     display: flex;
     justify-content: center;
     width: 100%;
+   }
+   .bank-options-text{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    
+   }
+   .bank-input-cursor{
+    cursor: not-allowed;
    }
    .items-text{
      height: 100%;
