@@ -61,7 +61,7 @@ export default {
        bankWrongAns:[],
        parseAns:[],
        isDisabled:true,
-        bankQuePoints:0
+       bankQuePoints:0
      }
   },
   methods:{
@@ -83,13 +83,13 @@ export default {
               if(this.ite!=this.examData.length-1){
                  var nextBtn = this.$refs["nextBtn"]
                    nextBtn.classList.add("next-btn-on") 
-              }         
+              }
       },
       clickBankHandler(event,option,modelData,index,midIndex){
-        var inputsCursor = this.$refs[option+midIndex]
-        inputsCursor.classList.add("bank-input-cursor")
-             this.checkIfcorrectBank(event,option,modelData,index)
-             this.disableNextBtn(modelData)
+            var inputsCursor = this.$refs[option+midIndex]
+              inputsCursor.classList.add("bank-input-cursor")
+              this.checkIfcorrectBank(event,option,modelData,index)
+              this.disableNextBtn(modelData)
          },
         checkIfcorrectBank(event,option,modelData,index){
           const pressedBankAnswer = event.target;
@@ -138,7 +138,7 @@ export default {
       },
             
     nextQue(){
-      this.isDisabled =true
+      this.isDisabled = true
         this.inputsCursor='pointer',
         this.nextBtnCursor= 'not-allowed'
         this.ite++
@@ -252,23 +252,23 @@ export default {
 
 <style scoped>
 button{
-    margin: 0 8px;
-    height: 40px;
-    width: 110px;
+     height: 45px;
+    width: 120px;
     border: 1px solid #007bff;
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
 }
 .next-button{
+  border-radius:15px ;
   position: absolute;
-  bottom: 45px;
+  bottom: 30px;
   cursor: var(--next-btn-cusror);
-    right: 50%;
-    transform: translateX(50%);
+  right: 50%;
+  transform: translateX(50%);
 }
 .next-btn-on{
-    border: 1px solid #007bff;
+    border:none;
     color: #fff;
     background-color: #007bff;
 }
@@ -290,15 +290,15 @@ button{
     position: relative;
     left: 50%;
     right: 50%;
-    transform: translate(50%,15%);
+    transform: translate(50%,11%);
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
-    height: 580px;
-    width: 950px;
+    height: 655px;
+    width: 1040px;
 }
 .question{
-    height: 70px;
+    height: 80px;
     padding: 8px 32px;
     display: flex;
     align-items: center;
@@ -309,26 +309,30 @@ button{
 }
 .answer-options{
     padding: 25px 30px 20px 30px;
-    margin-top:20px;
-    max-height: 340px;
+    margin-top: 30px;
+    max-height: 410px;
     overflow-y: auto;
     direction: ltr;
 }
 .answer-items{
-    height: 35px;
+    height: 40px;
     position: relative;
-    background-color: aliceblue;
-    border: 1px solid #84c5fe;
-    border-radius: 5px;
-    padding: 0.8em 15px;
-    margin-bottom: 20px;
+   
+    background-color: #f0f8ffc2;
+    border: 1px solid #b3c5d594;
+    border-radius: 30px;
+    padding: 0.85em;
+
+    margin-bottom: 30px;
     cursor: var(--cursor);
  }
- 
+ .answer-items:hover{
+  background-color:  #c5c2c2bb
+ }
 .bank-quiz{
     padding: 25px 30px 20px 30px;
     margin-top:20px;
-    max-height: 295px;
+    max-height: 385px;
     overflow-y: auto;
     direction: ltr;
 }
@@ -336,7 +340,7 @@ button{
     display: flex;
     align-items: center;
     min-height: 35px;
-    justify-content: space-around;
+    justify-content: space-between;
     position: relative;
     background-color: aliceblue;
     border: 1px solid #84c5fe;
@@ -346,7 +350,7 @@ button{
     cursor: var(--cursor);
  }
  .bank-options{
-  cursor: pointer;
+    cursor: pointer;
     position: relative;
     display: flex;
     width: 50%;
@@ -360,12 +364,11 @@ button{
     display: flex;
     justify-content: center;
     width: 100%;
-   }
+  }
    .bank-options-text{
       display: flex;
       justify-content: center;
-      align-items: center;
-    
+      align-items: center; 
    }
    .bank-input-cursor{
     cursor: not-allowed;
@@ -377,23 +380,24 @@ button{
      border-right: 1px solid rgba(0,0,0,.1);
    }
    .option-title{
+    padding: 0.5em 2.3em;
      margin-left: 2em;
    }
    
  .input-answer-right::before{
-    margin-right: 2px;
+    margin-right: 8px;
     content: '✔';
     bottom: 2px;
     color: green;
     position: relative;
     right: -2px;
- }
+  }
  
  .input-answer-wrong::before{
     position: relative;
-    right: -5px;
-    top:2px;
-    content:"❌";   
+    right: 5px;
+    top:5px;
+    content:"❌";  
     font-size: 20px;
   }
   .input-bank-right::before{
@@ -406,9 +410,9 @@ button{
       top:7px;
     }
     
-    .input-bank-wrong::before{
+  .input-bank-wrong::before{
       content:"❌";
-       right:18px;
+      right:18px;
       font-size:18px;
       color: green;
       position: absolute;    
@@ -431,15 +435,14 @@ label{
   left: 0;
 }
 .answers-text{
-  padding-right: 2.2em;
+    padding-right: 2.7em;
   font-size: 20px;
   display: flex;
   height: 100%;
   align-items: center;
   cursor: var(--cursor);
 }
-/* .num-of-options{
- } */
+
 .questions-text{
   width: 80%;
 }

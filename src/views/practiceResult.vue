@@ -112,11 +112,21 @@ tbody{
    td{
       height: 50px;
       font-size: 18px ;
-      padding: 0.5em;
-     text-align: center;
+      padding: 0.5em 1em;
+      text-align: center;
    }
   tr{
       border-bottom: 1px solid gray;
+  }
+  th:nth-child(2)::after{
+    content: '❌';
+    margin-right: 3px
+  }
+  th:nth-child(3)::after{
+    content: '✔';
+    color:green;
+    font-size:25px;
+    margin-right: 8px
   }
   tbody tr:last-child{
     border-bottom:none;
@@ -186,13 +196,7 @@ tbody{
       position: relative;
       top:40px;
       /* height: 170px; */
-       font-size: 60px;
+      font-size: 60px;
      }
-    /* .score::before{
-      content: '%';
-      position: relative;
-      left:3px;
-      top: 23px;
-      font-size:35px
-    } */
+     
   </style>
