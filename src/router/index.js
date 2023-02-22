@@ -6,10 +6,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import User from '../views/User.vue'
  import HafifaBook from '../views/HafifaBook.vue'
  import Quiz from '../views/Quiz.vue'
- import exam1 from '../views/exam1.vue'
- import exam2 from '../views/exam2.vue'
- import exam3 from '../views/exam3.vue'
- import exam4 from '../views/exam4.vue'
+ import exams from '../views/exams.vue'
+ import submitExams from '../views/submitExams.vue'
  import practiceResult from '../views/practiceResult'
 
 
@@ -41,24 +39,16 @@ const routes = [
   },
   
   {
-    path: '/exam1',
-    name: 'exam1',
-    component: exam1
+    path: '/exams/:Title',
+    name: 'exams',
+    component: exams,
+    props: (route)=>({...route.params})
   },
   {
-    path: '/exam2',
-    name: 'exam2',
-    component: exam2
-  },
-  {
-    path: '/exam3',
-    name: 'exam3',
-    component: exam3
-  },
-  {
-    path: '/exam4',
-    name: 'exam4',
-    component: exam4
+    path: '/exams/:Title/submitted',
+    name: 'submitExams',
+    component: submitExams,
+    props: (route)=>({...route.params})
   },
   {
     path: '/Practices/:title',
@@ -78,7 +68,6 @@ const routes = [
     component: practiceResult,
     props: (route)=>({...route.params})
   }
-
 ]
 
 const router = createRouter({

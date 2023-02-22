@@ -25,12 +25,9 @@
                     <li @mouseleave="isOpen=false" >
                          <div @mouseover="isOpen = true" >
                              <span >בחנים</span>
-                                 <div v-if="isOpen" class="drop-down-menu">
-                                     <ul class="drop-down-items">
-                                        <router-link  :to="{name: 'exam1'}" class="exams">בוחן 1</router-link>
-                                        <router-link  :to="{name: 'exam2'}" class="exams">בוחן 2</router-link>
-                                        <router-link  :to="{name: 'exam3'}" class="exams">בוחן 3</router-link>
-                                        <router-link  :to="{name: 'exam4'}" class="exams">בוחן 4</router-link>
+                                 <div v-if="isOpen"  class="drop-down-menu">
+                                     <ul class="drop-down-items" v-for="name in examsName" :key="name">
+                                             <router-link  :to="{name:'exams',params:{Title:name.Title}}" class="exams">{{name.subject}}</router-link>
                                      </ul>
                                  </div>
                          </div>
@@ -50,11 +47,33 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     name: 'MainNavbar',
     data(){
         return{
-            isOpen: false
+            isOpen: false,
+            examsName:[],
+            url: process.env.NODE_ENV =='development'? `http://localhost:3000/testsNames/`:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('testsNames')/Items",
+
+        }
+    },
+    methods:{
+        async getNameOfExams(){
+            const res = await axios.get(this.url)
+            this.examsName = res.data.value
+            console.log(this.examsName)
+        }
+    },
+    async beforeMount(){
+       if(this.url=='development')
+        {
+            await this.getNameOfExams()
+        }
+        else{
+            const res= await axios.get(this.url)
+            this.examsName = res.data.value
+            // console.log(this.examsName)
         }
     }
 }
@@ -122,7 +141,7 @@ a{
     width: 75%;
     justify-content: center;
     color: gray;
-    padding: 25px 0;
+    /* padding: 25px 0; */
     font-size: 20px;
     border-bottom: 1px solid #dddbdb ;
     }
@@ -162,7 +181,7 @@ a{
 .drop-down-menu{
     position: absolute;
     box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, 0.2);
-    height: 270px;
+    /* height: 270px; */
     z-index: 1;
     top: 60px;
     transform: translateX(30%);

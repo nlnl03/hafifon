@@ -3,14 +3,13 @@
 <div class="under-line"></div>
 <div class="main">
   <div class="right-side-flex">
-    <div class="fff"> 
+    <div class="name-progress-details"> 
     <div class="personal-info">
       <div class="personal-info-items">
         <div class="inner-right-flex"> 
-          <div v-if="finished" class="name-detail">
-              <h2 >{{userDetails[0].name}}</h2>  
-              <h5>{{userDetails[0].mahlaka}}</h5>
-          </div>
+          <div v-if="isFinished" class="name-detail">
+              <h2>{{userName}}</h2>  
+           </div>
 
           <div class="hafifa-nickname"> 
                 חפיפון מתחיל
@@ -18,7 +17,7 @@
         </div>
 
         <div class="inner-left-flex">
-              <img class="user-image" :src="require('@/assets/KioskServlet.jpg')"  > 
+              <img class="user-image" src="http://www.portalhr.leshem.idf/KioskServlet?infoOrPic=pic"> 
         </div>
       </div>
     </div>
@@ -43,24 +42,23 @@
             <div class="grid-container">
               <div class="average">
                 <span class="items-title">ממוצע ציונים </span>
-                   <span class="gradeAv">{{gradesAvera[0]}}</span>
+                   <span class="gradeAv"></span>
               </div>
               <div class="test-1-score" >
                 <span class="items-title">מבחן 1</span>
-                    <span class="the-grades">{{userDetails[0].grades.test1}}</span>
+                    <span class="the-grades"> </span>
               </div>
               <div class="test-2-score">
                  <span class="items-title">מבחן 2</span>
-                    <span class="the-grades">{{userDetails[0].grades.test2}}</span>
+                    <span class="the-grades"> </span>
               </div>
               <div class="test-3-score">
                  <span class="items-title">מבחן 3</span>
-                    <span class="the-grades">{{userDetails[0].grades.test3}}</span>
+                    <span class="the-grades"> </span>
               </div>
               <div class="test-4-score">
                  <span class="items-title">מבחן 4</span>
-                    <span class="the-grades">{{userDetails[0].grades.test4}}</span>
-              </div>
+               </div>
             </div>
         </div>
 </div>
@@ -77,31 +75,23 @@ export default {
    },
   data(){
     return{
-      finished:false,
-      userDetails:[],
-      gradesAvera: [],
+       userDetails:[],
+       gradesAvera: [],
+       userName:'',
+       isFinished:false
       // tests:[{
       // class:"",color:"" 
       // }]
     }
   },
-   
-
-  async beforeMount(){
-    const res = await axios.get('http://localhost:3000/users');
-    this.userDetails = res.data;
-    this.finished = true;
-    console.log(this.userDetails)
-    for(let i in this.userDetails){
-        var exam1 = parseInt(this.userDetails[i].grades.test1);
-        var exam2 = parseInt(this.userDetails[i].grades.test2);
-        var exam3 = parseInt(this.userDetails[i].grades.test3);
-        var exam4 = parseInt(this.userDetails[i].grades.test4);
-        var sum = (exam1 + exam2 + exam3 + exam4)/4;
-          this.gradesAvera.push(sum)
+    beforeMount(){
+      var userName = localStorage.getItem("userName")
+      this.userName =  userName
+      console.log(this.userName)
+      this.isFinished = true
+      
     }
-           console.log(this.gradesAvera)
-  }
+   
 }
 </script>
 
@@ -114,7 +104,7 @@ export default {
     margin-right: 10%;
     margin-left: 10%;
 }
-.fff{
+.name-progress-details{
   height: 93%;
   display: flex;
   flex-direction: column;

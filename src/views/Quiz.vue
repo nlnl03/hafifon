@@ -1,7 +1,7 @@
 <template> 
     <div class="quiz-box" v-if="isFinished" >  
         <form v-for="(question,index) in examData" :key="index"  >
-          <div class="show" v-if="index==ite">
+          <div v-if="index==ite">
               <div class="question"> 
                   <span class="questions-text">{{question.Title}}</span> 
                   <div class="current-que">{{ite+1}}/{{examData.length}}</div> 
@@ -298,8 +298,8 @@ button{
     width: 1040px;
 }
 .question{
-    height: 80px;
-    padding: 8px 32px;
+    min-height: 80px;
+    padding: 0.5em 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -317,12 +317,10 @@ button{
 .answer-items{
     height: 40px;
     position: relative;
-   
     background-color: #f0f8ffc2;
     border: 1px solid #b3c5d594;
     border-radius: 30px;
     padding: 0.85em;
-
     margin-bottom: 30px;
     cursor: var(--cursor);
  }
@@ -380,7 +378,7 @@ button{
      border-right: 1px solid rgba(0,0,0,.1);
    }
    .option-title{
-    padding: 0.5em 2.3em;
+     padding: 0.5em 2.3em;
      margin-left: 2em;
    }
    
@@ -402,12 +400,15 @@ button{
   }
   .input-bank-right::before{
       content: '✔';
-      margin-left:30px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      /* margin-left:30px; */
       right:20px;
       font-size:24px;
       color: green;
       position: absolute;    
-      top:7px;
+      top:0;
     }
     
   .input-bank-wrong::before{
