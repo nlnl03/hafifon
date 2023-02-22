@@ -12,7 +12,7 @@
                 <ul>
                    <li >
                       <div>
-                            <router-link :to="{name: 'FinalExam'}">המבחן הסופי</router-link>
+                            <router-link :to="{name: 'exams',params:{Title:'finalTest'}}">המבחן הסופי</router-link>
                       </div>
                    </li>
 

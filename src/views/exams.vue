@@ -15,7 +15,7 @@
           <router-link class="submit-btn" :to="{name:'submitExams'}" @click="submit">הגש</router-link>
   </div>
 
-  <div class="alreadySubmitted" v-if="isAllowed==false">
+  <div class="alreadySubmitted" v-if="isAllowed==false&&isFinished">
     כבר הגשת מבחן זה...
   </div>
 </template>
