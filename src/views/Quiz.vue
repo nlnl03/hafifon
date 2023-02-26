@@ -252,7 +252,7 @@ export default {
 
 <style scoped>
 button{
-     height: 45px;
+    height: 45px;
     width: 120px;
     border: 1px solid #007bff;
     border-radius: 10px;
@@ -310,7 +310,7 @@ button{
 .answer-options{
     padding: 25px 30px 20px 30px;
     margin-top: 30px;
-    max-height: 410px;
+    max-height: 400px;
     overflow-y: auto;
     direction: ltr;
 }
@@ -324,9 +324,7 @@ button{
     margin-bottom: 30px;
     cursor: var(--cursor);
  }
- .answer-items:hover{
-  background-color:  #c5c2c2bb
- }
+
 .bank-quiz{
     padding: 25px 30px 20px 30px;
     margin-top:20px;
@@ -340,11 +338,11 @@ button{
     min-height: 35px;
     justify-content: space-between;
     position: relative;
-    background-color: aliceblue;
-    border: 1px solid #84c5fe;
-    border-radius: 5px;
-    padding: 8px 15px;
-    margin-bottom: 20px;
+    background-color: rgba(240,248,255,.7607843137254902);
+    border: 1px solid rgba(179,197,213,.5803921568627451);
+    border-radius: 30px;
+    padding: .85em;
+    margin-bottom: 30px;
     cursor: var(--cursor);
  }
  .bank-options{
@@ -408,16 +406,19 @@ button{
       font-size:24px;
       color: green;
       position: absolute;    
-      top:0;
+      top:-3px;
     }
     
   .input-bank-wrong::before{
       content:"❌";
+      display: flex;
+      align-items: center;
+      height: 100%;
       right:18px;
       font-size:18px;
       color: green;
       position: absolute;    
-      top:13px;
+      top:0;
     }
  input{
   appearance: none;

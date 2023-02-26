@@ -21,17 +21,15 @@
                             <router-link :to="{name: 'HafifaBook'}">חוברת חפיפה</router-link>
                       </div>
                    </li>
-
-                    <li @mouseleave="isOpen=false" >
-                         <div @mouseover="isOpen = true" >
-                             <span >בחנים</span>
-                                 <div v-if="isOpen"  class="drop-down-menu">
-                                     <ul class="drop-down-items" v-for="name in examsName" :key="name">
-                                             <router-link  :to="{name:'exams',params:{Title:name.Title}}" class="exams">{{name.subject}}</router-link>
-                                     </ul>
-                                 </div>
-                         </div>
-                    </li>
+                    
+                    <li class="exams-drop-down" @mouseover="isOpen = true" @mouseleave="isOpen = false">
+                          <span >בחנים</span>
+                             <ul class="drop-down-menu" v-if="isOpen">
+                                <li v-for="name in examsName" :key="name" class="drop-down-list">
+                                    <router-link class="drop-down-items" :to="{name:'exams',params:{Title:name.Title}}" >{{name.subject}}</router-link>
+                                </li>
+                             </ul>
+                      </li>
 
                      <li>
                         <div>
@@ -103,14 +101,17 @@ export default {
     position: relative;
  
 }
+.exams-drop-down{
+    height: 52%;
+}
 .nav-bar{ 
      width: 600px;
      height: 100%;
  }
-ul {
+ ul{
     padding: 0;
     margin: 0;
-     list-style-type: none;
+    list-style-type: none;
     width: 100%;
     height: 100%;
     display: flex;
@@ -119,15 +120,14 @@ ul {
     align-items: center;
     font-size: 22px;
     color: #ffffff;
-        
-}
+ }
 li{
     position: relative;
     height: 50%;
     display: flex;
     align-items: center;
-
 }
+
 a{
     color: white;
     cursor: pointer;
@@ -135,19 +135,7 @@ a{
     height: 125px;
 
 }
-.exams{
-    display: flex;
-    align-items: center;
-    width: 75%;
-    justify-content: center;
-    color: gray;
-    /* padding: 25px 0; */
-    font-size: 20px;
-    border-bottom: 1px solid #dddbdb ;
-    }
- .exams:last-child{
-     border-bottom: none;
- }
+  
 .home-title{
     font-weight: bold;
     position: absolute;
@@ -177,32 +165,53 @@ a{
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
  }
   
-
-.drop-down-menu{
+ .drop-down-menu{
     position: absolute;
-    box-shadow: 2px 2px 3px 1px rgba(0, 0, 0, 0.2);
-    /* height: 270px; */
-    z-index: 1;
-    top: 60px;
-    transform: translateX(30%);
+    display: flex;
+    z-index: 1000;
+    top: 65px;
+    height: 290px;
     width: 120px;
-    transform-origin: top center;
-  }
- .drop-down-items{
+    left: -37px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     flex-direction: column;
     background-color:rgb(255, 255, 255);
-    border-radius: 5px 5px 5px 3px;   
- 
- }
+    border-radius: 5px;  
+    animation: growOut 280ms ease-in-out forwards;
+    transform-origin: top center;
+        /* transform: translateX(29%); */
+  }
 
-/* @keyframes slideDown{
+ .drop-down-items{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: gray;
+    /* padding: 25px 0; */
+    font-size: 20px;
+  }
+  .drop-down-list{
+    border-bottom: 1px solid #f3f3f3;
+    width: 100%;
+  }
+  .drop-down-list:hover{
+    border-radius: 5px;  
+    background-color: #f3f3f3;
+  }
+
+@keyframes growOut{
     0%{
-        opacity: 0;
+        transform: scale(0);
+     }
+     80%{
+        transform: scale(1.1);
      }
     100%{
-        opacity: 1;
+        transform: scale(1);
      }    
-} */
+}
 
 
 </style>
