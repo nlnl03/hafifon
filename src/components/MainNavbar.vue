@@ -22,7 +22,7 @@
                       </div>
                    </li>
                     
-                    <li class="exams-drop-down" @mouseover="isOpen = true" @mouseleave="isOpen = false">
+                    <li class="exams-drop-down" @mouseover="isOpen = true" @mouseleave="isOpen = false" >
                           <span >בחנים</span>
                              <ul class="drop-down-menu" v-if="isOpen">
                                 <li v-for="name in examsName" :key="name" class="drop-down-list">
@@ -173,7 +173,7 @@ a{
     height: 290px;
     width: 120px;
     left: -37px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     flex-direction: column;
     background-color:rgb(255, 255, 255);
     border-radius: 5px;  
@@ -196,6 +196,9 @@ a{
     border-bottom: 1px solid #f3f3f3;
     width: 100%;
   }
+    .drop-down-list:last-child{
+        border-bottom: none;
+    }
   .drop-down-list:hover{
     border-radius: 5px;  
     background-color: #f3f3f3;
