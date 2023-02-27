@@ -29,6 +29,7 @@ data(){
       examData:[],
       isFinished:false,
       examUserData:{},
+      dataToPost:[],
       token:'',
       isFinished:false,
       userName:'',
@@ -57,13 +58,20 @@ methods:{
           this.token = res.data.FormDigestValue
           console.log(this.token)
       },
-      
+      postData(){
+        Object.entries(this.examUserData).forEach(data=>{
+           const [key,value] = data
+           this.dataToPost.push({Que:key,Ans:value})
+           
+        })
+        console.log(this.dataToPost)
+       },
       async postExams(){
           if(this.urlForPostUser=="https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items"){
               await this.getToken();
               const res = await axios.post(this.urlForPostUser,{
               Title:this.userName,
-              exam:JSON.stringify(this.examUserData),
+              exam:JSON.stringify(this.dataToPost),
               num:this.userId,
               type: this.$route.params.Title
             },
@@ -85,10 +93,12 @@ methods:{
           }
       },
 
-       submit(){
+       async submit(){
           console.log(this.examUserData)
+          await this.postData()
           this.postExams()
-      },
+          
+       },
 
       async checkIfExamExist(){
           this.userId=localStorage.getItem("userId")
@@ -115,11 +125,12 @@ methods:{
 
 
 async beforeMount(){
-  await this.checkIfExamExist()
+  
   this.userName=localStorage.getItem("userName")
   console.log(this.userName)
     console.log(this.isAllowed)
      if(this.urlForTheExams==`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.Title}')/Items`){
+      await this.checkIfExamExist()
              console.log(this.urlForTheExams)
           const res = await axios.get(this.urlForTheExams);
               this.examData = res.data.value;
@@ -136,6 +147,7 @@ async beforeMount(){
               const res = await axios.get(this.urlForTheExams);
               this.examData = res.data.value;
               console.log(this.examData)
+              this.isAllowed=true
           }
           
        this.isFinished=true

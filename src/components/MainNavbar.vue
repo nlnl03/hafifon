@@ -133,7 +133,6 @@ a{
     cursor: pointer;
     text-decoration: none;
     height: 125px;
-
 }
   
 .home-title{
@@ -170,7 +169,7 @@ a{
     display: flex;
     z-index: 1000;
     top: 65px;
-    height: 290px;
+    height: 270px;
     width: 120px;
     left: -37px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
