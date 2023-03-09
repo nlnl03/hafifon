@@ -46,10 +46,11 @@ export default {
 }
  
 :root{
-  --main-background-color: rgb(2, 138, 206);
+  --main-background-color: #4EADAF;
   --user-link-pos: 100px;
   --table-width: 950px;
-  --table-header-width: calc(var(--table-width)/3)
+  --table-header-width: calc(var(--table-width)/3);
+  --exams-form-width:1400px;
 }
 
 
@@ -66,12 +67,11 @@ export default {
 *, body{
       margin: 0;
       padding: 0;
-      font-family: Assistant-Regular ;
+      font-family: Assistant-Regular;
       direction: rtl;
 
   }
- .main-container{
-     height: 200vh;
-}
-
+  button{
+        outline: none;
+     }
 </style>

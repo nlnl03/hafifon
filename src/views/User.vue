@@ -29,7 +29,7 @@
           <circle-progress 
           :percent="70"
           :show-percent="true"
-           fill-color="#00a2f3"
+           fill-color="var(--main-background-color)"
            :viewport="true"
            :transition="600"
           />
@@ -87,7 +87,7 @@ export default {
     beforeMount(){
       var userName = localStorage.getItem("userName")
       this.userName =  userName
-      console.log(this.userName)
+      // console.log(this.userName)
       this.isFinished = true
       
     }

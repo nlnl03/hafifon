@@ -1,28 +1,43 @@
 <template>
-   <div class="exam" v-if="isAllowed&&isFinished">
-      <form v-for="(question,index) in examData" :key="index">
+    <div class="loader-spinner" v-if="!isLoadForSpinner">
+          <loadingSpinner />
+    </div>
+
+   <div class="exam-box" v-if="isntSubmmitedYet&&isFinished&&isLoadForSpinner">
+      <form class="exam" v-for="(question,index) in examData" :key="index">
           <div class="question"> 
              <span >{{index+1}}.  {{question.Title}}</span> 
           </div> 
 
-          <div class="answer-options">
+          <div class="american-answer-options" v-if="question.type=='american'">
                 <div class="answer-items" v-for="(answer,inner) in question.answers"  :key="inner"> 
-                  <input type="radio" :ref="answer" v-model="examUserData[question.Title]" :value="answer" @change="clickHandler($event)" :name="question.Title"  :id="answer"   />
-                  <label :for="answer"><div class="answer-text"> {{answer}}</div></label>
+                  <div><input type="radio" :ref="answer" v-model="examUserData[question.Title]" :value="answer" @change="clickHandler($event)" :name="question.Title"  :id="answer"   /></div>
+                  <div class="label-text"><label :for="answer"> {{answer}} </label></div>
                 </div>
           </div>
-      </form>
-          <router-link class="submit-btn" :to="{name:'submitExams'}" @click="submit">הגש</router-link>
-  </div>
 
-  <div class="alreadySubmitted" v-if="isAllowed==false&&isFinished">
+          <div class="open-que" v-if="question.type=='open'">
+              <textarea name="open" id="open" placeholder="הכנס תשובה"></textarea>
+          </div>
+
+
+
+      </form>
+             <router-link class="submit-btn" :to="{name:'submitExams'}" @click="submit">הגש</router-link>
+   </div>
+
+  <div class="alreadySubmitted" v-if="isntSubmmitedYet==false&&isFinished">
     כבר הגשת מבחן זה...
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import loadingSpinner from '../components/loadingSpinner.vue'
 export default {
+  components:{
+    loadingSpinner
+  },
 data(){
   return{
       urlForTheExams: process.env.NODE_ENV =='development'? `http://localhost:3000/${this.$route.params.Title}/`:`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.Title}')/Items`,
@@ -34,13 +49,13 @@ data(){
       isFinished:false,
       userName:'',
       userId:'',
-      isAllowed:false,
+      isntSubmmitedYet:false,
+      isLoadForSpinner:false,
       examExistData:[],
       urlForPostUser: process.env.NODE_ENV =='development'?  "http://localhost:3000/pendingTests":"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
   }
 },
 methods:{
-      
       asyncParse(str){
         return new Promise((resolve)=>{
           resolve(JSON.parse(str))
@@ -58,14 +73,15 @@ methods:{
           this.token = res.data.FormDigestValue
           console.log(this.token)
       },
-      postData(){
+
+      postDataFormat(){
         Object.entries(this.examUserData).forEach(data=>{
            const [key,value] = data
            this.dataToPost.push({Que:key,Ans:value})
-           
-        })
-        console.log(this.dataToPost)
+          })
+            console.log(this.dataToPost)
        },
+
       async postExams(){
           if(this.urlForPostUser=="https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items"){
               await this.getToken();
@@ -75,6 +91,7 @@ methods:{
               num:this.userId,
               type: this.$route.params.Title
             },
+
             {
               headers:{
                     'X-RequestDigest':this.token,
@@ -95,9 +112,8 @@ methods:{
 
        async submit(){
           console.log(this.examUserData)
-          await this.postData()
+          await this.postDataFormat()
           this.postExams()
-          
        },
 
       async checkIfExamExist(){
@@ -108,27 +124,29 @@ methods:{
               console.log(this.examExistData)
               if(this.examExistData[0].exam==null){
                 console.log("is empty, you should see the exam")
-                this.isAllowed=true
+                this.isntSubmmitedYet=true
               }
               else{
                 console.log("is full")
-                this.isAllowed=false
+                this.isntSubmmitedYet=false
               }
           }
           catch{
               console.log("is empty, you should see the exam")
-              this.isAllowed=true
+              this.isntSubmmitedYet=true
           }
           
+      },
+      spinner(){
+          this.isLoadForSpinner=true
       }
 },
 
 
 async beforeMount(){
-  
   this.userName=localStorage.getItem("userName")
   console.log(this.userName)
-    console.log(this.isAllowed)
+    console.log(this.isntSubmmitedYet)
      if(this.urlForTheExams==`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.Title}')/Items`){
       await this.checkIfExamExist()
              console.log(this.urlForTheExams)
@@ -147,11 +165,13 @@ async beforeMount(){
               const res = await axios.get(this.urlForTheExams);
               this.examData = res.data.value;
               console.log(this.examData)
-              this.isAllowed=true
+              this.isntSubmmitedYet=true
           }
           
        this.isFinished=true
        console.log(this.isFinished)
+       const myTimeOut = setTimeout(this.spinner,170)
+
 },
 
 mounted(){
@@ -165,66 +185,127 @@ mounted(){
 </script>
 
 <style scoped>
+.loader-spinner{
+  position:relative;
+  right: 50%;
+  width: 100%;
+  height: 100%;
+  transform:translateX(50%)
+}
+
+ .exam-box{
+   margin-top:50px;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+ }
+ .exam{
+    border-top: 1px solid gray;
+  }
+  .exam:first-child{
+    border-top:none
+  }
  
 form{
-  height: 650px;
-  border-bottom: 1px solid gray;
+  position: relative;
+  /* right: 50%;
+  transform: translateX(50%); */
+   min-height: 400px;
+   width: var(--exams-form-width);
 }
-label{
-    position: absolute;
-    top: 0;
-    height: 100%;
+ label{
     cursor: pointer;
-}
-.question{
-    min-height: 80px;
-    padding: 0.5em 32px;
+    width: 100% ;
+    height: 100%;
     display: flex;
     align-items: center;
+  }
+.label-text{
+  width: 100% ;
+  margin-right: 30px;
+  font-size: 22px;
+  }
+.question{
+    min-height: 80px;
+    width: 90%;
+    position: relative;
+    right: 50%;
+    transform: translateX(50%);
+    padding: 1em 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(0,0,0,.1);    
+    /* border-bottom: 1px solid rgba(0,0,0,.1);     */
     font-size: 24px;
-    font-weight: 600;
-}
-.answer-options{
-  padding: 25px 30px 20px 30px;
-    margin-top: 30px;
-    max-height: 410px;
-    overflow-y: auto;
-    direction: ltr;
+    font-weight: 700;
+ }
+.american-answer-options{
+   /* padding: 25px 30px 20px 30px; */
+   margin-top: 60px;
+   margin-bottom: 150px;
+   max-height: 435px;
+   overflow-y: auto;
+   direction: ltr;
+   width: 85%;
+   position: relative;
+   right: 50%;
+   transform: translateX(50%);
+
 }
 .answer-items{
-    height: 40px;
-    background-color: #f0f8ffc2;
-    border: 1px solid #b3c5d594;
+    min-height: 40px;
+    display: flex;
+    background-color: rgba(192, 192, 192, 0.363);
+    border-radius: 10px;
     position: relative;
-    padding: 0.85em;
-    margin-bottom: 30px;
+    padding: 1.2em 1.5em;
+     margin-bottom: 40px;
 }
-.answer-text{
+.answer-items:last-child{
+  margin-bottom: 0px;
+}
+/* .answer-text{
   font-size:24px
-}
+} */
  input{
   /* appearance: none; */
-  font-size:27px;
   display: flex;
   height: 90%;
   position: relative;
   cursor: pointer;
 }
+textarea{
+  width: 70%;
+  position: relative;
+  padding: 12px;
+  right: 50%;
+   transform: translateX(50%);
+   height: 120px;
+   border-radius:5px;
+   border: 1px solid rgba(169, 169, 169, 0.774);
+   outline: none;
+   font-size: 20px;
+}
+.open-que{
+  position: relative;
+  top:20px;
+}
 .submit-btn{
-  text-decoration: none;
-    position: relative;
-    height: 40px;
-    width: 110px;
-    border: 1px solid #007bff;
-    border-radius: 10px;
-    right: 50%;
-    transform: translateX(50%);
-    font-size: 18px;
-    cursor: pointer;
-    color: #fff;
-    background-color: #007bff;
+   margin-top:50px;
+   margin-bottom: 50px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-decoration: none;
+   height: 50px;
+   width: 120px;
+   border: 1px solid var(--main-background-color);
+   border-radius: 15px;
+   font-size: 18px;
+   cursor: pointer;
+   color: #fff;
+   background-color: var(--main-background-color);
 }
 .alreadySubmitted{
   font-size: 70px;

@@ -67,12 +67,12 @@ import "vue3-circle-progress/dist/circle-progress.css"
 async beforeMount(){
      var score = localStorage.getItem("pointsInPerc")
       this.score =JSON.parse(score)
-       console.log(this.score)
+      //  console.log(this.score)
       var data = localStorage.getItem("results")
       this.userResults = JSON.parse(data)
       var bankData = localStorage.getItem("bankResults")
       this.userBankResults = JSON.parse(bankData)
-      console.log(this.userResults)
+      // console.log(this.userResults)
            if(this.userResults.length==0&&this.userBankResults.length==0){
             this.showMassaAllCorrect=true
           } 

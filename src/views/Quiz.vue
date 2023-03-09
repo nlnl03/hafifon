@@ -71,7 +71,7 @@ export default {
            const pressedAnswer = event.target;
            const pressedAnswerValue = pressedAnswer.value
           const indexOfCorrectAnswer = this.examData[index]["correctAnswer"]
-         console.log(this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input"))
+        //  console.log(this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input"))
          const rightAnswer = this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input")
            const rightAnswerValue = rightAnswer.value
                
@@ -154,7 +154,7 @@ export default {
                   this.userData[question.Title] = ""  
              }         
        })
-        console.log(this.userData)
+        // console.log(this.userData)
         this.isFinished = true;
     },
 
@@ -167,20 +167,20 @@ export default {
             })
           } 
         })
-           console.log(this.bankUserData)
+          //  console.log(this.bankUserData)
                this.isFinished = true;
           
     },
      submit(){
        //    console.log(this.userData)
-         console.log(this.results)
+        //  console.log(this.results)
          this.examData.forEach(que => {
            if(que.type=='american'){
-               console.log(this.userData)
+              //  console.log(this.userData)
               if(this.userData[que.Title]== que.answers[que.correctAnswer])
               {
                 this.grades++
-                console.log(this.grades) 
+                // console.log(this.grades) 
               }
               else{
                 this.wrongQue = que.Title
@@ -197,13 +197,9 @@ export default {
           localStorage.setItem("bankResults",JSON.stringify(this.bankResults))
 
     },
-     
-  },
-  
-    async beforeMount(){
-        if(this.url == `https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`){
-        const res = await axios.get(this.url)
-        this.examData = res.data.value;
+     async getSharePointData(){
+          const res = await axios.get(this.url)
+          this.examData = res.data.value;
 
            const promiseAnswers = await Promise.all(this.examData.map((item)=>{
              return this.asyncParse(item.answers).then((inner)=>{
@@ -229,19 +225,29 @@ export default {
                   })
                }
             }))
-                 console.log(this.examData)
+                //  console.log(this.examData)
+      },
 
-       }
+      async getLocalData(){
+        const res = await axios.get(this.url)
+          this.examData = res.data.value
+          this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
+          this.examData = this.examData.exam
+          console.log(this.examData)
+      }
+  },
+   
+    async beforeMount(){
+        if(this.url == `https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`){
+            await this.getSharePointData();
+        }
 
         else{
-            const res = await axios.get(this.url)
-            this.examData = res.data.value
-             this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
-             this.examData = this.examData.exam
-             console.log(this.examData)
-          }
-              this.updateVmodelBank()
-       },
+            await this.getLocalData()
+        }
+
+          this.updateVmodelBank()
+    },
 
       mounted(){
           this.updateVmodelAmerican()
@@ -254,7 +260,7 @@ export default {
 button{
     height: 45px;
     width: 120px;
-    border: 1px solid #007bff;
+    border: 1px solid var(--main-background-color);
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
@@ -270,21 +276,21 @@ button{
 .next-btn-on{
     border:none;
     color: #fff;
-    background-color: #007bff;
+    background-color: var(--main-background-color);
 }
 .submit-btn{
     position: absolute;
     text-decoration: none;
     height: 40px;
     width: 110px;
-    border: 1px solid #007bff;
+    border: 1px solid var(--main-background-color);
     border-radius: 10px;
     font-size: 18px;
     right: 50%;
     transform: translateX(50%);
     cursor: pointer;
     color: #fff;
-    background-color: #007bff;
+    background-color: var(--main-background-color);
 }
 .quiz-box{
     position: relative;

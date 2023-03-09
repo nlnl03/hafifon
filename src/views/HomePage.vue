@@ -1,23 +1,33 @@
 <template>
-<div class="container">
-   <div class="title"><h1>ברוכים הבאים לאתר חפיפה</h1></div>
-   <div class="name"><h2>שלום {{userName}}</h2></div>
-      <div class="btns">
-         <router-link to="">המשך תרגול</router-link>
-         <router-link to="">למבחן הסופי</router-link>
-      </div>
-</div>
+   <div class="loading-spinner" v-if="!isLoad">
+      <loadingSpinner />
+   </div>
+
+   <div class="container" v-if="isLoad">
+      <div class="title"><h1>ברוכים הבאים לאתר חפיפה</h1></div>
+      <div class="name"><h2>שלום {{userName}}</h2></div>
+         <div class="btns">
+            <router-link to="">המשך תרגול</router-link>
+            <router-link to="">למבחן הסופי</router-link>
+         </div>
+   </div>
    
 </template>
 
 <script>
 import axios from 'axios'
+import loadingSpinner from '../components/loadingSpinner.vue'
  export default {
    name:'HomePage',
+   components:{
+      loadingSpinner
+   },
      data(){
       return{
          currentUserData:[],
          Id:null,
+         isLoad:false,
+         timeOut:null,
          token:'',
          // sharePointUrl:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/items",
          currentUser:"https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
@@ -29,53 +39,27 @@ import axios from 'axios'
         const res = await axios.get(this.currentUser)
           this.currentUserData = res.data;
           this.Id=this.currentUserData.Id
-          const Title = this.currentUserData.Title.split('/')
-          this.userName = Title[Title.length-1]
+         console.log(this.currentUserData.Title)
+          const Title = this.currentUserData.Title.split(' -')
+          this.userName = Title[0]
+          console.log(this.userName)
           localStorage.setItem("userName",this.userName)
           localStorage.setItem("userId",this.Id)
           console.log(this.userName)
           console.log(this.currentUserData)
+          this.isLoad = true;
        },
        async getToken(){
           const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
           this.token = res.data.FormDigestValue
           console.log(this.token)
        },
-   //    async checkIfUser(){
-   //      console.log(this.Id)
-   //      const res = await axios.get(this.sharePointUrl+`?$filter=num eq '${this.Id}'`)
-   //      const resData = res.data.value
-   //      console.log(resData)
-   //      await this.getToken()
-   //       if(resData.length==0){
-   //        try{
-   //        const results = await axios.post(this.sharePointUrl,{
-   //              Title:this.userName,
-   //              num:this.Id,
-   //              exam1:null,
-   //              exam2:null,
-   //              exam3:null,
-   //              exam4:null,
-   //              finalTest:null,
-   //            },
-   //            {
-   //              headers:{
-   //              'X-RequestDigest':this.token,
-   //              }
-   //            })
-   //        }
-   //        catch(error){
-   //        console.log(error.message)
-   //      }
-   //    }
-   //  }
   },
    
 
-  async beforeMount(){
-       await this.getCurrentUser()
-      //  await this.checkIfUser()
-    }
+   beforeMount(){
+     this.timeOut = setTimeout(this.getCurrentUser,80)
+   }
 }
 </script>
 
@@ -89,5 +73,9 @@ import axios from 'axios'
    width: 50px;
    height: 50px;
    /* background-color: blue; */
+}
+.loading-spinner{
+   position: relative;
+   top:0;
 }
 </style>

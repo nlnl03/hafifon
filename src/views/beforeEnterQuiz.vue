@@ -75,9 +75,9 @@ async beforeMount(){
 }
 button{
     margin: 0 8px;
-     height: 40px;
-    width: 110px;
-    border: 1px solid #007bff;
+    height: 40px;
+    width: 115px;
+    border: 1px solid var(--main-background-color);
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
@@ -89,18 +89,18 @@ button{
     display: flex;
     align-items: center;
     justify-content: center;
-     border: 1px solid #007bff;
+     border: 1px solid var(--main-background-color);
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
 
     color: #fff;
     text-decoration: none;
-    background-color:#007bff ;
+    background-color:var(--main-background-color) ;
     
 }
 .back-btn{
-    color: #007bff;
+    color: var(--main-background-color);
     background-color: #fff;
 }
  
@@ -113,8 +113,8 @@ button{
     border-bottom: 1px solid lightgray;
 }
 .quiz-info{
-margin: 10px;
-font-size: 17px;
+    margin: 10px;
+    font-size: 17px;
 }
 
 </style>

@@ -1,5 +1,10 @@
 <template>
-   <h1>תרגולים</h1>
+  <div class="loader-spinner" v-if="!isLoad">
+        <loadingSpinner />
+  </div>
+
+<div class="main" v-if="isLoad">
+    <h1>תרגולים</h1>
    <div class="text-under-line"></div>
    <div class="container-cards">
     <div class="flex-cards">
@@ -16,33 +21,49 @@
       </div>
     </div>
   </div>
-   
+</div>
 </template>
 
 <script>
 import beforeEnterQuiz from './beforeEnterQuiz.vue'
+import loadingSpinner from '../components/loadingSpinner.vue'
 import axios from 'axios'
 export default {
   name:"PracticesList",
   components:{
-    beforeEnterQuiz
+    beforeEnterQuiz,
+    loadingSpinner
   },
   data(){
     return{
       practices:[],
+      isLoad:false,
+      timeOut:null,
       url: process.env.NODE_ENV =='development'? 'http://localhost:3000/practice':"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('tirgulim')/Items",
      }
   },
-  async beforeMount(){
-    const res = await axios.get(this.url)
-    this.practices = res.data.value
-    console.log(this.practices)
-    
+  methods:{
+    async getPractices(){
+      const res = await axios.get(this.url)
+      this.practices = res.data.value
+      // console.log(this.practices)
+      this.isLoad = true;
     }
+  },
+  async beforeMount(){
+      this.timeOut = setTimeout(this.getPractices,200)
+  }
 }
 </script>
 
 <style scoped>
+.loader-spinner{
+  position:relative;
+  right: 50%;
+  width: 100%;
+  height: 100%;
+  transform:translateX(50%)
+}
 .inner-flex{
   display:flex;
   height: 40%;
@@ -125,4 +146,4 @@ h1{
   width: 100%;
   height: 60%;
    }
-</style>
+ </style>
