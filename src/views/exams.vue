@@ -17,13 +17,11 @@
           </div>
 
           <div class="open-que" v-if="question.type=='open'">
-              <textarea name="open" id="open" placeholder="הכנס תשובה"></textarea>
+            <textarea name="" id="" cols="30" rows="10" placeholder="הכנס תשובה" @change="openQClickHandler($event)" v-model="examUserData[question.Title]"></textarea>
           </div>
 
-
-
       </form>
-             <router-link class="submit-btn" :to="{name:'submitExams'}" @click="submit">הגש</router-link>
+             <router-link class="submit-btn" :to="{name:submitRoutePath}" @click="submit()" v-if="counter==examData.length" ref="subBtn" >הגש</router-link>
    </div>
 
   <div class="alreadySubmitted" v-if="isntSubmmitedYet==false&&isFinished">
@@ -44,14 +42,18 @@ data(){
       examData:[],
       isFinished:false,
       examUserData:{},
+      isUserDataEmpty:false,
       dataToPost:[],
       token:'',
+      allowSubBtn:false,
       isFinished:false,
       userName:'',
       userId:'',
       isntSubmmitedYet:false,
       isLoadForSpinner:false,
       examExistData:[],
+      counter:0,
+      submitRoutePath:'submitExams',
       urlForPostUser: process.env.NODE_ENV =='development'?  "http://localhost:3000/pendingTests":"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
   }
 },
@@ -66,8 +68,44 @@ methods:{
           const pressedAnswer = event.target;
           const pressedAnswerValue = pressedAnswer.value
           console.log(pressedAnswerValue)
-      },
+          if(pressedAnswerValue!=''){
+               this.counter++
+              console.log(this.counter)
+          }
+       },
+      openQClickHandler(event){
+        var counter=0;
+           const pressedAnswer = event.target.value;
+          console.log(pressedAnswer)
+          Object.values(this.examUserData).forEach(ans=>{
+            if(pressedAnswer){
+              counter++
+           }
+            this.counter=counter
+            console.log(this.counter)
+           })
+           
+        },
 
+        checkIfUserDataIsFull(isUserDataEmpty){
+          var isFull = false
+             if(this.counter==this.examData.length){
+                  console.log("full")
+                  isFull = true
+                  console.log(isFull)
+                               
+            }
+                else{
+                  isFull=false
+                  console.log(isFull)
+                }
+              console.log(this.counter)
+               isUserDataEmpty = isFull
+              console.log( isUserDataEmpty)
+              return  isUserDataEmpty
+
+        },
+ 
       async getToken(){
           const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
           this.token = res.data.FormDigestValue
@@ -109,12 +147,30 @@ methods:{
             })
           }
       },
+        async submit(){
+        //   Object.values(this.examUserData).forEach(ans=>{
+        //     this.counter++
+        //   })
+        //  await this.checkIfUserDataIsFull()
+        //  var counter = 0
+        //   Object.values(this.examUserData).forEach(ans=>{
+        //         counter++
+        //     })
+        //       console.log(counter)
 
-       async submit(){
-          console.log(this.examUserData)
-          await this.postDataFormat()
-          this.postExams()
-       },
+        //    if(counter==this.examData.length){
+        //      console.log("yes")
+        //       console.log(this.examUserData)
+        //       await this.postDataFormat()
+        //       this.postExams()
+        //    }
+        //    else{
+        //      this.submitRoutePath=null
+        //      this.allowSubBtn = true
+        //      console.log("no")
+        //    }
+              
+        },
 
       async checkIfExamExist(){
           this.userId=localStorage.getItem("userId")
@@ -171,16 +227,16 @@ async beforeMount(){
        this.isFinished=true
        console.log(this.isFinished)
        const myTimeOut = setTimeout(this.spinner,170)
+       
 
 },
 
 mounted(){
   this.examData.forEach((question)=>{ 
       this.examUserData[question.Title] = ""  
-               
    })
         console.log(this.examUserData)
-}
+ }
 }
 </script>
 
@@ -271,17 +327,17 @@ form{
  input{
   /* appearance: none; */
   display: flex;
-  height: 90%;
+  height: 100%;
   position: relative;
   cursor: pointer;
 }
 textarea{
-  width: 70%;
+  width: 75%;
   position: relative;
   padding: 12px;
   right: 50%;
    transform: translateX(50%);
-   height: 120px;
+   height: 80px;
    border-radius:5px;
    border: 1px solid rgba(169, 169, 169, 0.774);
    outline: none;
@@ -307,6 +363,10 @@ textarea{
    color: #fff;
    background-color: var(--main-background-color);
 }
+.submit-btn-error{
+     background-color: red;
+
+  }
 .alreadySubmitted{
   font-size: 70px;
   margin-top:150px;
