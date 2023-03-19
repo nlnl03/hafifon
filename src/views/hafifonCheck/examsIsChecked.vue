@@ -1,7 +1,5 @@
 <template>
-  <h1>
-      חוברת חפיפה
-  </h1>
+  
 </template>
 
 <script>

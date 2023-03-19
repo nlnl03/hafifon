@@ -23,12 +23,16 @@ export default {
     top: 47%;
     left: 52%;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
-}.vue3-circular-progressbar .current-counter::after{
+}
+.progress-item .vue3-circular-progressbar .current-counter::after{
     font-size: 35px;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     content: '%' ;
 }
+   .average-items .vue3-circular-progressbar .current-counter::after{
+      content: '%';
+      font-size: 28px;
+  }
   ::-webkit-scrollbar{
   width: 10px;
 }
@@ -57,6 +61,9 @@ export default {
 @media (max-width:1280px) {
     :root{
       --user-link-pos:30px ;
+    }
+    form[class="exam"]{
+      --exams-form-width:1150px;
     }
 }
 @font-face {

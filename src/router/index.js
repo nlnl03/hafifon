@@ -4,7 +4,9 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import beforeEnterQuiz from '../views/beforeEnterQuiz.vue'
  import FinalExam from '../views/FinalExam.vue'
  import User from '../views/User.vue'
- import HafifaBook from '../views/HafifaBook.vue'
+ import MainCheckPage from '../views/hafifonCheck/MainCheckPage.vue'
+ import examsIsChecked from '../views/hafifonCheck/examsIsChecked.vue'
+ import examsToCheck from '../views/hafifonCheck/examsToCheck.vue'
  import Quiz from '../views/Quiz.vue'
  import exams from '../views/exams.vue'
  import submitExams from '../views/submitExams.vue'
@@ -33,11 +35,22 @@ const routes = [
     component: User
   },
   {
-    path: '/HafifaBook',
-    name: 'HafifaBook',
-    component: HafifaBook
+    path: '/MainCheckPage',
+    name: 'MainCheckPage',
+    component: MainCheckPage
   },
-  
+  {
+    path: '/examsToCheck/:num/:examType',
+    name: 'examsToCheck',
+    component: examsToCheck,
+    props:true 
+  },
+  {
+    path: '/examsToCheck/:num/:examType/submitted',
+    name: 'examsIsChecked',
+    component: examsIsChecked,
+    props:true 
+  },
   {
     path: '/exams/:Title',
     name: 'exams',

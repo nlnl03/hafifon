@@ -11,18 +11,23 @@
 
           <div class="american-answer-options" v-if="question.type=='american'">
                 <div class="answer-items" v-for="(answer,inner) in question.answers"  :key="inner"> 
-                  <div><input type="radio" :ref="answer" v-model="examUserData[question.Title]" :value="answer" @change="clickHandler($event)" :name="question.Title"  :id="answer"   /></div>
+                  <div><input type="radio" :ref="answer" v-model="examUserData[question.Title]" :value="answer" @change="clickHandler($event,examUserData[question.Title]+index,index)" :name="question.Title"  :id="answer"   /></div>
                   <div class="label-text"><label :for="answer"> {{answer}} </label></div>
                 </div>
           </div>
 
           <div class="open-que" v-if="question.type=='open'">
-            <textarea name="" id="" cols="30" rows="10" placeholder="הכנס תשובה" @change="openQClickHandler($event)" v-model="examUserData[question.Title]"></textarea>
+            <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,examUserData[question.Title]+index,index)"  v-model="examUserData[question.Title]"></textarea>
           </div>
 
       </form>
-             <router-link class="submit-btn" :to="{name:submitRoutePath}" @click="submit()" v-if="counter==examData.length" ref="subBtn" >הגש</router-link>
-   </div>
+
+      <div class="send">
+          <p class="show-red-Warn" v-if="showRedWarn">* אנא בדוק שענית על כל השאלות</p>
+                 <button v-if="!subRouterIsShow" class="submit-btn" @click="submit" >סיים</button>
+                 <router-link v-if="subRouterIsShow" class="submit-btn" :to="{name:'submitExams'}" @click="sendData">הגש</router-link>
+      </div>
+    </div>
 
   <div class="alreadySubmitted" v-if="isntSubmmitedYet==false&&isFinished">
     כבר הגשת מבחן זה...
@@ -42,18 +47,18 @@ data(){
       examData:[],
       isFinished:false,
       examUserData:{},
-      isUserDataEmpty:false,
+      isUserDataEmpty:true,
+      boolIfEmpty:[],
       dataToPost:[],
       token:'',
-      allowSubBtn:false,
       isFinished:false,
       userName:'',
       userId:'',
       isntSubmmitedYet:false,
       isLoadForSpinner:false,
       examExistData:[],
-      counter:0,
-      submitRoutePath:'submitExams',
+      subRouterIsShow:false,
+      showRedWarn:false,
       urlForPostUser: process.env.NODE_ENV =='development'?  "http://localhost:3000/pendingTests":"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
   }
 },
@@ -64,48 +69,27 @@ methods:{
         })
       },
 
-      clickHandler(event){
-          const pressedAnswer = event.target;
-          const pressedAnswerValue = pressedAnswer.value
-          console.log(pressedAnswerValue)
-          if(pressedAnswerValue!=''){
-               this.counter++
-              console.log(this.counter)
-          }
-       },
-      openQClickHandler(event){
-        var counter=0;
-           const pressedAnswer = event.target.value;
+  
+      clickHandler(event,theRef,index){
+        this.showRedWarn=false
+          const pressedAnswer = event.target.value;
           console.log(pressedAnswer)
-          Object.values(this.examUserData).forEach(ans=>{
-            if(pressedAnswer){
-              counter++
-           }
-            this.counter=counter
-            console.log(this.counter)
-           })
-           
-        },
 
-        checkIfUserDataIsFull(isUserDataEmpty){
-          var isFull = false
-             if(this.counter==this.examData.length){
-                  console.log("full")
-                  isFull = true
-                  console.log(isFull)
-                               
+             if(pressedAnswer.trim()){
+                 this.isUserDataEmpty=false
+                 this.boolIfEmpty[index]=this.isUserDataEmpty
+                 console.log(this.boolIfEmpty)
+             }
+            else{ 
+                   this.boolIfEmpty[index]=true
+                  console.log(this.boolIfEmpty)              
+                   console.log("is empty")
+                  event.target.classList.add("text-aria-placeholder")              
             }
-                else{
-                  isFull=false
-                  console.log(isFull)
-                }
-              console.log(this.counter)
-               isUserDataEmpty = isFull
-              console.log( isUserDataEmpty)
-              return  isUserDataEmpty
+                         
+         },
 
-        },
- 
+         
       async getToken(){
           const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
           this.token = res.data.FormDigestValue
@@ -147,29 +131,27 @@ methods:{
             })
           }
       },
-        async submit(){
-        //   Object.values(this.examUserData).forEach(ans=>{
-        //     this.counter++
-        //   })
-        //  await this.checkIfUserDataIsFull()
-        //  var counter = 0
-        //   Object.values(this.examUserData).forEach(ans=>{
-        //         counter++
-        //     })
-        //       console.log(counter)
+         submit(){
+          var allowed = true
+          this.boolIfEmpty.forEach(bool=>{
+            if(bool!=false){
+              allowed=false
+            }
+          })
+             console.log(allowed)
 
-        //    if(counter==this.examData.length){
-        //      console.log("yes")
-        //       console.log(this.examUserData)
-        //       await this.postDataFormat()
-        //       this.postExams()
-        //    }
-        //    else{
-        //      this.submitRoutePath=null
-        //      this.allowSubBtn = true
-        //      console.log("no")
-        //    }
-              
+           if(allowed==true){
+             this.showRedWarn = false
+             this.subRouterIsShow = true
+             console.log(this.examUserData)
+          }
+             else{
+               this.showRedWarn=true
+             }           
+        },
+        async sendData(){
+            await this.postDataFormat()
+             this.postExams()
         },
 
       async checkIfExamExist(){
@@ -195,12 +177,19 @@ methods:{
       },
       spinner(){
           this.isLoadForSpinner=true
+      },
+
+      pushToArrToCheckIfEmpty(){
+        this.examData.forEach(data=>{
+          this.boolIfEmpty.push(true)
+        })
+          
       }
 },
 
 
 async beforeMount(){
-  this.userName=localStorage.getItem("userName")
+   this.userName=localStorage.getItem("userName")
   console.log(this.userName)
     console.log(this.isntSubmmitedYet)
      if(this.urlForTheExams==`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.Title}')/Items`){
@@ -225,8 +214,8 @@ async beforeMount(){
           }
           
        this.isFinished=true
-       console.log(this.isFinished)
-       const myTimeOut = setTimeout(this.spinner,170)
+        const myTimeOut = setTimeout(this.spinner,170)
+        this.pushToArrToCheckIfEmpty()
        
 
 },
@@ -347,29 +336,41 @@ textarea{
   position: relative;
   top:20px;
 }
+.send{
+  display: flex;
+  flex-direction: column;
+  margin-top:30px;
+     margin-bottom: 70px;
+     align-items: center;
+
+}
 .submit-btn{
-   margin-top:50px;
-   margin-bottom: 50px;
+   margin-top:10px;
    display: flex;
    align-items: center;
    justify-content: center;
-   text-decoration: none;
    height: 50px;
+   text-decoration: none;
+   color: #fff;
    width: 120px;
    border: 1px solid var(--main-background-color);
    border-radius: 15px;
    font-size: 18px;
    cursor: pointer;
-   color: #fff;
    background-color: var(--main-background-color);
-}
-.submit-btn-error{
-     background-color: red;
 
+}
+  .alreadySubmitted{
+    font-size: 70px;
+    margin-top:150px;
+    text-align: center;
   }
-.alreadySubmitted{
-  font-size: 70px;
-  margin-top:150px;
-  text-align: center;
+.text-aria-placeholder::-webkit-input-placeholder{
+  color:red;
+}
+.show-red-Warn{
+  position: relative;
+  color: red;
+  margin-bottom: 5px;
 }
  </style>

@@ -18,7 +18,7 @@
 
                    <li>
                       <div>
-                            <router-link :to="{name: 'HafifaBook'}">חוברת חפיפה</router-link>
+                            <router-link :to="{name: 'MainCheckPage'}">ממשק בדיקות</router-link>
                       </div>
                    </li>
                     
