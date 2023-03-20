@@ -33,10 +33,10 @@
             <div class="modal-cont">
               <span></span>
             </div>
-              <router-link :to="{name:'examsIsChecked'}"  class="submit-btn">סיים ושלח בדיקה</router-link>
+              <router-link :to="{name:'examsIsChecked'}" class="submit-btn" @click="postData">סיים ושלח בדיקה</router-link>
           </div>
           
-      </div>    
+      </div>
    </div>
 
 </template>
@@ -63,7 +63,8 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
       ite:0,
       isOpenWarn:false,
       routerIsShown:false,
-      finalGrade:null
+      finalGrade:null,
+      token:''
     }
   },
   methods:{
@@ -73,6 +74,8 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
         })
       },
     handler(event,index){
+            console.log(this.$route.params)
+
       console.log(this.vModelData)
       this.isOpenWarn=false
       var val = event.target.value
@@ -96,7 +99,7 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
         }
         console.log(this.finalGrade)
       },
-     submit(){
+       submit(){
         var isFull = true
        this.pointsArray.forEach(point=>{
          if(!point){
@@ -105,14 +108,39 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
        })
          if(isFull==true){
             this.routerIsShown=true
-            this.calcFinalGrade()
+              this.calcFinalGrade()
             console.log(this.vModelData)
-          }
+           }
           else{
             this.isOpenWarn=true
           }
          
      },
+       async getToken(){
+          const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
+          this.token = res.data.FormDigestValue
+          console.log(this.token)
+      },
+
+
+     async postData(){
+       await this.getToken()
+       const res = await axios.post(`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/Items?$filter=(num eq ${this.$route.params.num})`,{
+            
+            exam1:null,
+            exam2:null,
+            exam3:null,
+            exam4:null,
+            finalTest:null,
+           [this.$route.params.examType]:this.finalGrade
+       },
+       {
+              headers:{
+                    'X-RequestDigest':this.token,
+              }
+       })    
+    },
+      
      asyncParse(str){
         return new Promise((resolve)=>{
           resolve(JSON.parse(str))

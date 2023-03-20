@@ -29,7 +29,7 @@ import loadingSpinner from '../components/loadingSpinner.vue'
          isLoad:false,
          timeOut:null,
          token:'',
-         // sharePointUrl:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/items",
+         sharePointUrl:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/items",
          currentUser:"https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
          userName:'',
        }
@@ -39,7 +39,7 @@ import loadingSpinner from '../components/loadingSpinner.vue'
         const res = await axios.get(this.currentUser)
           this.currentUserData = res.data;
           this.Id=this.currentUserData.Id
-         console.log(this.currentUserData.Title)
+          console.log(this.currentUserData.Title)
           const Title = this.currentUserData.Title.split(' -')
           this.userName = Title[0]
           console.log(this.userName)
@@ -54,11 +54,41 @@ import loadingSpinner from '../components/loadingSpinner.vue'
           this.token = res.data.FormDigestValue
           console.log(this.token)
        },
+
+      async checkIfUser(){
+         console.log(this.Id)
+         const res = await axios.get(this.sharePointUrl+`?$filter=num eq '${this.Id}'`)
+         const resData = res.data.value
+         console.log(resData)
+         await this.getToken()
+            if(resData.length==0){
+               try{
+                  const results = await axios.post(this.sharePointUrl,{
+                     Title:this.userName,
+                     num:this.Id,
+                     exam1:null,
+                     exam2:null,
+                     exam3:null,
+                     exam4:null,
+                     finalTest:null,
+                  },
+                  {
+                     headers:{
+                     'X-RequestDigest':this.token,
+                     }
+                  })
+               }
+            catch(error){
+               console.log(error.message)
+            }
+      }
+    }
   },
    
 
-   beforeMount(){
-     this.timeOut = setTimeout(this.getCurrentUser,80)
+   async beforeMount(){
+      await this.getCurrentUser()
+      this.checkIfUser()
    }
 }
 </script>

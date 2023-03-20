@@ -53,14 +53,16 @@ export default {
             isOpen: false,
             examsName:[],
             url: process.env.NODE_ENV =='development'? `http://localhost:3000/testsNames/`:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('testsNames')/Items",
-
-        }
+         }
     },
     methods:{
         async getNameOfExams(){
             const res = await axios.get(this.url)
             this.examsName = res.data.value
             console.log(this.examsName)
+        },
+        async checkPermForCheckPage(){
+            const res = await axios.get("https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('AdminCheck')/Items?$filter eq admin")
         }
     },
     async beforeMount(){
