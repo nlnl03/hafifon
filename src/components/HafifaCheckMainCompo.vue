@@ -13,7 +13,7 @@
                 :percent="userInfo.length"
                 :size="165"
                 :show-percent="true"
-                fill-color="#00a2f3"
+                fill-color="var(--main-background-color)"
                 :viewport="true"
                 :transition="600"
                 />
@@ -27,7 +27,7 @@
         <div class="ave-title"> ממוצע ציונים </div> 
           <div class="progress-circle">
             <circle-progress 
-            :percent="ave"
+            :percent="calcAve(ave)"
             :size="165"
             :show-percent="true"
             :fill-color="changeAveColor(aveColor)"
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <div class="hafifot" v-if="isLoad">
+  <div class="hafifot" v-if="isLoad&&examTitlesFiltered.length>0">
     <div class="info" v-for="(item,index) in examTitlesFiltered" :key="item">
       <button class="hafifot-item" @click="OpenAccordion(item,index)"  :ref="item+index" :value="item">
           {{item}}
@@ -51,6 +51,10 @@
           </div>
       </div>
     </div>   
+  </div>
+
+  <div class="when-empty" v-if="!examTitlesFiltered.length>0&&isLoad">
+      אין מבחנים לבדיקה
   </div>
 </div>
 
@@ -69,12 +73,9 @@ export default {
   },
   data(){
     return{
-      getDataUrl:process.env.NODE_ENV =='development'? 'http://localhost:3000/pendingTests/' : "https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
-
-      examTitlesUrl:process.env.NODE_ENV =='development'? 'http://localhost:3000/pendingTests/' : "https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
+      examsUrl:process.env.NODE_ENV =='development'? 'http://localhost:3000/pendingTests/' : "https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
       examTitles:[],
       examTitlesFiltered:[],
-      namesDataUrl: process.env.NODE_ENV =='development'? 'http://localhost:3000/pendingTests/':`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items?$filter=type eq '${this.getBtnVal}'`,
       userInfo:[],
       isOpen:false,
       ite:0,
@@ -86,14 +87,20 @@ export default {
   },
   methods:{
     async getTitles(){
-      if(this.examTitlesUrl){
-        const res = await axios.get(this.examTitlesUrl)
+        const res = await axios.get(this.examsUrl)
         this.examTitles=res.data.value
-        this.examTitles = await this.examTitles.map(data=>data.type)
-        const arr = this.examTitles
+
+       if(process.env.NODE_ENV =='development'){
+            console.log("yes")
+            this.examTitlesFiltered=this.examTitles.map(data=>data.type)
+            console.log(this.examTitles)
+        }
+        else{
+          this.examTitles = await this.examTitles.map(data=>data.type)
+          const arr = this.examTitles
           this.examTitlesFiltered = this.filterArrayOfTitles(arr)
           console.log(this.examTitlesFiltered)
-      }
+        }      
       
     },
 
@@ -103,8 +110,8 @@ export default {
       })
     },
     async getData(){
-      if(this.getDataUrl){
-        const res = await axios.get(this.getDataUrl)
+      if(this.examsUrl){
+        const res = await axios.get(this.examsUrl)
         this.userInfo = res.data.value
         console.log(this.userInfo)             
       }
@@ -130,6 +137,11 @@ export default {
        return this.aveColor = '#FF0000'
       }
     },
+
+      calcAve(ave){
+        
+      },  
+
      timeOutForSpinner(){
         this.isLoad=true
     },
@@ -153,13 +165,14 @@ export default {
   text-align: center;
  }
  .box{
+  margin-top: 100px;
    position: relative;
    margin-top:50px;
    right: 50%;
    transform: translateX(50%);
    background-color: rgba(230, 230, 230, 0.034);
    height: 700px;
-   width: 1200px;
+   width:var(--box-check-width);
    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.212);
    border:1px solid rgba(122, 122, 122, 0.274);
    border-radius: 30px;
@@ -264,5 +277,13 @@ export default {
     .loading-spinner{
       position: relative;
       top:150px;
+    }
+    .when-empty{
+      position: relative;
+      right: 50%;
+      text-align: center;
+      top: 12%;
+      transform: translate(50%,12%);
+
     }
    </style>

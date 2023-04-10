@@ -59,6 +59,7 @@ export default {
         async getNameOfExams(){
             const res = await axios.get(this.url)
             this.examsName = res.data.value
+            this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
             console.log(this.examsName)
         },
         async checkPermForCheckPage(){
@@ -73,8 +74,9 @@ export default {
         else{
             const res= await axios.get(this.url)
             this.examsName = res.data.value
-            // console.log(this.examsName)
-        }
+            this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
+         }
+ 
     }
 }
 </script>
@@ -107,8 +109,11 @@ export default {
     height: 52%;
 }
 .nav-bar{ 
-     width: 600px;
-     height: 100%;
+    width: 600px;
+    height: 100%;
+    margin-right: 45px;
+    margin-left: 45px;
+
  }
  ul{
     padding: 0;
@@ -126,6 +131,8 @@ export default {
 li{
     position: relative;
     height: 50%;
+    margin: 0 1em;
+    font-size: 23px;
     display: flex;
     align-items: center;
 }
@@ -140,21 +147,21 @@ a{
 .home-title{
     font-weight: bold;
     position: absolute;
-    font-size: 35px;
-    top: 35px;
+    font-size: 40px;
+    top: 32px;
     height: 60px;
-    right: 100px;
+    right: 150px;
  }
  
 .user-title{
-    width: 110px;
-    height: 40px;
+    width: 100px;
+    height: 45px;
     display: flex;
-    line-height: 38px;
     justify-content: center;
+    align-items: center;
     position: absolute;
     left:var(--user-link-pos);
-    top: 40px;
+    top: 37px;
     text-decoration: none;
     font-size: 20px;
     padding: 0.2em 1em;

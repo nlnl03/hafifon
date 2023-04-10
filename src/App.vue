@@ -1,17 +1,54 @@
 <template>
-  <div>
+  
     <MainNavbar/>
     <router-view/>
-  </div>
+  
 </template>
 
 <script>
 import MainNavbar from '@/components/MainNavbar.vue'
+import axios from 'axios'
 export default {
     name: 'App',
     components:{
         MainNavbar
     },
+    data(){
+      return{
+        token:null
+      }
+    },
+      methods:{
+        async getToken(){
+          const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
+          this.token = res.data.FormDigestValue
+          console.log(this.token)
+      },
+
+        async srtDefaultPage(){
+          await this.getToken()
+          const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/web/rootfolder",{
+            '__metadata':{
+              'type':'SP.Folder'
+            },
+              'WelcomePage':'hafifon/index.html#/'
+       },
+       {
+              headers:{
+                  "Accept":"application/json;odata=verbose",
+                  "Content-Type":"application/json;odata=verbose",
+                  "If-MATCH":"*",
+                  "X-HTTP-Method":"PATCH",
+                  "X-RequestDigest":this.token
+              }
+       })    
+    }      
+ },
+
+      async beforeMount(){
+        this.srtDefaultPage()
+      }
+      
      
     }
 
@@ -55,12 +92,14 @@ export default {
   --table-width: 950px;
   --table-header-width: calc(var(--table-width)/3);
   --exams-form-width:1400px;
+  --box-check-width: 1200px ;
 }
-
+ 
 
 @media (max-width:1280px) {
     :root{
-      --user-link-pos:30px ;
+      --user-link-pos:50px ;
+      --box-check-width:1050px
     }
     form[class="exam"]{
       --exams-form-width:1150px;
@@ -81,4 +120,8 @@ export default {
   button{
         outline: none;
      }
-</style>
+     .swal2-popup{
+       height: 390px;
+       width: 42em;
+     }
+ </style>

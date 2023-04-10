@@ -30,7 +30,7 @@ import loadingSpinner from '../components/loadingSpinner.vue'
          timeOut:null,
          token:'',
          sharePointUrl:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/items",
-         currentUser:"https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
+         currentUser: process.env.NODE_ENV =='development'? "http://localhost:3000/currentUser" : "https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
          userName:'',
        }
      },

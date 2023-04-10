@@ -11,7 +11,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import exams from '../views/exams.vue'
  import submitExams from '../views/submitExams.vue'
  import practiceResult from '../views/practiceResult'
-
+import displayCheckedExams from '../views/displayCheckedExams'
 
 const routes = [
   {
@@ -33,6 +33,11 @@ const routes = [
     path: '/User',
     name: 'User',
     component: User
+  },
+  {
+    path: '/User/:title',
+    name: 'CheckedExams',
+    component: displayCheckedExams
   },
   {
     path: '/MainCheckPage',

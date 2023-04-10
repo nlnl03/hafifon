@@ -57,6 +57,11 @@ export default {
 </script>
 
 <style scoped>
+.main{
+  position: relative;
+  overflow-x: hidden;
+
+ }
 .loader-spinner{
   position:relative;
   right: 50%;

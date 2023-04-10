@@ -3,31 +3,30 @@
           <loadingSpinner />
     </div>
 
-   <div class="exam-box" v-if="isntSubmmitedYet&&isFinished&&isLoadForSpinner">
-      <form class="exam" v-for="(question,index) in examData" :key="index">
+   <form class="exam-box" v-if="isntSubmmitedYet&&isFinished&&isLoadForSpinner">
+      <div class="exam" v-for="(question,index) in examData" :key="index">
           <div class="question"> 
              <span >{{index+1}}.  {{question.Title}}</span> 
-          </div> 
+              <span class="line"></span>
 
+          </div> 
           <div class="american-answer-options" v-if="question.type=='american'">
-                <div class="answer-items" v-for="(answer,inner) in question.answers"  :key="inner"> 
-                  <div><input type="radio" :ref="answer" v-model="examUserData[question.Title]" :value="answer" @change="clickHandler($event,examUserData[question.Title]+index,index)" :name="question.Title"  :id="answer"   /></div>
+                <div class="answer-items" v-for="(answer,inner) in question.answers"  :key="inner" > 
+                  <div><input type="radio"  v-model="examUserData[question.Title]" :ref="'inputRef' + index" :value="answer" @change="clickHandler($event,examUserData[question.Title]+index,index)" :name="answer"  :id="answer" /></div>
                   <div class="label-text"><label :for="answer"> {{answer}} </label></div>
                 </div>
           </div>
 
           <div class="open-que" v-if="question.type=='open'">
-            <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,examUserData[question.Title]+index,index)"  v-model="examUserData[question.Title]"></textarea>
+            <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,examUserData[question.Title]+index,index)"  v-model="examUserData[question.Title]" :ref="'inputRef' + index" ></textarea>
           </div>
 
-      </form>
-
-      <div class="send">
-          <p class="show-red-Warn" v-if="showRedWarn">* אנא בדוק שענית על כל השאלות</p>
-                 <button v-if="!subRouterIsShow" class="submit-btn" @click="submit" >סיים</button>
-                 <router-link v-if="subRouterIsShow" class="submit-btn" :to="{name:'submitExams'}" @click="sendData">הגש</router-link>
       </div>
-    </div>
+    </form>
+          <div class="send" v-if="isntSubmmitedYet&&isFinished&&isLoadForSpinner">
+              <p class="show-red-Warn" v-if="showRedWarn">* אנא בדוק שענית על כל השאלות</p>
+                    <button class="submit-btn" @click="sendData" >סיים</button>
+          </div>
 
   <div class="alreadySubmitted" v-if="isntSubmmitedYet==false&&isFinished">
     כבר הגשת מבחן זה...
@@ -81,12 +80,11 @@ methods:{
                  console.log(this.boolIfEmpty)
              }
             else{ 
-                   this.boolIfEmpty[index]=true
-                  console.log(this.boolIfEmpty)              
-                   console.log("is empty")
-                  event.target.classList.add("text-aria-placeholder")              
+                this.boolIfEmpty[index]=true
+                console.log(this.boolIfEmpty)              
+                console.log("is empty")
+                event.target.classList.add("text-aria-placeholder")
             }
-                         
          },
 
          
@@ -114,7 +112,7 @@ methods:{
               type: this.$route.params.Title
             },
 
-            {
+            { 
               headers:{
                     'X-RequestDigest':this.token,
                 }
@@ -130,6 +128,12 @@ methods:{
               type: this.$route.params.Title
             })
           }
+            if(res.status=='200'||res.status=='201'){
+              return true
+            }
+            else{
+              return false
+            }
       },
          submit(){
           var allowed = true
@@ -149,9 +153,40 @@ methods:{
                this.showRedWarn=true
              }           
         },
+      showAlertConfirm(){
+          this.$swal({
+          title:"האם את\ה בטוח",
+          text:"האם אתה בטוח שברצונך להגיש מבחן זו ?",
+          type:'warning',
+          showCancelButton:true,
+          confirmButtonColor:"var(--main-background-color)",
+          confirmButtonText:'כן, הגש מבחן'
+         }).then((result)=>{
+              if(result.value){
+                 this.postDataFormat()
+                 if(this.postExams()){
+                  this.$swal(
+                  'Send',
+                  'נשלח בהצלחה',
+                  'success'
+                )
+              }
+              else{
+                  this.$swal(
+                  'Not Send',
+                  'אירעה שגיעה',
+                  'not succeeded'
+                )
+              }
+           }
+         })            
+      },
+
         async sendData(){
-            await this.postDataFormat()
-             this.postExams()
+           this.submit()
+          if(this.subRouterIsShow==true){
+            this.showAlertConfirm()
+          }
         },
 
       async checkIfExamExist(){
@@ -232,32 +267,33 @@ mounted(){
 <style scoped>
 .loader-spinner{
   position:relative;
-  right: 50%;
   width: 100%;
   height: 100%;
-  transform:translateX(50%)
-}
-
- .exam-box{
-   margin-top:50px;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
  }
- .exam{
+.exam{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    min-height: 400px;
+    margin-top:100px;
     border-top: 1px solid gray;
   }
   .exam:first-child{
-    border-top:none
+    border-top:none;
+    margin-top:75px
+  }
+
+ .exam-box{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
  
 form{
-  position: relative;
-  /* right: 50%;
-  transform: translateX(50%); */
-   min-height: 400px;
-   width: var(--exams-form-width);
-}
+     min-height: 400px;
+ }
  label{
     cursor: pointer;
     width: 100% ;
@@ -272,31 +308,29 @@ form{
   }
 .question{
     min-height: 80px;
-    width: 90%;
+    width: 80%;
     position: relative;
-    right: 50%;
-    transform: translateX(50%);
     padding: 1em 32px;
     display: flex;
-    align-items: center;
+     align-items: center;
     justify-content: center;
     justify-content: space-between;
-    /* border-bottom: 1px solid rgba(0,0,0,.1);     */
     font-size: 24px;
     font-weight: 700;
  }
+ /* .line{
+   width: 90%;
+    border-bottom: 1px solid rgba(0,0,0,.1);    
+ } */
 .american-answer-options{
    /* padding: 25px 30px 20px 30px; */
    margin-top: 60px;
-   margin-bottom: 150px;
+   margin-bottom: 50px;
    max-height: 435px;
    overflow-y: auto;
    direction: ltr;
-   width: 85%;
+   width: 80%;
    position: relative;
-   right: 50%;
-   transform: translateX(50%);
-
 }
 .answer-items{
     min-height: 40px;
@@ -305,7 +339,7 @@ form{
     border-radius: 10px;
     position: relative;
     padding: 1.2em 1.5em;
-     margin-bottom: 40px;
+    margin-bottom: 40px;
 }
 .answer-items:last-child{
   margin-bottom: 0px;
@@ -321,12 +355,11 @@ form{
   cursor: pointer;
 }
 textarea{
-  width: 75%;
+  width: 900px;
+  margin-top: 30px;
   position: relative;
   padding: 12px;
-  right: 50%;
-   transform: translateX(50%);
-   height: 80px;
+  height: 120px;
    border-radius:5px;
    border: 1px solid rgba(169, 169, 169, 0.774);
    outline: none;

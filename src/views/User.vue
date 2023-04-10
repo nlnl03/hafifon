@@ -1,4 +1,8 @@
 <template>
+    <div class="loader-spinner" v-if="!isLoadForSpinner">
+          <loadingSpinner />
+    </div>
+<div class="main-page">
 <h1>האיזור האישי</h1>
 <div class="under-line"></div>
 <div class="main">
@@ -24,10 +28,10 @@
 
     <div class="progress-info">
          <div class="progress-item">
-           <div class="title">כמה עברתי מהחפיפה</div> 
+           <div class="title">כמה עברתי מהחפיפה ?</div> 
         <div class="progress-circle">
           <circle-progress 
-          :percent="70"
+          :percent="calcTotalProgress(val)"
           :show-percent="true"
            fill-color="var(--main-background-color)"
            :viewport="true"
@@ -39,27 +43,25 @@
 </div>
   </div> 
         <div class="left-side-flex">
-            <div class="grid-container">
+            <div class="grid-container" v-if="isLoad">
               <div class="average">
                 <span class="items-title">ממוצע ציונים </span>
-                   <span class="gradeAv"></span>
+                   <span class="gradeAv">{{calcGradesAve(average)}}</span>
+                </div>
+
+              <div v-for="(exam,index) in onlyExamData" :key="exam">
+                <div :class="dynamicGridClass(index+1)" >
+                    <span class="items-title">{{examsNames[index].subject}}</span>
+                    <span v-if="exam!=null" class="the-grades">{{exam[exam.length-1]["finalGrade"]}} </span>
+                    <span v-if="exam==null" class="the-grades-no-examdata">עוד לא הוזן</span>
+                    <div class="show-exam">
+                      <router-link v-if="exam!=null" class="exam-Checked-router" :to="{name:'CheckedExams',params:{title:examsNames[index].Title}}">לצפייה במבחן</router-link>
+                    </div>
+                </div>
               </div>
-              <div class="test-1-score" >
-                <span class="items-title">מבחן 1</span>
-                    <span class="the-grades"> </span>
-              </div>
-              <div class="test-2-score">
-                 <span class="items-title">מבחן 2</span>
-                    <span class="the-grades"> </span>
-              </div>
-              <div class="test-3-score">
-                 <span class="items-title">מבחן 3</span>
-                    <span class="the-grades"> </span>
-              </div>
-              <div class="test-4-score">
-                 <span class="items-title">מבחן 4</span>
-               </div>
-            </div>
+              
+             </div>
+             </div>
         </div>
 </div>
  
@@ -77,20 +79,114 @@ export default {
     return{
        userDetails:[],
        gradesAvera: [],
+       testsNameUrl:process.env.NODE_ENV =='development'? 'http://localhost:3000/testsNames/' : "https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('testsNames')/Items",
        userName:'',
-       isFinished:false
-      // tests:[{
-      // class:"",color:"" 
-      // }]
-    }
+       isFinished:false,
+       userId:'',
+       checkedExamData:[],
+       onlyExamData:[],
+       examsNames:[],
+       hafifaProgress:null,
+       isLoad:false,
+       theAve:0,
+       timeOut:null,
+       isLoadForSpinner:false
+     }
   },
-    beforeMount(){
+    methods:{
+      asyncParse(str){
+        return new Promise((resolve)=>{
+           resolve(JSON.parse(str))
+          })
+        },
+        async getExamsNames(){
+           const res = await axios.get(this.testsNameUrl)
+           this.examsNames = res.data.value
+           console.log(this.examsNames)
+        },
+
+        async parseData(){
+          await this.getExamsNames()
+              this.examsNames.forEach(name=>{
+              const promiseAnswers = Promise.all(this.checkedExamData.map((item)=>{
+                return this.asyncParse(item[name.Title]).then((inner)=>{
+                    item[name.Title] = inner
+                        return {item}
+                      })
+                  }))
+              })
+        },
+ 
+       async getCheckedExam(){
+         this.userId=localStorage.getItem("userId")
+         console.log(this.userId)
+         const res = await axios.get(`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/Items?$filter=num eq '${this.userId}'`)
+         this.checkedExamData = res.data.value
+         await this.parseData()
+           console.log(this.checkedExamData)
+           this.filterToExamsOnly()
+           this.isLoadForSpinner=true
+        },
+           filterToExamsOnly(){
+             this.examsNames.forEach(name=>{
+               this.onlyExamData.push(this.checkedExamData[0][name.Title])
+             })
+              console.log(this.onlyExamData)
+            },
+            dynamicGridClass(index){               
+              return 'test-'+index+'-score'
+            },
+
+            calcTotalProgress(val){
+              var counter=0
+              this.onlyExamData.forEach(exam=>{
+                if(exam!=null){
+                  counter++
+                }
+              })
+
+              if(counter==0){
+                return val=0
+              }
+              else{
+                return  val = (counter/this.onlyExamData.length)*100
+              }
+            },
+
+            calcGradesAve(average){
+               var ave = 0
+              var counter = 0
+             var ifEmptyText = 'אין מידע'
+              var length = this.onlyExamData.length
+              this.onlyExamData.forEach(data=>{
+                 if(data!=null){
+                   ave+=data[data.length-1]["finalGrade"]
+                }
+                else{
+                  counter++
+                  length=this.onlyExamData.length-counter
+                }
+              })
+              console.log(counter)
+              if(length==0){
+                  console.log("is 0")
+                return average = ifEmptyText
+              }
+              else{
+                return average = ave/length
+              }
+                 
+            }
+     },
+
+    async beforeMount(){
       var userName = localStorage.getItem("userName")
       this.userName =  userName
       // console.log(this.userName)
       this.isFinished = true
-      
-    }
+      this.timeOut = await setTimeout(this.getCheckedExam,100)
+        this.isLoad=true
+     }
    
 }
 </script>
@@ -105,7 +201,6 @@ export default {
     margin-left: 10%;
 }
 .name-progress-details{
-  height: 93%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -164,7 +259,7 @@ h5{
  }
 .left-side-flex{
     width: 50%;
-    align-items: center;
+     align-items: center;
     justify-content: center;
      height: 100%;
     display: flex;
@@ -196,11 +291,13 @@ h5{
     width: 420px;
     height: 290px;
     border-radius: 20px 20px 20px 20px;
-    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
+    box-shadow: 0px 0px 30px 0px rgba(0,  0,  0,  0.2)
  }
 .name-detail{
-    /* padding: 0px 10px; */
     font-size: 25px;
+    position: relative;
+    top: 10px;
+    width: 180px;
     border-right: 2px solid var(--main-background-color);
   }
 
@@ -244,79 +341,86 @@ h5{
  .grid-container{
     display: grid;   
     justify-content: end;
-     grid-template-columns: 0.9fr 0.2fr 0.2fr;
-    grid-template-rows: 0.6fr 0.6fr 0.6fr;
-    gap: 15px 15px;
-      grid-template-areas:
-      "test-1-score . test-3-score"
-      ". average ."
-      "test-2-score . test-4-score";
- }
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr);
+    gap: 25px 25px;
+  }
  .average{
-   border-top:6px solid var(--main-background-color);
-     /* background-color: var(--main-background-color); */
-      /* color:white; */
-     grid-area: average;
+    border-top:6px solid var(--main-background-color);
+    grid-area: 2/2/3/3;
     width: 150px;
-    height: 150px;
-     box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
-    border-radius: 30px 30px;
-
-
- }
- .test{
-    grid-area: var(--grid-area);
-    width: 130px;
-    height: 130px;
-    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
+    height: 160px;
+    box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
     border-radius: 30px 30px;
  }
- .items-title{
+  .items-title{
     font-size: 22px;
     position: relative;
     top: 13px;
-     
  }
  .test-1-score{
-   /* background-image: linear-gradient(to bottom,#ec9F05,#ff4e00); */
-    border-top:6px solid #ff4e00;
-    grid-area: test-1-score;
-    width: 130px;
-    height: 130px;
-    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
-    border-radius: 20px 20px;
+     border-top:6px solid #ff4e00;
+     grid-area: 1/1/2/2;
+     width: 150px;
+     height: 160px;
+     box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
+     border-radius: 20px 20px;
  }
  .test-3-score{
-      /* background-image: linear-gradient(to bottom,#ff0000,#990000); */
-        border-top:6px solid rgb(155, 16, 155);
-
-    grid-area: test-3-score;
-    width: 130px;
-    height: 130px;
-    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
+    border-top:6px solid rgb(155, 16, 155);
+    grid-area: 1/3/2/4;
+    width: 150px;
+    height: 160px;
+    box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
     border-radius: 20px 20px;
  }
  .test-4-score{
-      border-top:6px solid #ec9F05;
-
-    grid-area: test-4-score;
-    width: 130px;
-    height: 130px;
-    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
+    border-top:6px solid #ec9F05;
+    grid-area: 3/1/4/2;
+    width: 150px;
+    height: 160px;
+    box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
     border-radius: 20px 20px;
  }
  .test-2-score{
-      border-top:6px solid teal;
-
-    grid-area: test-2-score;
-    width: 130px;
-    height: 130px;
-    box-shadow: 0px 0px 100px 0px rgba(0,  0,  0,  0.2);
+    border-top:6px solid teal;
+    grid-area: 1/2/2/3;
+    width: 150px;
+    height: 160px;
+    box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
+    border-radius:20px 20px;
+ }
+ .test-5-score{
+    border-top:6px solid teal;
+    grid-area: 3/3/4/4;
+    width: 150px;
+    height: 160px;
+    box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
     border-radius:20px 20px;
  }
  .the-grades{
-   display: block;
-   font-size: 43px;
+    display: block;
+    font-size: 43px;
     margin-top: 20px;
+  }
+  .the-grades-no-examdata{
+    display: block;
+    font-size: 24px;
+    margin-top: 35px;
+  }
+  .show-exam{
+    margin-top: 15px;
+  }
+  .exam-Checked-router{
+    text-decoration: none;
+    color:black;
+    background: rgba(218, 220, 220, 0.78);
+    padding: 0.5em 0.8em;
+    font-size: 15px;
+    border-radius: 13px;
+  }
+  .exam-Checked-router:hover{
+    background-color: var(--main-background-color);
+;
   }
 </style>
