@@ -2,35 +2,42 @@
     <div class="loader-spinner" v-if="!isLoadForSpinner">
           <loadingSpinner />
     </div>
+  <div class="title">{{}}</div>
 
-   <form class="exam-box" v-if="isntSubmmitedYet&&isFinished&&isLoadForSpinner">
+  <div class="no-permission-mess" v-if="!isExamsPer">
+    <h1>אין לך הרשאות לעמוד זה...</h1>
+  </div>
+
+   <form class="exam-box" v-if="!isAlreadySub&&isLoadForSpinner&&isExamsPer">
       <div class="exam" v-for="(question,index) in examData" :key="index">
-          <div class="question"> 
-             <span >{{index+1}}.  {{question.Title}}</span> 
-              <span class="line"></span>
-
+          <div class="question">
+              <div class="que-index">{{index+1+"."}}</div> 
+               <div>{{question.Title}}</div> 
           </div> 
           <div class="american-answer-options" v-if="question.type=='american'">
-                <div class="answer-items" v-for="(answer,inner) in question.answers"  :key="inner" > 
-                  <div><input type="radio"  v-model="examUserData[question.Title]" :ref="'inputRef' + index" :value="answer" @change="clickHandler($event,examUserData[question.Title]+index,index)" :name="answer"  :id="answer" /></div>
-                  <div class="label-text"><label :for="answer"> {{answer}} </label></div>
-                </div>
-          </div>
+                <label class="answer-items" :class="{'checked': examUserData[question.Title] === option}" v-for="(option,inner) in question.options" :key="inner" :ref="'inputRef_' + index + inner"> 
+                  <div><input type="radio"  v-model="examUserData[question.Title]"  :value="option" @change="clickHandler($event,examUserData[question.Title]+index,index,inner)" :name="option"  :id="option" :ref="'inputRef_' + index" /></div>
+                  <div class="label-text">{{option}} </div>
+                </label>
+                      <span v-if="false" :ref="'warning_' + index">אנא בחר באחת מהאפשרויות</span>
 
-          <div class="open-que" v-if="question.type=='open'">
-            <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,examUserData[question.Title]+index,index)"  v-model="examUserData[question.Title]" :ref="'inputRef' + index" ></textarea>
           </div>
-
-      </div>
+          
+          <div class="open-que" v-if="question.type=='open'" :ref="'inputRef_' + index">
+            <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,examUserData[question.Title]+index,index,inner)" v-model="examUserData[question.Title]"   ></textarea>
+          </div>
+       </div>
     </form>
-          <div class="send" v-if="isntSubmmitedYet&&isFinished&&isLoadForSpinner">
+    
+          <div class="send" v-if="!isAlreadySub&&isLoadForSpinner&&isExamsPer">
               <p class="show-red-Warn" v-if="showRedWarn">* אנא בדוק שענית על כל השאלות</p>
                     <button class="submit-btn" @click="sendData" >סיים</button>
           </div>
 
-  <div class="alreadySubmitted" v-if="isntSubmmitedYet==false&&isFinished">
-    כבר הגשת מבחן זה...
-  </div>
+    <div class="alreadySubmitted" v-if="isAlreadySub&&isLoadForSpinner">
+        כבר הגשת מבחן זה...
+    </div>
+
 </template>
 
 <script>
@@ -44,22 +51,21 @@ data(){
   return{
       urlForTheExams: process.env.NODE_ENV =='development'? `http://localhost:3000/${this.$route.params.Title}/`:`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.Title}')/Items`,
       examData:[],
-      isFinished:false,
       examUserData:{},
       isUserDataEmpty:true,
       boolIfEmpty:[],
       dataToPost:[],
       token:'',
-      isFinished:false,
       userName:'',
       userId:'',
-      isntSubmmitedYet:false,
+      isExamsPer:true,
+      isAlreadySub:null,
       isLoadForSpinner:false,
       examExistData:[],
       subRouterIsShow:false,
       showRedWarn:false,
-      urlForPostUser: process.env.NODE_ENV =='development'?  "http://localhost:3000/pendingTests":"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
-  }
+      showRedWarnToAmerican:false,
+   }
 },
 methods:{
       asyncParse(str){
@@ -69,11 +75,10 @@ methods:{
       },
 
   
-      clickHandler(event,theRef,index){
+      clickHandler(event,theRef,index,inner){
         this.showRedWarn=false
-          const pressedAnswer = event.target.value;
-          console.log(pressedAnswer)
-
+        const v = this.$refs[`inputRef_${index}${inner}`]
+           const pressedAnswer = event.target.value;
              if(pressedAnswer.trim()){
                  this.isUserDataEmpty=false
                  this.boolIfEmpty[index]=this.isUserDataEmpty
@@ -83,7 +88,7 @@ methods:{
                 this.boolIfEmpty[index]=true
                 console.log(this.boolIfEmpty)              
                 console.log("is empty")
-                event.target.classList.add("text-aria-placeholder")
+                // event.target.classList.add("text-aria-placeholder")
             }
          },
 
@@ -103,13 +108,16 @@ methods:{
        },
 
       async postExams(){
-          if(this.urlForPostUser=="https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items"){
+        var res = null
+         console.log(this.examsName.subject)
+           if(this.$isSharePointUrl){
               await this.getToken();
-              const res = await axios.post(this.urlForPostUser,{
+              res = await axios.post(this.$sharePointUrl+"getByTitle('pending tests')/Items",{
               Title:this.userName,
               exam:JSON.stringify(this.dataToPost),
               num:this.userId,
-              type: this.$route.params.Title
+              type: this.$route.params.Title,
+              name:this.examsName.subject
             },
 
             { 
@@ -120,12 +128,17 @@ methods:{
           }
           
           else{
-            console.log(this.urlForPostUser)
-            const res = await axios.post(this.urlForPostUser,{
-              Title:'sdsdsd',
-              exam:this.examUserData,
-              num:this.userId,
-              type: this.$route.params.Title
+            console.log(this.$route.params)
+             res = await axios.post(this.$sharePointUrl+"pendingTests",{
+              value:[
+                {
+                  Title:'sdsdsd',
+                  exam:this.dataToPost,
+                  num:this.userId,
+                  type: this.$route.params.Title,
+                  name:this.examsName.subject
+                }
+              ]
             })
           }
             if(res.status=='200'||res.status=='201'){
@@ -165,11 +178,14 @@ methods:{
               if(result.value){
                  this.postDataFormat()
                  if(this.postExams()){
-                  this.$swal(
-                  'Send',
-                  'נשלח בהצלחה',
-                  'success'
-                )
+                  this.$swal({
+                    title:'Send',
+                    text:'נשלח בהצלחה',
+                    type:'success',
+                    confirmButtonColor:"var(--main-background-color)",
+                    confirmButtonText:'סיים'
+                  })
+                      this.$router.push({name:'submitted',params:{Title:this.$route.params.Title}})
               }
               else{
                   this.$swal(
@@ -184,32 +200,33 @@ methods:{
 
         async sendData(){
            this.submit()
+           for(let i=0; i < this.boolIfEmpty.length; i++){
+             console.log(this.$refs[`inputRef_${i}`])
+             var value = this.$refs[`inputRef_${i}`].children[0]
+             if(this.boolIfEmpty[i]==true){
+               this.$refs[`inputRef_${i}`].scrollIntoView({behavior:"smooth",block:"center"});
+               if(this.examData[i].type=='open'){
+                  value.classList.add("text-aria-placeholder")
+               }
+                   return alert(`אנא הכנס תשובה בשאלה ${i+1}`)
+
+             }
+           }
           if(this.subRouterIsShow==true){
             this.showAlertConfirm()
           }
         },
 
-      async checkIfExamExist(){
+       checkIfExamExist(){
           this.userId=localStorage.getItem("userId")
-          const res = await axios.get(`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items?$filter=(num eq '${this.userId}') and (type eq '${this.$route.params.Title}')`)
-          try{
-            this.examExistData=res.data.value
-              console.log(this.examExistData)
-              if(this.examExistData[0].exam==null){
-                console.log("is empty, you should see the exam")
-                this.isntSubmmitedYet=true
-              }
-              else{
-                console.log("is full")
-                this.isntSubmmitedYet=false
-              }
+          if(this.$isSharePointUrl){
+             return axios.get(this.$sharePointUrl+`getByTitle('pending tests')/Items?$filter=(num eq '${this.userId}') and (type eq '${this.$route.params.Title}')`).then((res)=>res.data.value)
           }
-          catch{
-              console.log("is empty, you should see the exam")
-              this.isntSubmmitedYet=true
+          else{
+              return axios.get(this.$sharePointUrl+`pendingTests?num=${this.userId}&type=${this.$route.params.Title}`).then((res)=>res.data.value)
           }
-          
       },
+
       spinner(){
           this.isLoadForSpinner=true
       },
@@ -218,40 +235,84 @@ methods:{
         this.examData.forEach(data=>{
           this.boolIfEmpty.push(true)
         })
-          
+          console.log(this.boolIfEmpty)
       }
 },
 
 
 async beforeMount(){
-   this.userName=localStorage.getItem("userName")
+  console.log(this.$route.params)
+  this.userName=localStorage.getItem("userName")
   console.log(this.userName)
-    console.log(this.isntSubmmitedYet)
-     if(this.urlForTheExams==`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.Title}')/Items`){
-      await this.checkIfExamExist()
-             console.log(this.urlForTheExams)
-          const res = await axios.get(this.urlForTheExams);
-              this.examData = res.data.value;
-              console.log(this.examData)
-                const promiseAnswers = await Promise.all(this.examData.map((item)=>{
-                      return this.asyncParse(item.answers).then((inner)=>{
-                            item['answers'] = inner
-                            return {item}
-                        })
-                    }))
+  this.examsName = localStorage.getItem("examsName")
+  this.examsName = JSON.parse(this.examsName)
+   this.examsName = this.examsName.filter(data=>data.Title==this.$route.params.Title)[0]
+  console.log(this.examsName)
+     this.examExistData = await this.checkIfExamExist()
+     console.log("yess") 
+    
+          if(this.$isSharePointUrl){
+               try{
+                  console.log(this.examExistData)
+                    if(!this.examExistData.length){
+                      console.log("is empty, you should see the exam")
+                      this.isAlreadySub=false
+                    }
+                    else{
+                      console.log("is full")
+                      this.isLoadForSpinner=true
+                      this.isAlreadySub=true
+                    }
+                 }
+                catch{
+                    console.log("is empty, you should see the exam")
+                 }
+                    console.log(this.isAlreadySub)
+
+
+              return axios.get(this.$sharePointUrl+`getByTitle('${this.$route.params.Title}')/Items`)
+              .then(response=>{
+                return  response.data.value;
+              })
+              .then(data =>{
+                  const promiseAnswers = Promise.all(data.map((item)=>{
+                        return this.asyncParse(item.options).then((inner)=>{
+                              item['options'] = inner
+                              return {item}
+                          })
+                      }))
+                      this.examData = data
+                      console.log(this.examData)
+                      const myTimeOut = setTimeout(this.spinner,170)
+                      this.pushToArrToCheckIfEmpty()
+
+              })
+              .catch(error=>{
+                 console.log(error)
+                   this.isExamsPer = false
+                   console.log(this.isExamsPer)
+                   this.isLoadForSpinner=true
+                 
+              })
           }
-  
+
           else{
-              const res = await axios.get(this.urlForTheExams);
-              this.examData = res.data.value;
-              console.log(this.examData)
-              this.isntSubmmitedYet=true
-          }
-          
-       this.isFinished=true
-        const myTimeOut = setTimeout(this.spinner,170)
-        this.pushToArrToCheckIfEmpty()
-       
+              return axios.get(this.$sharePointUrl+`${this.$route.params.Title}`)
+              .then(response=>{
+                  this.examData = response.data.value;
+                  console.log(this.examData)
+                  this.isAlreadySub=false
+                  const myTimeOut = setTimeout(this.spinner,170)
+                  this.pushToArrToCheckIfEmpty()
+              })
+               .catch(error=>{
+                 if(error.response.status === 404){
+                   this.isExamsPer = false
+                   console.log(this.isExamsPer)
+                   this.isLoadForSpinner=true
+                 }
+               })
+           }
 
 },
 
@@ -270,20 +331,28 @@ mounted(){
   width: 100%;
   height: 100%;
  }
+ .no-permission-mess{
+   font-size:35px;
+    margin-top:150px;
+    text-align: center;
+
+ }
 .exam{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 70%;
+    width: 75%;
     min-height: 400px;
-    margin-top:100px;
-    border-top: 1px solid gray;
+    margin-top: 80px;
+    border-top: 1.5px solid rgba(0,0,0,.1);
   }
   .exam:first-child{
     border-top:none;
     margin-top:75px
   }
-
+.show-red-Warn-american{
+  display:inline;
+}
  .exam-box{
     position: relative;
     display: flex;
@@ -296,16 +365,20 @@ form{
  }
  label{
     cursor: pointer;
-    width: 100% ;
-    height: 100%;
+     height: 100%;
     display: flex;
     align-items: center;
-  }
+   }
 .label-text{
   width: 100% ;
-  margin-right: 30px;
+  height: 100%;
+  margin-right: 10px;
   font-size: 22px;
   }
+   .que-index{
+    margin-left: 20px;
+    font-size: 27px;
+ }
 .question{
     min-height: 80px;
     width: 80%;
@@ -313,68 +386,79 @@ form{
     padding: 1em 32px;
     display: flex;
      align-items: center;
-    justify-content: center;
-    justify-content: space-between;
     font-size: 24px;
     font-weight: 700;
  }
  /* .line{
    width: 90%;
-    border-bottom: 1px solid rgba(0,0,0,.1);    
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    position: relative;
+    margin-top:15% 
  } */
-.american-answer-options{
+ .american-answer-options{
    /* padding: 25px 30px 20px 30px; */
    margin-top: 60px;
    margin-bottom: 50px;
-   max-height: 435px;
+   /* max-height: 510px; */
    overflow-y: auto;
    direction: ltr;
-   width: 80%;
+   width: 63%;
    position: relative;
 }
 .answer-items{
-    min-height: 40px;
+    min-height: 45px;
     display: flex;
     background-color: rgba(192, 192, 192, 0.363);
     border-radius: 10px;
     position: relative;
-    padding: 1.2em 1.5em;
-    margin-bottom: 40px;
+    padding: 1.5em;
+    margin-bottom: 45px;
+    
 }
 .answer-items:last-child{
   margin-bottom: 0px;
 }
-/* .answer-text{
-  font-size:24px
-} */
- input{
-  /* appearance: none; */
+.answer-items:hover:not(.checked){
+  background-color: rgba(150, 148, 148, 0.363) ;
+ }
+ .answer-items.checked{
+   background-color: rgba(150, 148, 148, 0.637) ;
+       transition: all 0.2s ease-in-out;
+
+ }
+  input{
+  appearance: none;
   display: flex;
   height: 100%;
   position: relative;
   cursor: pointer;
 }
 textarea{
-  width: 900px;
+  width: 70%;
   margin-top: 30px;
   position: relative;
   padding: 12px;
   height: 120px;
-   border-radius:5px;
-   border: 1px solid rgba(169, 169, 169, 0.774);
-   outline: none;
-   font-size: 20px;
+  border-radius:5px;
+  border: 1px solid rgba(169, 169, 169, 0.774);
+  outline: none;
+  font-size: 20px;
 }
 .open-que{
-  position: relative;
-  top:20px;
+    position: relative;
+    display: flex;
+    top: 20px;
+    width: 80%;
+    align-items: center;
+    justify-content: center;
 }
 .send{
-  display: flex;
-  flex-direction: column;
-  margin-top:30px;
-     margin-bottom: 70px;
-     align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-top:80px;
+    bottom: 60px;
+    align-items: center;
 
 }
 .submit-btn{

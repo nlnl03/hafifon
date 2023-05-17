@@ -39,15 +39,20 @@ export default {
       practices:[],
       isLoad:false,
       timeOut:null,
-      url: process.env.NODE_ENV =='development'? 'http://localhost:3000/practice':"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('tirgulim')/Items",
-     }
+      }
   },
   methods:{
     async getPractices(){
-      const res = await axios.get(this.url)
-      this.practices = res.data.value
-      // console.log(this.practices)
-      this.isLoad = true;
+      var res = null
+        if(this.$isSharePointUrl){
+          res = await axios.get(this.$sharePointUrl+"getByTitle('tirgulim')/Items")
+        }
+        else{
+          res = await axios.get(this.$sharePointUrl+"practice")
+        }
+          this.practices = res.data.value
+            // console.log(this.practices)
+            this.isLoad = true;
     }
   },
   async beforeMount(){

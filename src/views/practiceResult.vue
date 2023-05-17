@@ -1,13 +1,18 @@
 <template>
-<div class="results-card">
-  <div class="score">
+  <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
+
+<div class="results-card" v-if="isLoadForSpinner">
+  <div class="practice-results-score">
+    <div class="score-items">
     <circle-progress 
            :percent="score"
           :show-percent="true"
-           fill-color="#00a2f3"
+           fill-color="var(--main-background-color)"
            :viewport="true"
            :transition="700"
           />
+      <div class="countRightsAns">{{countRightsAns}}</div>
+      </div>
    </div>
   <div class="results-table" v-if="!showMassaAllCorrect" >
     <table>
@@ -21,15 +26,15 @@
 
       <tbody>
           <tr v-for="result in userResults" :key="result">
-              <td >{{result.theCorrectAns}}</td>
-              <td>{{result.wrongAns}}</td>
-              <td>{{result.wrongQue}}</td>
+              <td><div class="text">{{result.theCorrectAns}}</div></td>
+              <td><div class="text">{{result.wrongAns}}</div></td>
+              <td><div class="text">{{result.wrongQue}}</div></td>
           </tr>
 
           <tr v-for="bankResult in userBankResults" :key="bankResult">
-              <td> {{bankResult.theCorrectBankAns}}</td>
-              <td>{{bankResult.wrongBankAns}}</td>      
-              <td>{{bankResult.wrongBankQue}} </td>
+              <td><div class="text">{{bankResult.theCorrectBankAns}}</div> </td>
+              <td><div class="text">{{bankResult.wrongBankAns}}</div></td>      
+              <td><div class="text">{{bankResult.wrongBankQue}}</div> </td>
           </tr>
       </tbody> 
     </table>
@@ -50,10 +55,12 @@
 <script>
 import CircleProgress from 'vue3-circle-progress'
 import "vue3-circle-progress/dist/circle-progress.css"
+import loadingSpinner from '../components/loadingSpinner.vue'
  export default {
     name:'practiceResult',
     components:{
-      CircleProgress
+      CircleProgress,
+      loadingSpinner
     },
  data(){
     return{
@@ -61,10 +68,14 @@ import "vue3-circle-progress/dist/circle-progress.css"
         userBankResults:[],
         score:"",
         showMassaAllCorrect: false, 
-        isBankQue:false
+        isBankQue:false,
+        countRightsAns:null,
+        isLoadForSpinner:false,
+        timeOut:null,
     }
 },
-async beforeMount(){
+methods:{
+  getData(){
      var score = localStorage.getItem("pointsInPerc")
       this.score =JSON.parse(score)
       //  console.log(this.score)
@@ -72,11 +83,21 @@ async beforeMount(){
       this.userResults = JSON.parse(data)
       var bankData = localStorage.getItem("bankResults")
       this.userBankResults = JSON.parse(bankData)
+      this.countRightsAns = localStorage.getItem("countRightsAns")
+      console.log(this.countRightsAns)
       // console.log(this.userResults)
            if(this.userResults.length==0&&this.userBankResults.length==0){
             this.showMassaAllCorrect=true
-          } 
-    },
+          }
+          
+            this.isLoadForSpinner = true
+  }
+},
+
+  async beforeMount(){
+    this.timeOut = await setTimeout(this.getData,300)
+    
+  },
   
 }
 </script>
@@ -101,22 +122,27 @@ tbody{
  }
  thead{
     display: block;
+    
   }
   th,td{
-    width: var(--table-header-width);
+    width: var(--table-header-width) !important;
   }
   th{
-    padding-bottom: 5px ;
+    padding-bottom: 5px;
     font-size: 22px ;
   }
    td{
       height: 50px;
+
       font-size: 18px ;
       padding: 0.5em 1em;
       text-align: center;
    }
   tr{
       border-bottom: 1px solid gray;
+  }
+  tbody tr:hover{
+    background-color: rgba(192, 192, 192, 0.582);
   }
   th:nth-child(2)::after{
     content: '❌';
@@ -133,8 +159,12 @@ tbody{
   }
   table{
       border-collapse: collapse;
-  }
-  
+      table-layout: fixed;
+   }
+  /* .text{
+        width: calc(var(--table-header-width));
+
+   } */
   .results-table{
     position: relative;
     top: 85px;
@@ -146,7 +176,7 @@ tbody{
     position: relative;
     left: 50%;
     right: 50%;
-    transform: translate(50%,10%);
+    transform: translate(50%,8%);
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
@@ -165,38 +195,44 @@ tbody{
   }
 .back-btn{
     position: relative;
-    text-decoration: none;
-    color: #007bff;
+    color: #7c7c7c;
     background-color: #fff;
     height: 40px;
     width: 110px;
-    border: 1px solid #007bff;
-    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left:30px;
+    margin-left: 25px;
     }
   .video-btn{
       position: relative;
-      color: #007bff;
+      color: #fff;
       text-decoration: none;
       height: 40px;
       width: 110px;
-      background-color: #fff;
-      border: 1px solid #007bff;
-      border-radius: 10px;
+      background-color: var(--main-background-color);
+      border-radius: 13px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .score{
+    .practice-results-score{
       display: flex;
       justify-content: center;
       position: relative;
       top:40px;
-      /* height: 170px; */
       font-size: 60px;
      }
-     
+     .score-items{
+       display: flex;
+        width: 50%;
+       align-items: center;
+      justify-content: space-around;
+     }
+    .spinner{
+      position: relative;
+      top:100px
+    }
+
+
   </style>

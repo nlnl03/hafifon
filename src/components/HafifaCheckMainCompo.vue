@@ -3,57 +3,65 @@
       <loadingSpinner />
  </div>
 
-  <div class="box">
-    <div class="box-flex" v-if="isLoad">
+  <div class="box" v-if="isAdmin">
+    <div class="box-flex" v-if="isLoad" >
       <div class="count-students-cicrcle">
         <div class="count-students-items">
-          <div class="ave-title"> אנשים בחפיפה </div> 
-            <div class="progress-circle">
-                <circle-progress
-                :percent="userInfo.length"
-                :size="165"
-                :show-percent="true"
-                fill-color="var(--main-background-color)"
-                :viewport="true"
-                :transition="600"
-                />
-            </div>
+          <div class="ave-title"> מבחנים לבדיקה </div> 
+            <div class="students-in-hafifa">{{userData.length}}</div>
         </div>
       </div>
 
 
-    <div class="average-cicrcle">
-      <div class="average-items">
+    <div class="average-cicrcle" >
+      <div class="average-items" >
         <div class="ave-title"> ממוצע ציונים </div> 
           <div class="progress-circle">
             <circle-progress 
-            :percent="calcAve(ave)"
-            :size="165"
+            :percent="gradrPerExam"
+            :size="140"
             :show-percent="true"
-            :fill-color="changeAveColor(aveColor)"
+            :fill-color="changeAveColor(gradrPerExam)"
             :viewport="true"
             :transition="600"
             />
           </div>
-      </div>
+            
+             <div class="select-to-show-ave-menu" v-if="isLoad" @click="toggleOptions" ref="fixTitleWidth">
+                <div class="select-title">
+                    <div class="select-option-arrow" :class="{ rotate: showOptions }">&#9660;</div>
+                    <div class="selected-option" ref="selectTitle">בחר מבחן</div>
+                </div>
+               
+                  <ul v-show="showOptions" class="exams-list-options" >
+                      <li v-for="(name,index) in testsNames" :key="index" @click="selectOption(name)">
+                          {{name.subject}}
+                      </li>  
+                  </ul>
+            </div>            
+             
+       </div>
     </div>
   </div>
 
-  <div class="hafifot" v-if="isLoad&&examTitlesFiltered.length>0">
-    <div class="info" v-for="(item,index) in examTitlesFiltered" :key="item">
-      <button class="hafifot-item" @click="OpenAccordion(item,index)"  :ref="item+index" :value="item">
-          {{item}}
+  <div class="title" v-if="examTitlesFiltered.length&&isLoad">מבחנים הממתינים לבדיקה</div>
+
+  <div class="accordion" v-if="isLoad&&examTitlesFiltered.length>0">
+    <div class="accordion-item" v-for="(item,index) in examTitlesFiltered" :key="item">
+      <button class="accordion-header" :class="{'active': ite === index&&isOpen}" @click="OpenAccordion(item,index)"  :ref="item+index" :value="item">
+          <div class="accordion-arrow" :class="{ rotate: ite === index&&isOpen }">&#9660;</div>
+          <div class="text">{{item}}</div>
       </button>
 
-      <div class="accordion-items" v-if="isOpen&&ite==index"  >
+      <div class="accordion-content" v-if="isOpen&&ite==index"  >
           <div class="name-of-hafifot" v-for="info in userInfoFilterd" :key="info"  >
-                <router-link :to="{name:'examsToCheck',path:`/examsToCheck/${info.num}/${item}`,params:{examType:item,num:JSON.stringify(info.num)}}">{{info.Title}}</router-link>
+                <router-link :to="{name:'examsToCheck',path:`/examsToCheck/${info.num}/${info.type}`,params:{examType:info.type,num:info.num}}">{{info.Title}}</router-link>
           </div>
       </div>
     </div>   
   </div>
 
-  <div class="when-empty" v-if="!examTitlesFiltered.length>0&&isLoad">
+  <div class="when-empty" v-if="!examTitlesFiltered.length&&isLoad">
       אין מבחנים לבדיקה
   </div>
 </div>
@@ -73,35 +81,82 @@ export default {
   },
   data(){
     return{
-      examsUrl:process.env.NODE_ENV =='development'? 'http://localhost:3000/pendingTests/' : "https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('pending tests')/Items",
       examTitles:[],
       examTitlesFiltered:[],
-      userInfo:[],
+      userData:[],
       isOpen:false,
       ite:0,
       getBtnVal:null,
       userInfoFilterd:[],
-      ave:80,
-      isLoad:false
+      isLoad:false,
+      isAdmin:false,
+      testsNames:[],
+      aveColor:null,
+      showOptions:null,
+      gradrPerExam: 0
     }
   },
   methods:{
-    async getTitles(){
-        const res = await axios.get(this.examsUrl)
-        this.examTitles=res.data.value
+    asyncParse(str){
+        return new Promise((resolve)=>{
+          resolve(JSON.parse(str))
+        })
+      },
+    toggleOptions(){
+      this.showOptions = !this.showOptions
+    },
+    async getGrades(name){
+      var res = null
+      var v = null
+      if(this.$isSharePointUrl){
+         res = await axios.get(this.$sharePointUrl+`getByTitle('students')/items?$select=${name.Title}`)
+         v = res.data.value
+         const promiseData = await Promise.all(v.map((item)=>{
+                        return this.asyncParse(item[name.Title]).then((inner)=>{
+                              item[name.Title] = inner
+                              return {item}
+                          })
+                      }))
+          console.log(v)
 
-       if(process.env.NODE_ENV =='development'){
-            console.log("yes")
-            this.examTitlesFiltered=this.examTitles.map(data=>data.type)
-            console.log(this.examTitles)
-        }
-        else{
-          this.examTitles = await this.examTitles.map(data=>data.type)
-          const arr = this.examTitles
-          this.examTitlesFiltered = this.filterArrayOfTitles(arr)
-          console.log(this.examTitlesFiltered)
-        }      
-      
+      }
+      else{
+        res = await axios.get(this.$sharePointUrl+`students`)
+        console.log(res.data)
+        v=res.data
+      }
+         var mapExam = v.map(data=>data[name.Title])
+          console.log(mapExam)
+          var aveArray = mapExam.map(inner=>{
+            if(inner!=null){
+                return inner.map(object=>object.finalGrade)
+                .filter(grade => grade !== undefined)
+            }
+         }).flat().filter(grade => grade !== undefined)
+         
+            console.log(aveArray)
+            this.calcAve(aveArray)
+    },
+    
+    selectOption(name){
+      var selectedText = this.$refs["selectTitle"]
+      console.log(selectedText)
+      selectedText.innerHTML = name.subject
+      var fixTitleWidth = this.$refs["fixTitleWidth"]
+       if(name.subject =='המבחן הסופי'){
+         console.log("yes")
+         fixTitleWidth.style.width = "125px"
+      } 
+      else{
+        fixTitleWidth.style.width = "100px"
+      }
+      this.getGrades(name)
+    },
+    async filterTitles(){
+        this.examTitlesFiltered=this.userData.map(data=>data.name)
+        const arr = this.examTitlesFiltered
+        this.examTitlesFiltered = this.filterArrayOfTitles(arr)
+        console.log(this.examTitlesFiltered)
     },
 
     filterArrayOfTitles(arr){
@@ -109,37 +164,67 @@ export default {
         return arr.indexOf(value)===index;
       })
     },
+
     async getData(){
-      if(this.examsUrl){
-        const res = await axios.get(this.examsUrl)
-        this.userInfo = res.data.value
-        console.log(this.userInfo)             
-      }
+      var res = null
+        if(this.$isSharePointUrl){
+             res = await axios.get(this.$sharePointUrl+"getByTitle('pending tests')/Items")
+         }
+
+        else{
+             res = await axios.get(this.$sharePointUrl+"pendingTests")
+        }
+          this.userData = res.data.value
+          console.log(this.userData)             
     },
+
    async OpenAccordion(item,index){
          // console.log(this.isOpen)
         this.ite=index
         this.getBtnVal = await this.$refs[item+index].value
         console.log(this.getBtnVal)
-          this.userInfoFilterd = await this.userInfo.filter(data=>data.type==this.getBtnVal)
+          this.userInfoFilterd = await this.userData.filter(data=>data.name==this.getBtnVal)
           console.log(this.userInfoFilterd)
           this.isOpen=!this.isOpen
     },
 
-    changeAveColor(aveColor){
-      if(this.ave>=80){
-        return aveColor='#2E8B57'
+    changeAveColor(ave){
+      if(ave>=80){
+        return '#2E8B57'
       }
-      if(this.ave>=70&&this.ave<80){
-        return this.aveColor = '#FF4500'
+      if(ave>=60&&ave<80){
+        return 'var(--main-background-color)'
       }
       else{
-       return this.aveColor = '#FF0000'
+       return '#de0f0f'
       }
     },
+      showAveOnEachTest(name){
+          console.log(name)
+      },
 
-      calcAve(ave){
-        
+       calcAve(aveArray){
+         console.log("yews")
+         console.log(aveArray)
+          let sum = 0;
+          let count = 0;
+        if(aveArray.length){
+          for(let i=0; i<aveArray.length; i++){
+              sum+=aveArray[i]
+              count++
+          }
+            if(count === 0){
+              return 0
+            }
+             this.gradrPerExam = sum / count
+             console.log(this.gradrPerExam)
+             return this.gradrPerExam
+        }
+          else{
+            this.gradrPerExam = 0
+            console.log(this.gradrPerExam)
+            return this.gradrPerExam
+          }
       },  
 
      timeOutForSpinner(){
@@ -148,17 +233,37 @@ export default {
   },
 
   async beforeMount(){
-     await this.getTitles()
-     await this.getData()
-      const myTimeOut = setTimeout(this.timeOutForSpinner,150)
-     
-  },
-
+    this.isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"))
+    console.log(this.isAdmin)
+      if(!this.isAdmin){
+        alert("מצטערים, אך אין לך גישה לעמוד זה...")
+        this.$router.go(-1)
+      }
+      else{
+        this.isAdmin = true
+        var testsNames = JSON.parse(localStorage.getItem("examsName"))
+        this.testsNames = testsNames
+        console.log(this.testsNames)
+          await this.getData()    
+          await this.filterTitles()
+          const myTimeOut = setTimeout(this.timeOutForSpinner,250)
+      }
+   }, 
+  
  }
 
 </script>
 
  <style scoped>
+ .title{
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 30px;
+    font-weight: 700;
+    z-index: -1;
+    text-align: center;
+  }
  .main-title{
   margin-top:40px;
   font-size:28px;
@@ -178,67 +283,83 @@ export default {
    border-radius: 30px;
  }
 
- .hafifot{
-    position: relative;
-    /* min-height: 335px; */
-    overflow: auto;
-    top: 5%;
-    right: 50%;
-    transform: translateX(50%);
-    width: 85%;
-    border:2px solid rgba(128, 128, 128, 0.24);
-    border-radius: 10px;
+ .accordion{
+     display: flex;
+     position: relative;
+     z-index: -10;
+     flex-direction: column;
+     max-height: 255px;
+     overflow-y: auto;
+     width: 60%;
+     right: 50%;
+     /* margin-top: 80px; */
+     transform: translateX(50%);
  }
- .hafifot:last-child{
-   border-bottom:1px solid rgba(128, 128, 128, 0.24);;
- }
-  
- .hafifot-item{
-   cursor: pointer;
+   button{
+       width: 100%;
+       position: relative;
+       border: none;
+       transition: all 0.2s ease-in-out;
+       min-height: 70px;
+       background-color: rgba(160, 160, 160, 0.22);
+    }
+     button:hover{
+       background-color: #b9b8b8a8;
+     }
+     .active .accordion-header, .accordion-header.active{
+       background-color: #8886867c;
+     }
+
+ .accordion-item{
+   border: 1px solid #ccc;
+   border-radius: 7px;
+   margin-bottom: 12px;
+  }
+ .accordion-header{
+   border-radius: 7px;
    display: flex;
-   border-right: none;
-   border-left: none;
-   border-top:none;
-   flex-direction: column;
+   align-items: center;
    width: 100%;
-   background-color:#fff;
-   /* min-height: 70px; */
-   padding: 0.7em 1em;
-   font-size: 25px;
+   padding: 1rem;
+   cursor: pointer;
+   transition: background-color 0.3s ease-out;
  }
- .hafifot-item:hover{
-   background-color: rgba(0,0,0,.1);
+ .text{
+   margin-right: 10px;
+   font-size: 25px;
+
  }
  
- .hafifot-item-clicked{
-      background-color: rgba(0,0,0,.1);
- } 
-     .text{
-    display: flex;
-    align-items: center;
-    padding: 0.7em 1em;
-  }
-   .accordion-btn{
-     background-color: #fff ;
-     padding: 0.7em 1em;
-     font-size: 25px;
-   }
-
-     button{
-       border-bottom: 1px solid  rgba(0,0,0,.1);
-       outline: none;
-     }
+.accordion-content{
+  max-height: 123px;
+  overflow-y: auto;
+  direction: ltr;
+  /* padding: 0.7em; */
+}
+.accordion-arrow{
+  font-size: 18px;
+  color: rgba(71, 70, 70, 0.596);
+  transition: transform 0.2s ease-out;
+}
+.accordion-arrow.rotate{
+  transform: rotate(180deg);
+}
+    
       .name-of-hafifot{
        border-bottom: 1px solid  rgba(0,0,0,.1);
-       max-height: 100px;
-       overflow: auto;
-     }
-     .name-of-hafifot:last-child{
-       border-bottom: none;
+        position: relative;
+        height: 60px;
+       width: 100%;
+       display: flex;
+       align-items: center;
+       font-size: 18px;
+      }
+    .name-of-hafifot:hover{
+       background: rgb(231, 230, 230);
      }
      .count-students-cicrcle, .average-cicrcle{
       position: relative;
-      height: 250px;
+      height: 260px;
       width: 350px;
       box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
       border-radius: 20px;
@@ -260,6 +381,7 @@ export default {
     .box-flex{
       position: relative;
        display: flex;
+       top:10px;
        width: 100%;
        height: 300px;
        align-items: center;
@@ -272,7 +394,10 @@ export default {
 
     a{
       text-decoration: none;
+      margin-right: 25px;
+      position: relative;
       color:black;
+      width: 100%;
     }
     .loading-spinner{
       position: relative;
@@ -281,9 +406,94 @@ export default {
     .when-empty{
       position: relative;
       right: 50%;
+      z-index: -1;
+      font-size: 30px;
+      font-weight: 700;
       text-align: center;
       top: 12%;
       transform: translate(50%,12%);
-
     }
-   </style>
+    .students-in-hafifa{
+        font-size: 35px;
+        position: relative;
+        top: 25%;
+    }
+    /* select{
+      margin-top:15px;
+      font-size:17px;
+      padding: 0.2em;
+      font-weight:700 ;
+    } */
+    .select-option-arrow{
+      margin-right: 7px;
+      margin-left: 0.5em;
+      transition: transform 0.3s ease-out;
+    }
+    .select-option-arrow.rotate{
+      transform: rotate(180deg);
+    }
+
+    .select-to-show-ave-menu{
+      margin-top:15px;
+      position: relative;
+      justify-content: space-around;
+      width: 105px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background-color: rgba(145, 164, 167, 0.41);
+      border-radius: 5px ;
+    }
+    .select-title{
+      display: flex;
+      /* justify-content: space-around; */
+      /* width: 90%; */
+      align-items: center;
+      font-size: 17px;
+      font-weight: 700;
+      align-items: center;
+    }
+    .selected-option{
+      padding: 3px 0;
+      text-align: center;
+    }
+    ul{
+      border-radius: 5px;
+      list-style: none;
+      position: absolute;
+      display: flex;
+      z-index: 1000;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      flex-direction: column;
+      background-color:rgb(255, 255, 255);
+      border-radius: 5px;  
+      animation: growOut 280ms ease-in-out forwards;
+      transform-origin: top center;
+    }
+     
+    @keyframes growOut{
+    0%{
+        transform: scale(0);
+     }
+     80%{
+        transform: scale(1.1);
+     }
+    100%{
+        transform: scale(1);
+     }    
+}
+    li{
+      padding: 0.6em 0;
+      text-align: center;
+      border-bottom: 1px solid rgb(224, 223, 223) ;
+    }
+    li:last-child{
+      border:none
+    }
+    li:hover{
+      background: rgb(231, 230, 230);
+    }
+    /* .progress-circle .vue3-circular-progressbar .current-counter{
+      font-size: 30px;
+    } */
+    </style>

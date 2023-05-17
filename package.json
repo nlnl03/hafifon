@@ -21,7 +21,7 @@
     "vue-sweetalert2": "^5.0.2",
     "vue3-circle-progress": "^1.0.7"
   },
-  "devDependencies": {
+  "devDependencies": {  
     "@vue/cli-plugin-babel": "^4.5.19",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",

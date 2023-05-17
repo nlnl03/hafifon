@@ -3,13 +3,17 @@
       <loadingSpinner />
    </div>
 
-   <div class="container" v-if="isLoad">
-      <div class="title"><h1>ברוכים הבאים לאתר חפיפה</h1></div>
-      <div class="name"><h2>שלום {{userName}}</h2></div>
-         <div class="btns">
-            <router-link to="">המשך תרגול</router-link>
-            <router-link to="">למבחן הסופי</router-link>
-         </div>
+   <div class="container" >
+      <div class="main-background">
+         <div class="welcome" v-if="isLoad">
+             <h1>ברוכים הבאים לאתר חפיפה</h1> 
+            <div class="name"><h2>שלום {{userName}}</h2></div>
+               <!-- <div class="btns">
+                  <router-link to="">המשך תרגול</router-link>
+                  <router-link to="">למבחן הסופי</router-link>
+               </div> -->
+         </div>   
+      </div>
    </div>
    
 </template>
@@ -29,83 +33,109 @@ import loadingSpinner from '../components/loadingSpinner.vue'
          isLoad:false,
          timeOut:null,
          token:'',
-         sharePointUrl:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/items",
-         currentUser: process.env.NODE_ENV =='development'? "http://localhost:3000/currentUser" : "https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
          userName:'',
        }
      },
      methods:{
-     async getCurrentUser(){
-        const res = await axios.get(this.currentUser)
-          this.currentUserData = res.data;
-          this.Id=this.currentUserData.Id
-          console.log(this.currentUserData.Title)
-          const Title = this.currentUserData.Title.split(' -')
-          this.userName = Title[0]
-          console.log(this.userName)
-          localStorage.setItem("userName",this.userName)
-          localStorage.setItem("userId",this.Id)
-          console.log(this.userName)
-          console.log(this.currentUserData)
-          this.isLoad = true;
-       },
+     
        async getToken(){
-          const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
-          this.token = res.data.FormDigestValue
-          console.log(this.token)
+               return axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo").then(res=>res.data.FormDigestValue)
        },
 
       async checkIfUser(){
+         this.Id = localStorage.getItem("userId")
+         this.userName = localStorage.getItem("userName")
          console.log(this.Id)
-         const res = await axios.get(this.sharePointUrl+`?$filter=num eq '${this.Id}'`)
-         const resData = res.data.value
-         console.log(resData)
-         await this.getToken()
-            if(resData.length==0){
-               try{
-                  const results = await axios.post(this.sharePointUrl,{
-                     Title:this.userName,
-                     num:this.Id,
-                     exam1:null,
-                     exam2:null,
-                     exam3:null,
-                     exam4:null,
-                     finalTest:null,
-                  },
-                  {
-                     headers:{
-                     'X-RequestDigest':this.token,
-                     }
-                  })
+         console.log(this.$isSharePointUrl)
+         if(this.$isSharePointUrl){
+            const res = await axios.get(this.$sharePointUrl+`getByTitle('students')/items?$filter=num eq '${this.Id}'`)
+            const resData = res.data.value
+            console.log(resData)
+           this.token = await this.getToken()
+           console.log(this.token)
+               if(!resData.length){
+                  try{
+                     const results = await axios.post(this.$sharePointUrl+"getByTitle('students')/items",{
+                        Title:this.userName,
+                        num:this.Id,
+                        exam1:null,
+                        exam2:null,
+                        exam3:null,
+                        exam4:null,
+                        finalTest:null,
+                     },
+                     {
+                        headers:{
+                        'X-RequestDigest':this.token,
+                        }
+                     })
+                  }
+               catch(error){
+                  console.log(error.message)
                }
-            catch(error){
-               console.log(error.message)
-            }
-      }
+         }
+       }
+            this.isLoad = true
+            console.log(this.isLoad)
     }
   },
    
 
-   async beforeMount(){
-      await this.getCurrentUser()
-      this.checkIfUser()
-   }
+     beforeMount(){
+        const myTimeOut = setTimeout(this.checkIfUser,500)
+        
+    }
 }
 </script>
 
 <style scoped>
 .container{
-   text-align: center;
+    min-height: 86.5vh;
+    height: 86.5vh;
+    min-width: 100vw;
+    width: 100vw;
  }
-.btns{
+   .main-background{
+      background-image: url("../assets/homePageBackground.png");
+      background-position: center;
+      /* animation: animate 10s linear infinite; */
+      background-size: cover;
+      height: 100%;
+      width: 100%;
+      background-repeat: no-repeat;
+      overflow: hidden;
+  }
+  @keyframes animate{
+     0%{
+        background-position: 0 0;
+     }
+     50%{
+        background-position: 50% 0;
+     }
+     100%{
+        background-position: 100% 0;
+     }
+     
+  }
+   .welcome{
+      margin-top: 70px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+/* .btns{
    display: flex;
    flex-direction: row;
-   width: 50px;
-   height: 50px;
-   /* background-color: blue; */
-}
-.loading-spinner{
+    background-color: blue;
+} */
+
+ .loading-spinner{
    position: relative;
    top:0;
 }
+h1{
+   font-size: 50px;
+   margin-bottom: 10px;
+ }
 </style>

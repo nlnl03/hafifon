@@ -1,68 +1,70 @@
 <template>
-    <div class="loader-spinner" v-if="!isLoadForSpinner">
-          <loadingSpinner />
-    </div>
-<div class="main-page">
-<h1>האיזור האישי</h1>
-<div class="under-line"></div>
-<div class="main">
-  <div class="right-side-flex">
-    <div class="name-progress-details"> 
-    <div class="personal-info">
-      <div class="personal-info-items">
-        <div class="inner-right-flex"> 
-          <div v-if="isFinished" class="name-detail">
-              <h2>{{userName}}</h2>  
-           </div>
+ <div class="main-page" >
+    <h1>האיזור האישי</h1>
+    <div class="under-line"></div>
+      <div class="main">
+        <div class="right-side-flex">
+          <div class="name-progress-details"> 
+          <div class="personal-info">
+            <div class="personal-info-items">
+              <div class="inner-right-flex"> 
+                <div v-if="isFinished" class="name-detail">
+                    <h2>{{userName}}</h2>  
+                </div>
 
-          <div class="hafifa-nickname"> 
-                חפיפון מתחיל
+                <div class="hafifa-nickname"> 
+                      חפיפון מתחיל
+                </div>
+              </div>
+
+          <div class="inner-left-flex">
+                <img class="user-image" src="http://www.portalhr.leshem.idf/KioskServlet?infoOrPic=pic"> 
           </div>
-        </div>
-
-        <div class="inner-left-flex">
-              <img class="user-image" src="http://www.portalhr.leshem.idf/KioskServlet?infoOrPic=pic"> 
-        </div>
       </div>
     </div>
 
-    <div class="progress-info">
-         <div class="progress-item">
-           <div class="title">כמה עברתי מהחפיפה ?</div> 
-        <div class="progress-circle">
-          <circle-progress 
-          :percent="calcTotalProgress(val)"
-          :show-percent="true"
-           fill-color="var(--main-background-color)"
-           :viewport="true"
-           :transition="600"
-          />
-        </div>
-        </div>
-     </div>
-</div>
+            <div class="progress-info">
+                <div class="users-progress-item" >
+                  <div class="title" v-if="isLoadForSpinner">כמה עברתי מהחפיפה ?</div>
+                      <div class="spinner-for-progress" v-if="!isLoadForSpinner"><loadingSpinner /></div> 
+                      <div class="progress-circle" v-if="isLoadForSpinner">
+                        <circle-progress 
+                          :percent="calcTotalProgress(val)"
+                          :show-percent="true"
+                          fill-color="var(--main-background-color)"
+                          :viewport="true"
+                          :transition="600"
+                        />
+                      </div>
+                </div>
+            </div>
+      </div>
   </div> 
-        <div class="left-side-flex">
-            <div class="grid-container" v-if="isLoad">
-              <div class="average">
-                <span class="items-title">ממוצע ציונים </span>
-                   <span class="gradeAv">{{calcGradesAve(average)}}</span>
-                </div>
 
-              <div v-for="(exam,index) in onlyExamData" :key="exam">
-                <div :class="dynamicGridClass(index+1)" >
-                    <span class="items-title">{{examsNames[index].subject}}</span>
-                    <span v-if="exam!=null" class="the-grades">{{exam[exam.length-1]["finalGrade"]}} </span>
-                    <span v-if="exam==null" class="the-grades-no-examdata">עוד לא הוזן</span>
-                    <div class="show-exam">
-                      <router-link v-if="exam!=null" class="exam-Checked-router" :to="{name:'CheckedExams',params:{title:examsNames[index].Title}}">לצפייה במבחן</router-link>
-                    </div>
-                </div>
+        <div class="left-side-flex">
+            <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
+
+            <div class="grid-container" v-if="isLoadForSpinner">
+              <div class="average">
+                  <span class="items-title" >ממוצע ציונים </span>
+                  <span class="gradeAv" ref="gradeAv">{{calcGradesAve(average)}}</span>
               </div>
-              
-             </div>
-             </div>
+
+            <div v-for="(exam,index) in onlyExamData" :key="exam">
+              <div :class="dynamicGridClass(index+1)" >
+                  <span class="items-title">{{examsNames[index].subject}}</span>
+                  <span v-if="exam!=null" class="the-grades">{{exam[exam.length-1]["finalGrade"]}} </span>
+                  <span v-if="exam==null" class="the-grades-no-examdata">עוד לא הוזן</span>
+
+                  <div class="show-exam">
+                     <router-link v-if="exam!=null" class="exam-Checked-router" :to="{name:'CheckedExams',params:{title:examsNames[index].Title}}">לצפייה במבחן</router-link>
+                  </div>
+              </div>
+            </div>   
+          </div>
+
         </div>
+    </div>
 </div>
  
 </template>
@@ -70,16 +72,17 @@
 <script>
 import CircleProgress from 'vue3-circle-progress'
 import "vue3-circle-progress/dist/circle-progress.css"
+import loadingSpinner from '../components/loadingSpinner.vue'
 import axios from 'axios';
 export default {
   components:{
-    CircleProgress
+    CircleProgress,
+    loadingSpinner
    },
   data(){
     return{
        userDetails:[],
        gradesAvera: [],
-       testsNameUrl:process.env.NODE_ENV =='development'? 'http://localhost:3000/testsNames/' : "https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('testsNames')/Items",
        userName:'',
        isFinished:false,
        userId:'',
@@ -88,8 +91,9 @@ export default {
        examsNames:[],
        hafifaProgress:null,
        isLoad:false,
-       theAve:0,
+       average:null,
        timeOut:null,
+       isGradeAve:false,
        isLoadForSpinner:false
      }
   },
@@ -100,9 +104,16 @@ export default {
           })
         },
         async getExamsNames(){
-           const res = await axios.get(this.testsNameUrl)
-           this.examsNames = res.data.value
-           console.log(this.examsNames)
+          var res=null
+          if(this.$isSharePointUrl){
+            res = await axios.get(this.$sharePointUrl+"getByTitle('testsNames')/Items")
+          }
+          else{
+            res = await axios.get(this.$sharePointUrl+"testsNames")
+          }
+             this.examsNames = res.data.value
+            console.log(this.examsNames)
+          
         },
 
         async parseData(){
@@ -120,19 +131,35 @@ export default {
        async getCheckedExam(){
          this.userId=localStorage.getItem("userId")
          console.log(this.userId)
-         const res = await axios.get(`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/Items?$filter=num eq '${this.userId}'`)
-         this.checkedExamData = res.data.value
-         await this.parseData()
-           console.log(this.checkedExamData)
-           this.filterToExamsOnly()
-           this.isLoadForSpinner=true
-        },
-           filterToExamsOnly(){
-             this.examsNames.forEach(name=>{
-               this.onlyExamData.push(this.checkedExamData[0][name.Title])
-             })
-              console.log(this.onlyExamData)
+         var res = null
+         if(this.$isSharePointUrl){
+            res = await axios.get(this.$sharePointUrl+`getByTitle('students')/Items?$filter=num eq '${this.userId}'`)
+            this.checkedExamData = res.data.value
+         }
+         else{
+            res = await axios.get(this.$sharePointUrl+`students?num='${this.userId}'`)
+            this.checkedExamData = res.data
+         }
+                console.log(this.checkedExamData)
+                this.filterToExamsOnly()
+                this.calcGradesAve()
+                this.isLoadForSpinner=true
+         },
+          async filterToExamsOnly(){
+            await this.parseData()
+            if(this.$isSharePointUrl){
+                this.examsNames.forEach(name=>{
+                  this.onlyExamData.push(this.checkedExamData[0][name.Title])
+                })
+            }
+            else{
+                this.examsNames.forEach(name=>{
+                    this.onlyExamData.push(this.checkedExamData[name.Title])
+                })
+            }
+                console.log(this.onlyExamData)
             },
+            
             dynamicGridClass(index){               
               return 'test-'+index+'-score'
             },
@@ -170,24 +197,37 @@ export default {
               console.log(counter)
               if(length==0){
                   console.log("is 0")
-                return average = ifEmptyText
+                  let a = this.$refs["gradeAv"]
+                  console.log(a);
+                  // this.$refs["gradeAv"].style.fontSize = "20px";
+                  return average = ifEmptyText
               }
               else{
                 return average = ave/length
+                
               }
-                 
+            },
+            asyncSetTimeout(){
+              return new Promise((res)=>{
+                setTimeout(res,300)
+                })
+              },
+            
+           getUserName(){
+              var userName = localStorage.getItem("userName")
+              this.userName = userName
+              // console.log(this.userName)
             }
      },
 
     async beforeMount(){
-      var userName = localStorage.getItem("userName")
-      this.userName =  userName
-      // console.log(this.userName)
+      await this.asyncSetTimeout()
+      this.getUserName()
       this.isFinished = true
-      this.timeOut = await setTimeout(this.getCheckedExam,100)
-        this.isLoad=true
-     }
-   
+      this.getCheckedExam()
+      //  this.timeOut = await setTimeout(,200)
+      },
+     
 }
 </script>
 
@@ -313,12 +353,13 @@ h5{
     justify-content: center;
     height: 100%;
    }
- .progress-item{
+ .users-progress-item{
     display: flex;
     flex-direction: column;
     height: 90%;
     align-items: center;
     justify-content: space-evenly;
+    margin-top: 8px;
 
   }
  .title{
@@ -327,7 +368,7 @@ h5{
       padding-bottom: 7px;
       font-size: 20px;
       text-align: center;
-      border-bottom: 1px solid var(--main-background-color)  ;
+      /* border-bottom: 1px solid var(--main-background-color)  ; */
   }
   
  .average-title{
@@ -352,6 +393,9 @@ h5{
     height: 160px;
     box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
     border-radius: 30px 30px;
+ }
+ .no-gradeAv-yet{
+   font-size: 20px;
  }
   .items-title{
     font-size: 22px;
@@ -421,6 +465,26 @@ h5{
   }
   .exam-Checked-router:hover{
     background-color: var(--main-background-color);
-;
+
   }
+  .spinner{
+    position: relative;
+    bottom:50%;
+    transform: translateY(50%);
+   }    
+  .spinner .spin::before{
+      height: 80px;
+      width: 80px;
+  }
+  .spinner-for-progress{
+      position: relative;
+       bottom:70%;
+       transform: translateY(80%);
+  }
+  .spinner-for-progress .spin::before{
+      height: 45px;
+      width: 45px;
+   }
+
+
 </style>

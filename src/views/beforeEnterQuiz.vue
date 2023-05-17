@@ -1,5 +1,6 @@
 <template>
-  <div class="main-container">
+    <div class="spiner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
+  <div class="main-container" v-if="isLoadForSpinner" >
       <div class="about-quiz" v-if="!isShow">
           <div class="quiz-subject">
               {{Subject}}
@@ -18,33 +19,53 @@
 
 <script>
 import axios from 'axios'
+import loadingSpinner from '../components/loadingSpinner.vue'
  export default {
 name:"beforeEnterQuiz",
+    components:{
+        loadingSpinner
+    },
+
   data(){
     return{
       results:[],
       Subject:'',
-      }
+      isLoadForSpinner:false,
+      timeOut:null,
+
+    }
 },
-methods:{
-      goBack(){
-        this.$router.go(-1)
-    },
+    methods:{
+        goBack(){
+            this.$router.go(-1)
+        },
+
+        async getData(){
+            if(this.$isSharePointUrl){
+                const res = await axios.get(this.$sharePointUrl+"getByTitle('tirgulim')/Items")
+                this.results = res.data.value
+                this.results = this.results.filter(data=>data.Title == this.$route.params.title)[0]
+                this.Subject = this.results.Subject
+                // console.log(this.Subject)
+            }
+                this.isLoadForSpinner = true
+        }
       
 },
 
 
-async beforeMount(){
-    const res = await axios.get("https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('tirgulim')/Items")
-    this.results = res.data.value
-    this.results = this.results.filter(data=>data.Title == this.$route.params.title)[0]
-    this.Subject = this.results.Subject
-    console.log(this.Subject)
- }
+    async beforeMount(){
+        this.timeOut = await setTimeout(this.getData,150)
+    }
 }
 </script>
 
 <style scoped>
+.spiner{
+    position: relative;
+      display: flex;
+      top:100px
+ }
 .main-container{
     height: 813px;
     width: 100vw;

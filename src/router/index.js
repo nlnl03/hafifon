@@ -2,14 +2,13 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import HomePage from '../views/HomePage.vue'
  import PracticesList from '../views/PracticesList.vue'
  import beforeEnterQuiz from '../views/beforeEnterQuiz.vue'
- import FinalExam from '../views/FinalExam.vue'
  import User from '../views/User.vue'
- import MainCheckPage from '../views/hafifonCheck/MainCheckPage.vue'
- import examsIsChecked from '../views/hafifonCheck/examsIsChecked.vue'
- import examsToCheck from '../views/hafifonCheck/examsToCheck.vue'
+ import MainCheckPage from '../views/hafifonAdmin/MainCheckPage.vue'
+ import examsToCheck from '../views/hafifonAdmin/examsToCheck.vue'
+ import openPermForExams from '../views/hafifonAdmin/openPermForExams.vue'
  import Quiz from '../views/Quiz.vue'
  import exams from '../views/exams.vue'
- import submitExams from '../views/submitExams.vue'
+ import submitted from '../views/submitted.vue'
  import practiceResult from '../views/practiceResult'
 import displayCheckedExams from '../views/displayCheckedExams'
 
@@ -24,11 +23,7 @@ const routes = [
     name: 'PracticesList',
     component: PracticesList
   },
-  {
-    path: '/FinalExam',
-    name: 'FinalExam',
-    component: FinalExam
-  },
+
   {
     path: '/User',
     name: 'User',
@@ -40,20 +35,27 @@ const routes = [
     component: displayCheckedExams
   },
   {
-    path: '/MainCheckPage',
+    path: '/Admin/MainCheckPage',
     name: 'MainCheckPage',
     component: MainCheckPage
   },
+  
   {
-    path: '/examsToCheck/:num/:examType',
+    path: '/Admin/examsToCheck/:num/:examType',
     name: 'examsToCheck',
     component: examsToCheck,
     props:true 
   },
   {
+    path: '/Admin/openPermForExams',
+    name: 'openPerm',
+    component: openPermForExams,
+    props:true 
+  },
+  {
     path: '/examsToCheck/:num/:examType/submitted',
-    name: 'examsIsChecked',
-    component: examsIsChecked,
+    name: 'submitted',
+    component: submitted,
     props:true 
   },
   {
@@ -64,8 +66,8 @@ const routes = [
   },
   {
     path: '/exams/:Title/submitted',
-    name: 'submitExams',
-    component: submitExams,
+    name: 'submitted',
+    component: submitted,
     props: (route)=>({...route.params})
   },
   {

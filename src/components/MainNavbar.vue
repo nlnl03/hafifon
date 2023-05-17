@@ -2,7 +2,10 @@
    <div class="main-nav">
              <router-link :to="{ name: 'HomePage'}" class="home-title" >
                 חפיפה
-            </router-link>  
+            </router-link> 
+            <!-- <div class="logo">
+                <img src="../assets/logo-removebg-preview.png" alt="">
+            </div>  -->
             <router-link :to="{ name: 'User'}"  class="user-title" >
                 לאיזור אישי
             </router-link>
@@ -16,15 +19,22 @@
                       </div>
                    </li>
 
-                   <li>
-                      <div>
-                            <router-link :to="{name: 'MainCheckPage'}">ממשק בדיקות</router-link>
-                      </div>
-                   </li>
+                   <li class="exams-drop-down" @mouseover="isOpen = true" @mouseleave="isOpen = false" >
+                        <span >ממשק מנהלים</span>
+                             <ul class="admin-drop-down-menu" v-if="isOpen">
+                                <li class="drop-down-list">
+                                    <router-link class="admin-routers" :to="{name:'MainCheckPage'}"> בדיקת מבחנים</router-link>
+                                </li>
+                                <li class="drop-down-list">
+                                    <router-link class="admin-routers" :to="{name: 'openPerm'}"> פתיחת הרשאות למבחנים</router-link>
+                                </li>
+                             </ul>
+                    </li>
+
                     
-                    <li class="exams-drop-down" @mouseover="isOpen = true" @mouseleave="isOpen = false" >
+                    <li class="exams-drop-down" @mouseover="isExamsDropOpen = true" @mouseleave="isExamsDropOpen = false" >
                           <span >בחנים</span>
-                             <ul class="drop-down-menu" v-if="isOpen">
+                             <ul class="drop-down-menu" v-if="isExamsDropOpen">
                                 <li v-for="name in examsName" :key="name" class="drop-down-list">
                                     <router-link class="drop-down-items" :to="{name:'exams',params:{Title:name.Title}}" >{{name.subject}}</router-link>
                                 </li>
@@ -50,39 +60,55 @@ export default {
     name: 'MainNavbar',
     data(){
         return{
-            isOpen: false,
+            isExamsDropOpen: false,
+            isOpen:false,
             examsName:[],
             url: process.env.NODE_ENV =='development'? `http://localhost:3000/testsNames/`:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('testsNames')/Items",
-         }
+          }
     },
     methods:{
         async getNameOfExams(){
-            const res = await axios.get(this.url)
-            this.examsName = res.data.value
+            var res = null
+            if(this.$isSharePointUrl){
+                res = await axios.get(this.$sharePointUrl+"getByTitle('testsNames')/Items")
+            }
+            else{
+                 res = await axios.get(this.$sharePointUrl+"testsNames")
+            }
+             this.examsName = res.data.value
+            localStorage.setItem("examsName",JSON.stringify(this.examsName))
             this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
-            console.log(this.examsName)
+            // console.log(this.examsName)
         },
         async checkPermForCheckPage(){
             const res = await axios.get("https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('AdminCheck')/Items?$filter eq admin")
-        }
+        },
+        
     },
-    async beforeMount(){
-       if(this.url=='development')
-        {
-            await this.getNameOfExams()
-        }
-        else{
-            const res= await axios.get(this.url)
-            this.examsName = res.data.value
-            this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
-         }
+     async beforeMount(){
+         await this.$isSharePointUrl
+         this.getNameOfExams()
+         
+        // else{
+        //     const res= await axios.get(this.url)
+        //     this.examsName = res.data.value
+        //     this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
+        //  }
  
     }
 }
 </script>
 
 <style scoped>
+.logo{
+    position: absolute;
+        right: 80px;
+        top: 40px;
 
+}
+img{
+    width: 80px;
+}
 .main-nav{
     height: 125px;
     width: 100%;
@@ -151,6 +177,7 @@ a{
     top: 32px;
     height: 60px;
     right: 150px;
+
  }
  
 .user-title{
@@ -173,7 +200,7 @@ a{
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
  }
   
- .drop-down-menu{
+ .drop-down-menu , .admin-drop-down-menu{
     position: absolute;
     display: flex;
     z-index: 1000;
@@ -187,19 +214,26 @@ a{
     border-radius: 5px;  
     animation: growOut 280ms ease-in-out forwards;
     transform-origin: top center;
-        /* transform: translateX(29%); */
-  }
+   }
 
- .drop-down-items{
+ .drop-down-items, .admin-routers{
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: gray;
-    /* padding: 25px 0; */
     font-size: 20px;
   }
+  .admin-drop-down-menu{
+      height: 120px;
+      width: 150px;
+      right:-10%;
+    }
+    .admin-routers{
+        padding: 0.75em;
+    }
+ 
   .drop-down-list{
     border-bottom: 1px solid #f3f3f3;
     width: 100%;

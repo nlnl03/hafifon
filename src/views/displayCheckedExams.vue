@@ -2,20 +2,28 @@
 <div class="exam">
    <div class="exam-checked" v-for="(exam,index) in checkedExam[examType]" :key="exam">
       <div class="que">
-          {{index+1+"."}} {{exam.Que}}
+          <div class="que-title">
+             <div class="que-index">{{index+1+"."}}</div>
+                {{exam.Que}}
+          </div>
+        <div class="points">
+          {{exam.Points}}/{{showTheGradeOutOf(val)}}
+        </div>
       </div>
+    
         <p>התשובה שענ\תה:</p>
       <div class="ans">
           {{exam.Ans}}
       </div>
-      <div class="points">
-          {{exam.Points}}/{{showTheGradeOutOf(val)}}
-      </div>
-       <p>הערות הבודק\ת:</p>
+      
+       <p class="comments-title">הערות הבודק\ת:</p>
+          <div v-if="!exam.Comments">אין הערות</div>
+
       <div class="comments" v-if="exam.Comments">
-          <span>הערות הבודק\ת</span>
-          {{exam.Comments}}
-      </div>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est tenetur maxime ipsum, illo, in doloremque cumque dolores dolore numquam consectetur id, unde enim non sapiente repellat iure voluptatibus quis. Sint possimus deserunt porro incidunt corporis perferendis fugit tempora voluptatibus. Nostrum, ut similique voluptatibus totam iste, vero tenetur distinctio numquam rerum commodi repellendus, quae nam rem! Rerum blanditiis, recusandae harum itaque asperiores, illo dolores numquam nisi tempora mollitia facilis laboriosam neque culpa ipsa exercitationem in similique tenetur temporibus est ratione explicabo dolore qui quos. Modi, corrupti quidem blanditiis quis ad impedit obcaecati repellat at tempore necessitatibus suscipit ratione facere eaque, aliquam error quisquam commodi unde. Aut aliquam accusantium, esse odio est, illum veniam repellendus maxime quaerat modi mollitia numquam deserunt dolorem, temporibus minima architecto? Unde laborum velit earum ipsa odit numquam eius quod expedita magni aut doloremque totam sunt, possimus voluptates sed veritatis porro quisquam nihil eaque quia ad ipsam aliquid exercitationem distinctio. Inventore dignissimos totam ad quae earum vel in magni dolorem. Distinctio provident nesciunt tenetur, odit pariatur, maxime atque ipsum ab impedit architecto nihil ut magnam voluptate quasi eligendi, neque ullam ducimus et ipsa mollitia a? Fugiat dignissimos, quibusdam recusandae ad consequuntur, quas repellat eius nam neque repudiandae ullam?
+       </div>
+
+      <div class="under-line"></div>
   </div>
 
 </div>
@@ -35,7 +43,15 @@ export default {
     },
     methods:{
         async getdata(){
-            const res = await axios.get(`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('students')/Items?$filter=num eq '${this.userId}'&$select=${this.examType}`)
+            var res = null
+            if(this.$isSharePointUrl){
+                res = await axios.get(this.$sharePointUrl+`getByTitle('students')/Items?$filter=num eq '${this.userId}'&$select=${this.examType}`)
+                
+            }
+            else{
+                res = await axios.get(this.$sharePointUrl+`students?num='${this.userId}'`)
+ 
+            }
             this.checkedExam = res.data.value
             this.parseData()
             console.log(this.checkedExam)
@@ -83,13 +99,17 @@ export default {
     min-height: 400px;
  }
 .exam-checked{
-    width: 80%;
+    width: 74%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
 }
   .que{
     margin-bottom: 30px;
     margin-top: 20px;
     min-height: 80px;
-    width: 70%;
+    width: 60%;
     position: relative;
      padding: 1em 32px;
     display: flex;
@@ -99,9 +119,46 @@ export default {
     font-size: 24px;
     font-weight: 700;
  }
+ .que-index{
+    display: inline;
+    font-size: 30px;
+    margin-left: 20px;
 
- .points{
-     direction: ltr;
  }
-
+ .que-title{
+    padding-left: 1.3em;
+ }
+ .points{
+    direction: ltr;
+ }
+ p{
+    position: relative;
+    font-size: 22px;
+    font-weight: 700;
+    border-bottom: 1px solid rgb(211, 210, 210);
+    margin-bottom: 30px;
+ }
+ .ans{
+    background: #bfbfbf94;
+    min-width: 400px;
+    min-height: 40px;
+    border-radius: 10px;
+    padding: 1em;
+ }
+ .comments{
+    background: #bfbfbf94;
+    width: 700px;
+    min-height: 40px;
+    border-radius: 10px;
+    padding: 1.5em;
+ }
+  .comments-title{
+     margin-top: 30px;
+ }
+.under-line{
+    border-bottom: 2px solid hsla(0,0%,74.9%,.5803921568627451);
+    width: 60%;
+    margin-bottom: 40px;
+    margin-top: 100px;
+}
 </style>

@@ -15,38 +15,57 @@ export default {
     },
     data(){
       return{
-        token:null
+        token:null,
+        currentUser: process.env.NODE_ENV =='development'? "http://localhost:3000/currentUser" : "https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
+        urlForToken: process.env.NODE_ENV =='development'? `http://localhost:3000/`:"https://portal.army.idf/sites/hafifon383/_api/contextinfo",
+        Id:null,
+        userName:null,
+        isAdmin:null
+        
       }
     },
       methods:{
         async getToken(){
           const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
           this.token = res.data.FormDigestValue
-          console.log(this.token)
+          // console.log(this.token)
       },
+      async getCurrentUser(){
+         const res = await axios.get(this.currentUser)
+          this.currentUserData = res.data;
+          this.Id=this.currentUserData.Id
+          const Title = this.currentUserData.Title.split(' -')
+          this.userName = Title[0]
+           localStorage.setItem("userName",this.userName)
+          localStorage.setItem("userId",this.Id)
+          console.log(this.Id)
+          // console.log(this.currentUserData)
+        },
 
-        async srtDefaultPage(){
-          await this.getToken()
-          const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/web/rootfolder",{
-            '__metadata':{
-              'type':'SP.Folder'
-            },
-              'WelcomePage':'hafifon/index.html#/'
-       },
-       {
-              headers:{
-                  "Accept":"application/json;odata=verbose",
-                  "Content-Type":"application/json;odata=verbose",
-                  "If-MATCH":"*",
-                  "X-HTTP-Method":"PATCH",
-                  "X-RequestDigest":this.token
-              }
-       })    
-    }      
+    
+    async checkIfAdmin(){
+            var res = null
+            if(this.$isSharePointUrl){
+                res = await axios.get(this.$sharePointUrl+"getByTitle('AdminCheck')/Items")
+            }
+            else{
+                 res = await axios.get(this.$sharePointUrl + "AdminCheck")
+            }
+                // console.log(res.data.value)
+                if(res.data.value.length){
+                    this.isAdmin = true
+                }
+                else{
+                    this.isAdmin = false
+                 }
+                // console.log("isAdmin: "+ this.isAdmin)
+                sessionStorage.setItem("isAdmin",this.isAdmin)
+        }      
  },
 
-      async beforeMount(){
-        this.srtDefaultPage()
+        beforeMount(){
+          this.getCurrentUser()
+          this.checkIfAdmin()
       }
       
      
@@ -61,16 +80,29 @@ export default {
     left: 52%;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-.progress-item .vue3-circular-progressbar .current-counter::after{
+.users-progress-item .vue3-circular-progressbar .current-counter::after{
     font-size: 35px;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     content: '%' ;
 }
+ .practice-results-score .vue3-circular-progressbar .current-counter::after{
+    font-size: 35px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    content: '%' ;
+  }
+  .average-items .vue3-circular-progressbar .current-counter{
+        font-size: 40px;
+        /* top:20px */
+  }
    .average-items .vue3-circular-progressbar .current-counter::after{
+      content: '%';
+      font-size: 25px;
+  }
+  .average-items .vue3-circular-progressbar .loading-spinner{
       content: '%';
       font-size: 28px;
   }
-  ::-webkit-scrollbar{
+   ::-webkit-scrollbar{
   width: 10px;
 }
 ::-webkit-scrollbar-track{
@@ -117,11 +149,19 @@ export default {
       direction: rtl;
 
   }
+  body{
+    min-height: 100vh;
+    height: 100vh;
+    min-width: 100vw;
+    width: 100vw;
+    overflow-x: hidden;
+  }
   button{
         outline: none;
      }
-     .swal2-popup{
-       height: 390px;
-       width: 42em;
-     }
+  .swal2-popup{
+     height: 470px;
+     width: 48em !important;
+     border-radius:10px !important ;
+  }
  </style>

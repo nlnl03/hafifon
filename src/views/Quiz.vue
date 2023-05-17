@@ -1,8 +1,9 @@
-<template> 
-    <div class="quiz-box" v-if="isFinished" >  
+<template>
+  <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
+    <div class="quiz-box" v-if="isFinished&&isLoadForSpinner" >  
         <form v-for="(question,index) in examData" :key="index"  >
           <div v-if="index==ite">
-              <div class="question"> 
+              <div class="question" v-if="question.type!= null"> 
                   <span class="questions-text">{{question.Title}}</span> 
                   <div class="current-que">{{ite+1}}/{{examData.length}}</div> 
               </div> 
@@ -20,31 +21,43 @@
                         <div class="VX" :ref="option"></div>
                     <div class="bank-options" :ref="option+midIndex">
                         <div class="bank-words-items"  v-for="(item,indexInner) in question.bankCorrect" :key="item+indexInner">
-                           <input type="radio" v-model=" bankUserData[question.Title][option]"  :id="item+midIndex" :value="item" @click="clickBankHandler($event,option,bankUserData[question.Title],index,midIndex)" :disabled="bankUserData[question.Title][option]!=''"/>
-                           <label class="bank-options-text" :for="item+midIndex" > {{item}}  </label>  
+                           <input type="radio" v-model="bankUserData[question.Title][option]" :id="item+midIndex" :value="item" @click="clickBankHandler($event,option,bankUserData[question.Title],index,midIndex)" :disabled="bankUserData[question.Title][option]!=''" />
+                           <label class="bank-options-text" :for="item+midIndex" >{{item}}</label>  
                         </div>
                     </div>
                 </div>
               </div>
-                <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]&&isDisabled" v-if="ite!=examData.length-1" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
+
+              <div v-if=" question.type == null">
+                <div class="que-title">שאלה {{ite+1}} נסו בעצמכם</div>
+                <div class="questions-without-ans">
+                    <span>{{question.Title}}</span>
+                 </div>
+                  <button class="next-btn-on-type-null" @click="nextQue" v-if="examData.length!=ite+1" >הבא</button>
+                  <button class="next-btn-on-type-null" @click="submit" v-if="examData.length==ite+1" >סיים</button>
+              </div>
+
+                <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]&&isDisabled" v-if="ite!=examData.length-1&&question.type != null" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
           </div>
         </form>  
-              <router-link class="submit-btn" :to="{name:'result'}" v-if="examData.length==ite+1"
-               @click="submit"> <span class="finish-btn-text"> סיים </span></router-link>
+              <button @click="submit" class="next-button" v-if="examData.length==ite+1&&examData[ite].type != null" :disabled="!isEndBtnAllow" ref="endBtn" :style="`--next-btn-cusror:${nextBtnCursor}`"> 
+                  <span class="finish-btn-text"> סיים </span>
+              </button>
      </div>
 </template>
 
 <script>
 import practiceResult from '../views/practiceResult.vue'
+import loadingSpinner from '../components/loadingSpinner.vue'
 import axios from 'axios'
 export default {
   components:{
-    practiceResult
+    practiceResult,
+    loadingSpinner
   },
   data(){
     return{
        examData:[],
-       url: process.env.NODE_ENV =='development'? `http://localhost:3000/practice/`:`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`,
        userData:{},
        bankUserData:{},
        grades: 0,
@@ -61,8 +74,12 @@ export default {
        bankWrongAns:[],
        parseAns:[],
        isDisabled:true,
-       bankQuePoints:0
-     }
+       bankQuePoints:0,
+       isLoadForSpinner:false,
+       isEndBtnAllow:false,
+       countRightsAns:0,
+       queWithoutAns:0
+      }
   },
   methods:{
     clickHandler(event,index,titleOfQuestion){
@@ -71,25 +88,37 @@ export default {
            const pressedAnswer = event.target;
            const pressedAnswerValue = pressedAnswer.value
           const indexOfCorrectAnswer = this.examData[index]["correctAnswer"]
-        //  console.log(this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input"))
-         const rightAnswer = this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input")
+          const rightAnswer = this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input")
            const rightAnswerValue = rightAnswer.value
-               
+               var nextBtn = this.$refs["nextBtn"]
+                var endBtn = this.$refs["endBtn"]
           if(pressedAnswerValue != rightAnswerValue){ 
                 pressedAnswer.classList.add("input-answer-wrong")
             }
-                  rightAnswer.classList.add("input-answer-right")
+            else{
+                this.countRightsAns++
+                console.log(this.countRightsAns)
+            }
+                   rightAnswer.classList.add("input-answer-right")
              
               if(this.ite!=this.examData.length-1){
-                 var nextBtn = this.$refs["nextBtn"]
-                   nextBtn.classList.add("next-btn-on") 
-              }
-      },
+                console.log("yess")
+                   nextBtn.classList.add("next-btn-on")
+               }
+               if(index == this.examData.length-1){
+                   this.isEndBtnAllow = true
+                   endBtn.classList.add("next-btn-on")
+               }
+       },
       clickBankHandler(event,option,modelData,index,midIndex){
             var inputsCursor = this.$refs[option+midIndex]
               inputsCursor.classList.add("bank-input-cursor")
               this.checkIfcorrectBank(event,option,modelData,index)
               this.disableNextBtn(modelData)
+               if(index == this.examData.length-1){
+                   this.isEndBtnAllow = true
+                   endBtn.classList.add("next-btn-on")
+               }
          },
         checkIfcorrectBank(event,option,modelData,index){
           const pressedBankAnswer = event.target;
@@ -103,8 +132,10 @@ export default {
            if(val==this.examData[index].bankOptions[option]){
                 console.log("correct")
                 addVX.classList.add("input-bank-right")
-                this.bankQuePoints += (100/this.examData.length)/bankOptionLen
-                console.log(this.bankQuePoints)
+                this.bankQuePoints += (100/(this.examData.length-this.queWithoutAns))/bankOptionLen
+                // console.log(this.bankQuePoints)
+                this.countRightsAns++
+                console.log(this.countRightsAns)
               }
             else{
               console.log("not correct")
@@ -142,7 +173,7 @@ export default {
         this.inputsCursor='pointer',
         this.nextBtnCursor= 'not-allowed'
         this.ite++
-        this.isFinishedButton=false
+        this.isFinishedButton=false         
     },
     backQue(){
          this.ite--
@@ -158,47 +189,50 @@ export default {
         this.isFinished = true;
     },
 
-    updateVmodelBank(){
-           this.examData.forEach((question)=>{ 
-            if(question.type=="bankQue"){
+    updateVmodelBank(){           
+            this.examData.forEach((question)=>{ 
+             if(question.type=="bankQue"){
               this.bankUserData[question.Title] = {}
-             Object.keys(question.bankOptions).forEach((ans)=>{
-               this.bankUserData[question.Title][ans] = ""
+             Object.keys(question.bankOptions).forEach((que)=>{
+               this.bankUserData[question.Title][que] = ""
             })
           } 
         })
-          //  console.log(this.bankUserData)
+           console.log(this.bankUserData)
                this.isFinished = true;
           
     },
      submit(){
-       //    console.log(this.userData)
-        //  console.log(this.results)
-         this.examData.forEach(que => {
+       this.$router.push({name:'result'})
+          this.examData.forEach(que => {
            if(que.type=='american'){
-              //  console.log(this.userData)
-              if(this.userData[que.Title]== que.answers[que.correctAnswer])
-              {
-                this.grades++
-                // console.log(this.grades) 
-              }
+                if(this.userData[que.Title]== que.answers[que.correctAnswer])
+                  {
+                   this.grades++
+                  }
+                  
               else{
                 this.wrongQue = que.Title
                 this.wrongAns = this.userData[que.Title]
                 this.theCorrectAns = que.answers[que.correctAnswer]
                 this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns,type:"AmerQue"})     
-                }
-           } 
-           
+              }
+           }       
       })
-          var pointsInPerc =  Math.round((this.grades/this.examData.length)*100+this.bankQuePoints)
+          var pointsInPerc =  Math.round((this.grades/(this.examData.length-this.queWithoutAns))*100+this.bankQuePoints)
           localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
           localStorage.setItem("results", JSON.stringify(this.results))
+          console.log(this.results)
           localStorage.setItem("bankResults",JSON.stringify(this.bankResults))
-
+          console.log(this.bankResults)
+          var countRightsAns = this.countRightsAns + "/" + (this.examData.length-this.queWithoutAns)
+          localStorage.setItem("countRightsAns",countRightsAns)
     },
-     async getSharePointData(){
-          const res = await axios.get(this.url)
+    
+     async getData(){
+       var res = null
+       if(this.$isSharePointUrl){
+          res = await axios.get(this.$sharePointUrl+`getByTitle('${this.$route.params.title}')/Items`)
           this.examData = res.data.value;
 
            const promiseAnswers = await Promise.all(this.examData.map((item)=>{
@@ -211,7 +245,7 @@ export default {
             const promiseBankAnswer = await Promise.all(this.examData.map((item)=>{
               if(item.type=='bankQue'){
                   return this.asyncParse(item.bankCorrect).then((corr)=>{
-                  item['bankCorrect'] = corr
+                     item['bankCorrect'] = corr
                   return {item}
                 })
               }
@@ -225,28 +259,36 @@ export default {
                   })
                }
             }))
-                //  console.log(this.examData)
-      },
-
-      async getLocalData(){
-        const res = await axios.get(this.url)
+       }
+        else{
+          res = await axios.get(this.$sharePointUrl+"practice")
           this.examData = res.data.value
           this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
           this.examData = this.examData.exam
-          console.log(this.examData)
-      }
+          // console.log(this.examData)
+        }
+              this.examData.forEach(que=>{
+                if(que.type==null){
+                  this.queWithoutAns++
+                }
+              })
+          console.log(this.examData.length)
+          console.log(this.queWithoutAns)
+       },
+    asyncSetTimeout(){
+      return new Promise((res)=>{
+        setTimeout(res,500)
+      })
+    }
   },
+
    
-    async beforeMount(){
-        if(this.url == `https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.title}')/Items`){
-            await this.getSharePointData();
-        }
-
-        else{
-            await this.getLocalData()
-        }
-
+      async beforeMount(){
+        this.getData()
+          await this.asyncSetTimeout()
+          // console.log(this.examData)
           this.updateVmodelBank()
+          this.isLoadForSpinner = true
     },
 
       mounted(){
@@ -268,7 +310,7 @@ button{
 .next-button{
   border-radius:15px ;
   position: absolute;
-  bottom: 30px;
+  bottom: 25px;
   cursor: var(--next-btn-cusror);
   right: 50%;
   transform: translateX(50%);
@@ -278,11 +320,21 @@ button{
     color: #fff;
     background-color: var(--main-background-color);
 }
+.next-btn-on-type-null{
+     border:none;
+     position: absolute;
+     top:80%;
+     right: 50%;
+     transform: translate(50%,80%);
+    color: #fff;
+    background-color: var(--main-background-color);
+}
 .submit-btn{
     position: absolute;
     text-decoration: none;
     height: 40px;
     width: 110px;
+    bottom: 25px;
     border: 1px solid var(--main-background-color);
     border-radius: 10px;
     font-size: 18px;
@@ -300,7 +352,7 @@ button{
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
-    height: 655px;
+    height: 670px;
     width: 1040px;
 }
 .question{
@@ -316,14 +368,14 @@ button{
 .answer-options{
     padding: 25px 30px 20px 30px;
     margin-top: 30px;
-    max-height: 400px;
+    max-height: 397px;
     overflow-y: auto;
     direction: ltr;
 }
 .answer-items{
     height: 40px;
     position: relative;
-    background-color: #f0f8ffc2;
+    background-color: #eff5fbc2;
     border: 1px solid #b3c5d594;
     border-radius: 30px;
     padding: 0.85em;
@@ -416,7 +468,7 @@ button{
     }
     
   .input-bank-wrong::before{
-      content:"❌";
+     content:"❌";
       display: flex;
       align-items: center;
       height: 100%;
@@ -444,15 +496,26 @@ label{
 }
 .answers-text{
     padding-right: 2.7em;
-  font-size: 20px;
-  display: flex;
-  height: 100%;
-  align-items: center;
-  cursor: var(--cursor);
+    padding-left: 2em;
+    font-size: 20px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    cursor: var(--cursor);
 }
 
 .questions-text{
   width: 80%;
+}
+.questions-without-ans{
+    font-size: 30px;
+    margin: 0 10%;
+    margin-top: 135px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 .finish-btn-text{
   display: flex;
@@ -460,5 +523,16 @@ label{
   width: 100%;
   justify-content: center;
   align-items: center;
+}
+.que-title{
+  font-size: 45px;
+  font-weight: 700;
+  position: relative;
+  top: 50px;
+  text-align: center;
+}
+.spinner{
+  position: relative;
+  top:100px
 }
 </style>
