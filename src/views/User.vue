@@ -27,7 +27,7 @@
                 <div class="users-progress-item" >
                   <div class="title" v-if="isLoadForSpinner">כמה עברתי מהחפיפה ?</div>
                       <div class="spinner-for-progress" v-if="!isLoadForSpinner"><loadingSpinner /></div> 
-                      <div class="progress-circle" v-if="isLoadForSpinner">
+                      <div class="progress-circle-how-much" v-if="isLoadForSpinner">
                         <circle-progress 
                           :percent="calcTotalProgress(val)"
                           :show-percent="true"
@@ -159,7 +159,7 @@ export default {
             }
                 console.log(this.onlyExamData)
             },
-            
+
             dynamicGridClass(index){               
               return 'test-'+index+'-score'
             },
@@ -232,13 +232,24 @@ export default {
 </script>
 
 <style scoped>
+.main-page{
+  background-image: url("../assets/homePageBackground.png");
+        background-position: center;
+      background-size: cover;
+      height: 86.5vh;
+      width: 100%;
+      background-repeat: no-repeat;
+
+}
 .main{
     display: flex;
     direction: rtl;
     text-align: center;
-    height: 620px;
+    height: 645px;
+    margin-top: 25px;
     margin-right: 10%;
     margin-left: 10%;
+    
 }
 .name-progress-details{
   display: flex;
@@ -251,7 +262,7 @@ h1{
   color: var(--main-background-color);
   position: relative;
   margin-bottom: 50px;
-   top: 30px ;
+   top: 35px ;
   text-align: center;
 }
 .under-line{
@@ -290,12 +301,11 @@ h5{
   }
 
 .right-side-flex{
-    width: 50%;
-     height: 100%; 
-    align-items: center;
+    width: 47%;
+    height: 100%; 
+    align-items: flex-end;
     display: flex;
-    margin-top: 10px;
-    flex-direction: column;
+     flex-direction: column;
  }
 .left-side-flex{
     width: 50%;
@@ -303,8 +313,7 @@ h5{
     justify-content: center;
      height: 100%;
     display: flex;
-    margin-top: 10px;
-    flex-direction: column;
+     flex-direction: column;
   }
   .inner-right-flex{
     display: flex;
@@ -384,6 +393,7 @@ h5{
     justify-content: end;
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
+    background: #fff;
     gap: 25px 25px;
   }
  .average{

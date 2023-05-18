@@ -1,12 +1,16 @@
 <template>
 <div class="main" v-if="isAdmin">
+    <div class="title">פתיחת הרשאות</div>
+    
     <div class="permission">
         <div class="permisson-items" v-for="(per,index) in currentPermission" :key="per">
-            <span class="permission-title">{{per.Title}}</span>
-            <label class="switch" v-if="isload">
-                <input type="checkbox" :checked="per.isAllow" @click="openPerm(per,index)" :ref="per+index">
-                <span class="slider round"></span>
-            </label>     
+            <div class="permission-flex">
+                <span class="permission-title">{{per.Title}}:</span>
+                <label class="switch" v-if="isload">
+                    <input type="checkbox" :checked="per.isAllow" @click="openPerm(per,index)" :ref="per+index">
+                    <span class="slider round"></span>
+                </label> 
+            </div>    
         </div>
     </div>
 </div>
@@ -22,8 +26,6 @@ export default {
             groupId:null,
             targetRoleDefId:null,
             token:null,
-            testNames:[],
-            active:[],
             currentPermission:[],
             Id:null,
             isload:false,
@@ -156,36 +158,60 @@ export default {
     position: relative;
     justify-content: center;
     width: 55%;
-    height: 600px;
+    height: 700px;
     right: 50%;
     left: 50%;
-    transform: translate(50%,18%);
+    transform: translate(50%,8%);
     box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.212);
     border-radius:20px ;
 }
+.title{
+    text-align: center;
+    font-size: 40px;
+    font-weight: 700;
+    top: 55px;
+    position: absolute;
+    width: 100%;
+}
 .permission{
     display: flex;
-    margin-top: 50px;
-    justify-content: space-around;
-    width: 75%;
-    height: 50%;
-    flex-wrap: wrap;
+    flex-direction: column;
+    position: relative;
+    top: 200px;
+    max-height: 480px;
+    overflow-y: auto;
+    width: 60%;
+    flex-wrap: wrap; 
 
  }
 .permisson-items{
     display: flex;
-    margin-left: 10%;
-    flex-direction: column;
-    height: 150px;
+    justify-content: center;
+    align-items: center;
+    background-color: #cccccc9c;
+    margin-bottom: 35px;
+    margin-right: 40px;
+    border-radius: 20px;
+    height: 90px;
 }
+.permission-flex{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 70%;
+    width: 80%;
+
+}
+
 .permisson-items:last-child{
     margin-left: 0;
 }
 .permission-title{
+    margin-left: 10px;
     font-size: 25px;
     font-weight: 700;
-    margin-bottom: 40px;
-}
+    color: #575658;
+ }
 .toggle{
     background-color: #fff;
     border: none;
@@ -206,7 +232,7 @@ export default {
     left:0;
     right:0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #6d6c71;
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -222,10 +248,10 @@ export default {
     transition: .4s;
 }
 input:checked + .slider{
-    background-color: #2196F3;
+    background-color: var(--main-background-color);
 }
 input:focus + .slider{
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px var(--main-background-color);
 }
 input:checked + .slider::before{
     -webkit-transform:translateX(26px);

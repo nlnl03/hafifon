@@ -1,6 +1,11 @@
 <template>
   
     <MainNavbar/>
+    <div v-if="scroll >=300">
+      <button class="scroll-to-top" @click="scrollToTop">
+          &#9650;
+      </button>
+    </div>
     <router-view/>
   
 </template>
@@ -20,11 +25,18 @@ export default {
         urlForToken: process.env.NODE_ENV =='development'? `http://localhost:3000/`:"https://portal.army.idf/sites/hafifon383/_api/contextinfo",
         Id:null,
         userName:null,
-        isAdmin:null
-        
+        isAdmin:null,
+        scroll:null
       }
     },
       methods:{
+        scrollToTop(){
+          console.log(window.pageYOffset)
+          window.scrollTo({
+            top:0,
+            behavior:'smooth'
+          })
+        },
         async getToken(){
           const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
           this.token = res.data.FormDigestValue
@@ -40,6 +52,9 @@ export default {
           localStorage.setItem("userId",this.Id)
           console.log(this.Id)
           // console.log(this.currentUserData)
+        },
+        showScrollBtn(){
+          this.scroll = window.scrollY
         },
 
     
@@ -66,9 +81,14 @@ export default {
         beforeMount(){
           this.getCurrentUser()
           this.checkIfAdmin()
-      }
-      
-     
+      },
+
+       created(){
+         window.addEventListener('scroll', this.showScrollBtn)
+       },
+        unmounted(){
+          window.removeEventListener('scroll', this.showScrollBtn)
+        },
     }
 
 </script>
@@ -101,6 +121,12 @@ export default {
   .average-items .vue3-circular-progressbar .loading-spinner{
       content: '%';
       font-size: 28px;
+  }
+  .progress-circle .vue3-circular-progressbar .current-counter{
+    font-size: 32px;
+  }
+  .progress-circle .vue3-circular-progressbar .current-counter::after{
+    font-size: 22px;
   }
    ::-webkit-scrollbar{
   width: 10px;
@@ -164,4 +190,27 @@ export default {
      width: 48em !important;
      border-radius:10px !important ;
   }
+  .scroll-to-top{
+    position: fixed;
+    z-index: 100000;
+    bottom:70px;
+    right: 90px;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    background: var(--main-background-color);
+    border:none;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    font-size: 20px;
+    line-height: 1;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .scroll-to-top:hover{
+    background-color:  #3b999b;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+
+  }
+ 
+
  </style>

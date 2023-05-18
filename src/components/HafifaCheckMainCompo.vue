@@ -196,7 +196,7 @@ export default {
         return 'var(--main-background-color)'
       }
       else{
-       return '#de0f0f'
+       return 'rgb(175 11 11)'
       }
     },
       showAveOnEachTest(name){
@@ -301,13 +301,14 @@ export default {
        border: none;
        transition: all 0.2s ease-in-out;
        min-height: 70px;
-       background-color: rgba(160, 160, 160, 0.22);
+       background-color: rgb(150 149 149 / 39%);
     }
      button:hover{
-       background-color: #b9b8b8a8;
+       background-color: #cac8c88e;
      }
      .active .accordion-header, .accordion-header.active{
-       background-color: #8886867c;
+       background-color: #7270707c;
+       transition: 0.3s ease-in-out;
      }
 
  .accordion-item{

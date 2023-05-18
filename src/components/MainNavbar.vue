@@ -1,11 +1,9 @@
 <template>
    <div class="main-nav">
-             <router-link :to="{ name: 'HomePage'}" class="home-title" >
-                חפיפה
-            </router-link> 
-            <!-- <div class="logo">
-                <img src="../assets/logo-removebg-preview.png" alt="">
-            </div>  -->
+        <router-link class="home-title" :to="{ name: 'HomePage'}">
+                 חפיפה
+         </router-link>
+             
             <router-link :to="{ name: 'User'}"  class="user-title" >
                 לאיזור אישי
             </router-link>
@@ -100,14 +98,15 @@ export default {
 </script>
 
 <style scoped>
-.logo{
+.title-logo{
     position: absolute;
-        right: 80px;
-        top: 40px;
-
+    display: flex;
+    height: 125px;
+    align-items: center;
 }
-img{
-    width: 80px;
+ img{
+    width: 382px;
+    height: 70px;
 }
 .main-nav{
     height: 125px;
