@@ -11,19 +11,19 @@
         <div class="menu">
             <div class="nav-bar">
                 <ul>
-                   <li >
+                   <li>
                       <div>
-                            <router-link :to="{name: 'exams',params:{Title:'finalTest'}}">המבחן הסופי</router-link>
+                            <button class="final-test-btn" @click="checkIfhasPermToExams()">המבחן הסופי</button>
                       </div>
                    </li>
 
                    <li class="exams-drop-down" @mouseover="isOpen = true" @mouseleave="isOpen = false" >
                         <span >ממשק מנהלים</span>
                              <ul class="admin-drop-down-menu" v-if="isOpen">
-                                <li class="drop-down-list">
+                                <li class="admin-drop-down-list">
                                     <router-link class="admin-routers" :to="{name:'MainCheckPage'}"> בדיקת מבחנים</router-link>
                                 </li>
-                                <li class="drop-down-list">
+                                <li class="admin-drop-down-list">
                                     <router-link class="admin-routers" :to="{name: 'openPerm'}"> פתיחת הרשאות למבחנים</router-link>
                                 </li>
                              </ul>
@@ -34,7 +34,7 @@
                           <span >בחנים</span>
                              <ul class="drop-down-menu" v-if="isExamsDropOpen">
                                 <li v-for="name in examsName" :key="name" class="drop-down-list">
-                                    <router-link class="drop-down-items" :to="{name:'exams',params:{Title:name.Title}}" >{{name.subject}}</router-link>
+                                    <button class="drop-down-items" @click="checkIfhasPermToExams(name)" >{{name.subject}}</button>
                                 </li>
                              </ul>
                       </li>
@@ -60,7 +60,9 @@ export default {
         return{
             isExamsDropOpen: false,
             isOpen:false,
+            examsPerm:[],
             examsName:[],
+            isAdmin:false,
             url: process.env.NODE_ENV =='development'? `http://localhost:3000/testsNames/`:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('testsNames')/Items",
           }
     },
@@ -78,22 +80,45 @@ export default {
             this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
             // console.log(this.examsName)
         },
-        async checkPermForCheckPage(){
-            const res = await axios.get("https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('AdminCheck')/Items?$filter eq admin")
-        },
+
+        async checkIfhasPermToExams(name){
+          var res = null
+          var title = null
+             if(this.$isSharePointUrl){
+                res = await axios.get(this.$sharePointUrl+"getByTitle('isPermissionActive')/Items")
+             }
+            else{
+                res = await axios.get(this.$sharePointUrl+"isPermissionActive")
+            }
+                var examsPerm = res.data.value
+
+                if(name!==undefined){
+                    title = name.Title
+                    this.examsPerm = examsPerm.filter(data=>data.type==title)[0]
+                    console.log(this.examsPerm)
+                }
+
+                else{
+                    title = "finalTest"
+                    this.examsPerm = examsPerm.filter(data=>data.type==title)[0]
+                    console.log(this.examsPerm)
+                }
+
+                    if(this.examsPerm.isAllow||this.isAdmin){
+                        this.$router.push({name:'beforeStartingExam',params:{Title:title}})
+                    }
+                    else{
+                        this.$router.push({name:'noPermission',params:{Title:title}})
+                    } 
+        }
         
     },
      async beforeMount(){
-         await this.$isSharePointUrl
+        //  await this.$isSharePointUrl
          this.getNameOfExams()
-         
-        // else{
-        //     const res= await axios.get(this.url)
-        //     this.examsName = res.data.value
-        //     this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
-        //  }
- 
-    }
+         this.isAdmin = sessionStorage.getItem("isAdmin")
+     },
+    
 }
 </script>
 
@@ -224,6 +249,22 @@ a{
     color: gray;
     font-size: 20px;
   }
+   button[class="final-test-btn"]{
+    outline: none;
+    background: var(--main-background-color);
+    border: none;
+    color: #fff;
+    font-size: 23px;
+    cursor: pointer;
+  }
+
+
+   button[class="drop-down-items"]{
+    background:#fff;
+    border:none;
+    border-radius: 5px;  
+    cursor: pointer;
+  }
   .admin-drop-down-menu{
       height: 120px;
       width: 150px;
@@ -232,19 +273,23 @@ a{
     .admin-routers{
         padding: 0.75em;
     }
- 
-  .drop-down-list{
-    border-bottom: 1px solid #f3f3f3;
-    width: 100%;
+   .drop-down-list, .admin-drop-down-list{
+        border-bottom: 1px solid #f3f3f3;
+        width: 100%;
+    }
+  .drop-down-list :hover{
+      border-radius: 5px;
+     background-color: #f3f3f3;
   }
-    .drop-down-list:last-child{
+  .admin-drop-down-list:hover{
+        border-radius: 5px;
+        background-color: #f3f3f3;
+
+  }
+     .drop-down-list:last-child{
         border-bottom: none;
     }
-  .drop-down-list:hover{
-    border-radius: 5px;  
-    background-color: #f3f3f3;
-  }
-
+ 
 @keyframes growOut{
     0%{
         transform: scale(0);

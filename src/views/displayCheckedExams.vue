@@ -1,28 +1,58 @@
 <template>
 <div class="exam">
-   <div class="exam-checked" v-for="(exam,index) in checkedExam[examType]" :key="exam">
-      <div class="que">
-          <div class="que-title">
-             <div class="que-index">{{index+1+"."}}</div>
-                {{exam.Que}}
+   <div class="exam-checked" v-for="(item,index) in checkedExam[examType]" :key="item">
+        <div class="que-index">{{index+1+"."}}</div>
+
+      <div class="exam-item" v-for="(question,queIndex) in item.questions" :key="queIndex">
+          <div class="regular-que" v-if="item.type=='regularQue'">
+              <div class="que-points">
+                  <div class="que-title">
+                     {{question.que}}
+                  </div>
+            
+                  <div class="points">
+                     {{item.pointsReceived}}/{{item.points}}
+                  </div>
+              </div>
+            
+
+            <p>התשובה שענ\תה:</p>
+                <div class="ans">
+                    {{item.inputAns}}
+                </div>
+
+            <p class="comments-title">הערות הבודק\ת:</p>
+                <div class="comments" v-if="item.Comments">
+                    {{item.comments}}
+                </div>
+                <div v-if="!item.Comments">אין הערות</div>   
+
           </div>
-        <div class="points">
-          {{exam.Points}}/{{showTheGradeOutOf(val)}}
+
+          <div class="sub-que"  v-if="item.type=='subQue'">
+              <div class="que-points">
+                <div class="que-title">
+                    {{question.que}}
+                </div>
+            
+                <div class="points">
+                    {{question.pointsReceived}}/{{question.points}}
+                </div>
+             </div>
+
+            <p>התשובה שענ\תה:</p>
+                <div class="ans">
+                    {{question.inputAns}}
+                </div>
+
+            <p class="comments-title">הערות הבודק\ת:</p>
+                <div class="comments" v-if="question.Comments">
+                    {{question.comments}}
+                </div>
+                <div v-if="!question.Comments">אין הערות</div>   
+          </div>
+                   
         </div>
-      </div>
-    
-        <p>התשובה שענ\תה:</p>
-      <div class="ans">
-          {{exam.Ans}}
-      </div>
-      
-       <p class="comments-title">הערות הבודק\ת:</p>
-          <div v-if="!exam.Comments">אין הערות</div>
-
-      <div class="comments" v-if="exam.Comments">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est tenetur maxime ipsum, illo, in doloremque cumque dolores dolore numquam consectetur id, unde enim non sapiente repellat iure voluptatibus quis. Sint possimus deserunt porro incidunt corporis perferendis fugit tempora voluptatibus. Nostrum, ut similique voluptatibus totam iste, vero tenetur distinctio numquam rerum commodi repellendus, quae nam rem! Rerum blanditiis, recusandae harum itaque asperiores, illo dolores numquam nisi tempora mollitia facilis laboriosam neque culpa ipsa exercitationem in similique tenetur temporibus est ratione explicabo dolore qui quos. Modi, corrupti quidem blanditiis quis ad impedit obcaecati repellat at tempore necessitatibus suscipit ratione facere eaque, aliquam error quisquam commodi unde. Aut aliquam accusantium, esse odio est, illum veniam repellendus maxime quaerat modi mollitia numquam deserunt dolorem, temporibus minima architecto? Unde laborum velit earum ipsa odit numquam eius quod expedita magni aut doloremque totam sunt, possimus voluptates sed veritatis porro quisquam nihil eaque quia ad ipsam aliquid exercitationem distinctio. Inventore dignissimos totam ad quae earum vel in magni dolorem. Distinctio provident nesciunt tenetur, odit pariatur, maxime atque ipsum ab impedit architecto nihil ut magnam voluptate quasi eligendi, neque ullam ducimus et ipsa mollitia a? Fugiat dignissimos, quibusdam recusandae ad consequuntur, quas repellat eius nam neque repudiandae ullam?
-       </div>
-
       <div class="under-line"></div>
   </div>
 
@@ -43,20 +73,24 @@ export default {
     },
     methods:{
         async getdata(){
-            var res = null
+          var res = null
+
             if(this.$isSharePointUrl){
                 res = await axios.get(this.$sharePointUrl+`getByTitle('students')/Items?$filter=num eq '${this.userId}'&$select=${this.examType}`)
-                
+                this.checkedExam = res.data.value
+                this.parseData()
             }
+
             else{
-                res = await axios.get(this.$sharePointUrl+`students?num='${this.userId}'`)
+                res = await axios.get(this.$sharePointUrl+`students`)
+                var checkedExam = res.data.value[0]
+                this.checkedExam[this.examType]= checkedExam[this.examType].filter(item=>Object.keys(item)!='finalGrade')
  
             }
-            this.checkedExam = res.data.value
-            this.parseData()
-            console.log(this.checkedExam)
-            console.log(this.fullcheckedExam)
+                console.log(this.checkedExam)
+                console.log(this.fullcheckedExam)
         },
+        
          asyncParse(str){
             return new Promise((resolve)=>{
            resolve(JSON.parse(str))
@@ -99,12 +133,26 @@ export default {
     min-height: 400px;
  }
 .exam-checked{
-    width: 74%;
+    width: 75%;
     display: flex;
     align-items: center;
     flex-direction: column;
+    margin-top: 50px;
+}
+.exam-checked:last-child .under-line{
+    border: none;
+}
+.exam-item{
+    width: 80%;
 
 }
+.que-points{
+    display: flex;
+    width: 75%;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 50px;
+  }
   .que{
     margin-bottom: 30px;
     margin-top: 20px;
@@ -120,14 +168,16 @@ export default {
     font-weight: 700;
  }
  .que-index{
-    display: inline;
-    font-size: 30px;
-    margin-left: 20px;
+    font-size: 27px;
+    position: relative;
+    left: 45%;
+    top: 40px;
+    transform: translate(45%,40px);
 
  }
  .que-title{
-    padding-left: 1.3em;
- }
+     margin-left: 20px;
+  }
  .points{
     direction: ltr;
  }
@@ -141,7 +191,7 @@ export default {
  .ans{
     background: #bfbfbf94;
     min-width: 400px;
-    min-height: 40px;
+    min-height: 25px;
     border-radius: 10px;
     padding: 1em;
  }
@@ -158,7 +208,22 @@ export default {
 .under-line{
     border-bottom: 2px solid hsla(0,0%,74.9%,.5803921568627451);
     width: 60%;
-    margin-bottom: 40px;
-    margin-top: 100px;
+    margin-bottom: 30px;
+    margin-top: 50px;
 }
+ 
+.sub-que, .regular-que{
+    position: relative;
+    margin-top: 1.5em;
+    margin-bottom: 90px;
+    min-height: 480px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    font-size: 24px;
+    font-weight: 700;
+
+}
+
 </style>

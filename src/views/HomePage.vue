@@ -105,6 +105,7 @@ import loadingSpinner from '../components/loadingSpinner.vue'
       background-repeat: no-repeat;
       overflow: hidden;
   }
+  
   @keyframes animate{
      0%{
         background-position: 0 0;

@@ -37,6 +37,9 @@
                   <button class="next-btn-on-type-null" @click="submit" v-if="examData.length==ite+1" >סיים</button>
               </div>
 
+              <div class="drag-drop" v-if=" question.type == 'dragDrop' ">
+                  <dragAndDrop :question="question"/>
+              </div>
                 <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]&&isDisabled" v-if="ite!=examData.length-1&&question.type != null" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
           </div>
         </form>  
@@ -49,11 +52,13 @@
 <script>
 import practiceResult from '../views/practiceResult.vue'
 import loadingSpinner from '../components/loadingSpinner.vue'
+import dragAndDrop from '../components/dragAndDropQuiz.vue'
 import axios from 'axios'
 export default {
   components:{
     practiceResult,
-    loadingSpinner
+    loadingSpinner,
+    dragAndDrop
   },
   data(){
     return{
@@ -396,7 +401,7 @@ button{
     min-height: 35px;
     justify-content: space-between;
     position: relative;
-    background-color: rgba(240,248,255,.7607843137254902);
+    background-color: rgba(239,245,251,.7607843137254902);
     border: 1px solid rgba(179,197,213,.5803921568627451);
     border-radius: 30px;
     padding: .85em;
@@ -493,6 +498,10 @@ label{
   width: 100%;
   top:0;
   left: 0;
+}
+.drag-drop{
+    display: flex;
+    justify-content: center;
 }
 .answers-text{
     padding-right: 2.7em;

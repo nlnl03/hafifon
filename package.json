@@ -7,6 +7,8 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/vue-fontawesome": "^0.1.10",
     "@mdi/font": "5.9.55",
     "@popperjs/core": "^2.6.0",
     "axios": "^0.23.0",
@@ -21,7 +23,7 @@
     "vue-sweetalert2": "^5.0.2",
     "vue3-circle-progress": "^1.0.7"
   },
-  "devDependencies": {  
+  "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.19",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",

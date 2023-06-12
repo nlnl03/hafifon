@@ -5,25 +5,56 @@
 
  <form class="exam-box" v-if="isLoad">
       <div class="exam" v-for="(item,index) in examData" :key="index">
-          <div class="question"> 
-             <div class="que-index">{{index+1+"."}}</div>
-                {{item.Que}}
-          </div> 
-                <p>התשובה שענ\תה:</p>  
+         <div class="que-index">{{index+1+"."}}</div>
+  
+           <div class="question" v-for="(question,subIndex) in item.questions" :key="subIndex"> 
 
-          <div class="answer-options">
-              <div class="answer-items"> 
-                 {{item.Ans}} 
-              </div>
-              <div class="select-right-wrong">
-                  <span class="choose-points">*בחר ניקוד (מקס' {{Math.round(pointsForEachQue)}} נק')</span>
-                 <input type="number" min="0" :max="pointsForEachQue"  v-model="vModelData[item.Que]" placeholder="אנא בחר ניקוד" @change="handler($event,index)" :ref="'inputRef_' + index">
-              </div>
-              <div class="comments">
-                <textarea name="" id="" cols="30" rows="5" v-model="commentsData[item.Que]" placeholder="הכנס הערות (אופציונלי)"></textarea>              
-              </div>
-          </div>
+              <div class="regular-que" v-if="item.type=='regularQue'">
+                    <div class="que-text"> {{question.que}}</div> 
+                      <p>התשובה שענ\תה:</p>
+
+                      <div class="answer-options" >
+                        <div class="answer-items"> 
+                            {{item.inputAns}} 
+                        </div>
+
+                        <div class="select-right-wrong">
+                            <span class="choose-points">*בחר ניקוד (מקס' {{item.points}} נק')</span>
+                            <input type="number" min="0" :max="question.points" step="any"  v-model="item.pointsReceived" placeholder="אנא בחר ניקוד" @change="handler($event,item.id,item.points)" :ref="'inputRef_' + item.id">
+                        </div>
+
+                        <div class="comments">
+                          <textarea name="" id="" cols="30" rows="5" v-model="item.comments" placeholder="הכנס הערות (אופציונלי)"></textarea>              
+                        </div>
+
+                     </div>
+               </div>       
+
+             <div class="sub-que" v-if="item.type=='subQue'">
+                <div class="que-text"> {{getHebLetters(subIndex)}}.{{question.que}}</div>  
+
+                    <p>התשובה שענ\תה:</p>
+
+                <div class="answer-options" >
+                    <div class="answer-items"> 
+                        {{question.inputAns}} 
+                    </div>
+
+                    <div class="select-right-wrong">
+                        <span class="choose-points">*בחר ניקוד (מקס' {{question.points}} נק')</span>
+                        <input type="number" min="0" :max="question.points" step="any" v-model="question.pointsReceived" placeholder="אנא בחר ניקוד" @change="handler($event,question.id,question.points)" :ref="'inputRef_' + question.id">
+                    </div>
+
+                    <div class="comments">
+                        <textarea name="" id="" cols="30" rows="5" v-model="question.comments" placeholder="הכנס הערות (אופציונלי)"></textarea>              
+                    </div>
+                </div>
+              </div>    
+             
+          </div> 
       </div>
+
+
       <div class="bottom-of-page">
           <div class="warning-title" v-if="isOpenWarn">*אנא בדוק שניקדת את כל השאלות</div>
             <div class="send">
@@ -45,17 +76,12 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
     return{
       examData:[],
       vModelData:{},
-      isAllInpFull:false,
       isLoad:false,
       pointsForEachQue:null,
       examLength:null,
       pointsArray:[],
-      inputVal:[],
-      openHalfAns:'',
-      ite:0,
       isOpenWarn:false,
-      routerIsShown:false,
-      finalGrade:null,
+      finalGrade:0,
       isChecExamNotExist:false,
       token:'',
       id:null,
@@ -63,74 +89,61 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
       dataToPost:[],
       commentsData:{},
       examType:null,
-      alreadyCalc:false
+      alreadyCalc:false,
+      fullUserDataToHistory:null
      }
   },
   methods:{
+    
+    getHebLetters(index){
+      const hebrewLetters = ["א","ב","ג","ד","ה","ו","ז","ח","ט","י","כ","ל","מ","נ","ס","ע","פ","צ","ק","ר","ש","ת"]
+      return hebrewLetters[index % hebrewLetters.length]
+    },
+
     pushToArrToCheckGrade(){
         this.examData.forEach(data=>{
-          this.pointsArray.push(null)
+          data.questions.forEach(que=>{
+            this.pointsArray.push(null)
+          })
         })
+        console.log(this.pointsArray)
       },
-    handler(event,index){
+      
+    handler(event,id,maxPointsForEach){
         console.log(this.vModelData)
         this.isOpenWarn=false
-        var val = event.target.value
-        console.log(val)
-          if(val>=0&&val<=this.pointsForEachQue){
-            if(val==Math.round(this.pointsForEachQue)){
-                this.pointsArray[index]=(this.pointsForEachQue)
-            }
-            else{
-                this.pointsArray[index]=parseInt(val)
-            }
-            }
-            else{
-              this.pointsArray[index]=null
-            }
+        var pointsInputted = event.target.value
+        console.log(pointsInputted)
+          if(pointsInputted>=0&&pointsInputted<=maxPointsForEach){
+             this.pointsArray[id]=parseFloat(pointsInputted)
+          }
+          else{
+            this.pointsArray[id]=null
+          }
               console.log(this.pointsArray)
      },
       postDataFormat(){
-        var comm =null
-        var ans = null
-        Object.entries(this.vModelData).forEach(data=>{
-          console.log(data)
-          comm= this.commentsData[data[0]]
-          this.examData.forEach(item=>{
-            if(item['Que']==data[0]){
-               ans = item['Ans']
-            }
-          })
-           console.log(ans)
-           const [key,value,Comments,Ans] = data
-           this.dataToPost.push({Que:key,Points:value,Comments:comm,Ans:ans})
-          })
-        },
+          this.dataToPost = [...this.examData]
+          this.dataToPost.push({"finalGrade":this.finalGrade})
+          console.log(this.dataToPost)
+       },
 
-      calcFinalGrade(){
+      async calcFinalGrade(){
         return new Promise((resolve)=>{
-          if(!this.alreadyCalc){
-             for(var p in this.pointsArray){
-                 this.finalGrade+=this.pointsArray[p]
-             }
-                console.log(this.finalGrade)
-                this.dataToPost.push({finalGrade:this.finalGrade})
-                this.alreadyCalc = true;
-          }
-          
-          else{
-            this.dataToPost.push({finalGrade:this.finalGrade})
-            console.log(this.dataToPost)
-          }
-                 resolve(this.dataToPost)
-           
-        })        
-      },
+            this.pointsArray.forEach((point)=>{
+                this.finalGrade+=point
+             })
+             console.log(this.finalGrade)
+             resolve (this.finalGrade)
+        })
+      },      
+                    
       
       checkIfAllIsFull(){
         var value = null
         var isFull = true
         this.pointsArray.forEach((point,index)=>{
+          console.log(`${index}`+point)
          if(!point){
            isFull=false
            value = this.$refs[`inputRef_${index}`]
@@ -142,31 +155,35 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
          return isFull
       },
 
-       showAlertConfirm(){
-          this.$swal({
-            title:"האם את\ה בטוח שברצונך להגיש בדיקה זו ?",
-            type:'warning',
-            showCancelButton:true,
-            confirmButtonColor:"var(--main-background-color)",
-            confirmButtonText:'כן, שלח בדיקה'
-         })
-         
-         .then((result)=>{
-             if(result.value){
-               this.calcFinalGrade()
-                 .then(data =>{
-                    this.postData()
-                 })
-             } 
-          })
+       async showAlertConfirm(){
+         try{
+           const result = await new Promise((resolve)=>{
+             this.$swal({
+                icon:"warning",
+                title:"האם את\ה בטוח שברצונך להגיש בדיקה זו ?",
+                type:'warning',
+                showCancelButton:true,
+                confirmButtonColor:"var(--main-background-color)",
+                confirmButtonText:'כן, שלח בדיקה'
+              }).then((result)=>{
+                  resolve(result)
+              })
+           })
+              if(result.isConfirmed){
+                  await this.calcFinalGrade()
+                  this.postDataFormat()
+                  this.postData()
+              }
+         }
+          catch(error){
+            console.log(error)
+          }
+           
         },
                    
-     async submit(){
-        await this.checkIfAllIsFull()
+       submit(){
           if(this.checkIfAllIsFull()==true){
-              this.postDataFormat()
-              console.log(this.dataToPost)
-              this.showAlertConfirm()
+               this.showAlertConfirm()
             }
           else{
               this.isOpenWarn=true
@@ -228,6 +245,7 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
                       'נשלח בהצלחה',
                       'success'
                     )
+                      await this.postToHistoryList()
                       this.delDataFromPending()
                       this.$router.push({name:'submitted',params:{Title:this.$route.params.examType,num:this.$route.params.num}})
                 }
@@ -264,6 +282,7 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
                     'נשלח בהצלחה',
                     'success'
                     )
+                     await this.postToHistoryList()
                       // this.delDataFromPending()
                       this.$router.push({name:'submitted',params:{Title:this.$route.params.examType,num:this.$route.params.num}})
                 }
@@ -323,10 +342,40 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
       calcTheGrade(){
           this.pointsForEachQue=100/this.examLength
           console.log(this.pointsForEachQue)
+      },
+
+      async postToHistoryList(){
+        this.fullUserDataToHistory = this.dataToPost
+        console.log(this.fullUserDataToHistory)
+        const dateOfSub = new Date()
+        if(this.$isSharePointUrl){
+            this.token = await this.getToken()
+          return new Promise((resolve,reject)=>{
+            return axios.post(this.$sharePointUrl + `getByTitle('hafifotHistory')/Items`,{
+                Title:localStorage.getItem("infoName"),
+                num:this.$route.params.num,
+                group:dateOfSub,
+                [this.examType]:JSON.stringify(this.fullUserDataToHistory)
+            },
+            {
+                headers:{
+                    'X-RequestDigest':this.token
+                }
+           
+            })
+              .then(response=>{
+                  return response.data
+              })
+
+              .then(responseData=>{
+                resolve(responseData)
+              })
+          })          
+        }
       }
   },
-  async beforeMount(){
-    console.log(this.$route.params.examType)
+  async beforeMount(){   
+     console.log(this.$route.params.examType)
     this.examType=this.$route.params.examType
     if(this.$isSharePointUrl){
        const res = await axios.get(this.$sharePointUrl+`getByTitle('pending tests')/Items?$filter=(num eq '${this.$route.params.num}') and (type eq '${this.$route.params.examType}')`)
@@ -376,31 +425,48 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
 form{
    min-height: 400px;
  }
-
-  .exam{
+   .exam{
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 70%;
     margin-bottom: 100px;
+    margin-top:50px;
     border-top: 1.5px solid rgba(0,0,0,.1);
   }
   .exam:first-child{
      border-top:none
   }
  .question{
-    margin-bottom: 50px;
+    /* margin-bottom: 50px;
     margin-top: 30px;
     min-height: 80px;
     width: 70%;
     position: relative;
-     padding: 1em 32px;
+    padding: 1em 32px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-     /* border-bottom: 1px solid rgba(0,0,0,.1);     */
+     font-size: 24px;
+    font-weight: 700; */
+         width: 80%;
+
+ }
+ .regular-que, .sub-que{
+    position: relative;
+    margin: 1em 0;
+    min-height: 350px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
     font-size: 24px;
     font-weight: 700;
  }
+  .que-text{
+    width: 80%;
+  }
+
 
  .answer-options{
     margin-top: 30px;
@@ -444,8 +510,11 @@ input[type="number"]{
 textarea{
   width: 90%;
   font-size: 23px;
-  padding: 10px;
-  outline-color:var(--main-background-color);
+  padding: 0.6em;
+  outline-color: rgba(128, 128, 128, 0.39);
+  border-radius: 5px;
+  /* outline-color:var(--main-background-color); */
+  border: 1px solid rgba(169, 169, 169, 0.774);
 }
 .send{
    margin-bottom: 70px;
@@ -474,12 +543,13 @@ p{
   font-size: 22px;
   font-weight: 700;
   border-bottom:1px solid rgb(211, 210, 210);
-   margin-bottom: 20px;
+   margin-bottom: 5px;
+   margin-top: 10%;
  }
  .choose-points{
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
      border-bottom:1px solid rgb(211, 210, 210);
 
  }
@@ -505,7 +575,10 @@ p{
     top:30px;
  }
  .que-index{
-    margin-left: 20px;
-    font-size: 25px;
+    font-size: 27px;
+    position: relative;
+    left: 45%;
+    top: 20px;
+    transform: translate(45%,20px);
  }
 </style>

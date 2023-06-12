@@ -41,13 +41,13 @@
       </div>
   </div> 
 
-        <div class="left-side-flex">
+        <div class="left-side-flex"  >
             <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
 
-            <div class="grid-container" v-if="isLoadForSpinner">
-              <div class="average">
+            <div class="grid-container" v-show="isLoadForSpinner" >
+              <div class="average" >
                   <span class="items-title" >ממוצע ציונים </span>
-                  <span class="gradeAv" ref="gradeAv">{{calcGradesAve(average)}}</span>
+                  <span class="gradeAv" ref="gradeAv">{{average}}</span>
               </div>
 
             <div v-for="(exam,index) in onlyExamData" :key="exam">
@@ -94,7 +94,9 @@ export default {
        average:null,
        timeOut:null,
        isGradeAve:false,
-       isLoadForSpinner:false
+       isLoadForSpinner:false,
+       isCalculated:false,
+        onlyExam:null
      }
   },
     methods:{
@@ -103,29 +105,36 @@ export default {
            resolve(JSON.parse(str))
           })
         },
-        async getExamsNames(){
-          var res=null
-          if(this.$isSharePointUrl){
-            res = await axios.get(this.$sharePointUrl+"getByTitle('testsNames')/Items")
-          }
-          else{
-            res = await axios.get(this.$sharePointUrl+"testsNames")
-          }
-             this.examsNames = res.data.value
-            console.log(this.examsNames)
+        // async getExamsNames(){
+        //   var res=null
+        //   if(this.$isSharePointUrl){
+        //     res = await axios.get(this.$sharePointUrl+"getByTitle('testsNames')/Items")
+        //   }
+        //   else{
+        //     res = await axios.get(this.$sharePointUrl+"testsNames")
+        //   }
+        //      this.examsNames = res.data.value
+        //     console.log(this.examsNames)
           
-        },
+        // },
 
         async parseData(){
-          await this.getExamsNames()
+          this.examsNames = localStorage.getItem("examsName")
+          this.examsNames = JSON.parse(this.examsNames)
+          console.log(this.examsNames)
+          if(this.$isSharePointUrl){
               this.examsNames.forEach(name=>{
-              const promiseAnswers = Promise.all(this.checkedExamData.map((item)=>{
-                return this.asyncParse(item[name.Title]).then((inner)=>{
+                const promiseAnswers = Promise.all(this.checkedExamData.map((item)=>{
+                  return this.asyncParse(item[name.Title]).then((inner)=>{
                     item[name.Title] = inner
                         return {item}
                       })
                   }))
-              })
+                })
+            }
+            else{
+              return this.examsNames
+            }
         },
  
        async getCheckedExam(){
@@ -133,32 +142,39 @@ export default {
          console.log(this.userId)
          var res = null
          if(this.$isSharePointUrl){
-            res = await axios.get(this.$sharePointUrl+`getByTitle('students')/Items?$filter=num eq '${this.userId}'`)
-            this.checkedExamData = res.data.value
-         }
+            return axios.get(this.$sharePointUrl+`getByTitle('students')/Items?$filter=num eq '${this.userId}'`)
+            .then(res=>res.data.value)
+          }
          else{
-            res = await axios.get(this.$sharePointUrl+`students?num='${this.userId}'`)
-            this.checkedExamData = res.data
-         }
-                console.log(this.checkedExamData)
-                this.filterToExamsOnly()
-                this.calcGradesAve()
-                this.isLoadForSpinner=true
+            return axios.get(this.$sharePointUrl+`students?num=${this.userId}`)
+            .then(res=>{
+              console.log(res.data)
+                 return res.data.value
+            })
+           
+          }
+                
          },
           async filterToExamsOnly(){
             await this.parseData()
-            if(this.$isSharePointUrl){
-                this.examsNames.forEach(name=>{
-                  this.onlyExamData.push(this.checkedExamData[0][name.Title])
-                })
-            }
-            else{
-                this.examsNames.forEach(name=>{
-                    this.onlyExamData.push(this.checkedExamData[name.Title])
-                })
-            }
+            return new Promise((resolve)=>{             
+              console.log("yesss")
+              if(this.$isSharePointUrl){
+                  this.examsNames.forEach(name=>{
+                    this.onlyExamData.push(this.checkedExamData[0][name.Title])
+                  })
+              }
+              else{
+                  this.examsNames.forEach(name=>{
+                      this.onlyExamData.push(this.checkedExamData[0][name.Title])
+                  })
+              }
+
                 console.log(this.onlyExamData)
-            },
+                // this.onlyExam = this.onlyExamData
+                  resolve(this.onlyExamData)
+            })
+             },
 
             dynamicGridClass(index){               
               return 'test-'+index+'-score'
@@ -180,33 +196,7 @@ export default {
               }
             },
 
-            calcGradesAve(average){
-               var ave = 0
-              var counter = 0
-             var ifEmptyText = 'אין מידע'
-              var length = this.onlyExamData.length
-              this.onlyExamData.forEach(data=>{
-                 if(data!=null){
-                   ave+=data[data.length-1]["finalGrade"]
-                }
-                else{
-                  counter++
-                  length=this.onlyExamData.length-counter
-                }
-              })
-              console.log(counter)
-              if(length==0){
-                  console.log("is 0")
-                  let a = this.$refs["gradeAv"]
-                  console.log(a);
-                  // this.$refs["gradeAv"].style.fontSize = "20px";
-                  return average = ifEmptyText
-              }
-              else{
-                return average = ave/length
-                
-              }
-            },
+            
             asyncSetTimeout(){
               return new Promise((res)=>{
                 setTimeout(res,300)
@@ -217,28 +207,61 @@ export default {
               var userName = localStorage.getItem("userName")
               this.userName = userName
               // console.log(this.userName)
-            }
+            },
+            calcGradesAve(){
+              console.log(this.onlyExamData)
+              var ave = 0
+              var counter = 0
+              var ifEmptyText = 'אין מידע'
+              var length = this.onlyExamData.length
+              console.log(length)
+              console.log(this.onlyExamData)
+              this.onlyExamData.forEach(data=>{
+                 if(data!=null){
+                   console.log("usdfjdh")
+                   ave+=data[data.length-1]["finalGrade"]
+                }
+                else{
+                  counter++
+                  length=this.onlyExamData.length-counter
+                }
+              })
+              
+              console.log(counter)
+              if(!length){
+                  console.log("is 0")
+                  let a = this.$refs["gradeAv"]
+                  console.log(a);
+                  a.style.fontSize = "35px";
+                  this.average = ifEmptyText
+              }
+              else{
+                this.average = ave/length
+              }
+             }
      },
 
     async beforeMount(){
       await this.asyncSetTimeout()
       this.getUserName()
       this.isFinished = true
-      this.getCheckedExam()
+      this.checkedExamData = await this.getCheckedExam()
+      await this.filterToExamsOnly()
+      this.calcGradesAve()
+      this.isLoadForSpinner=true
       //  this.timeOut = await setTimeout(,200)
       },
-     
-}
+ }
 </script>
 
 <style scoped>
 .main-page{
-  background-image: url("../assets/homePageBackground.png");
-        background-position: center;
-      background-size: cover;
-      height: 86.5vh;
-      width: 100%;
-      background-repeat: no-repeat;
+    background-image: url("../assets/homePageBackground.png");
+    background-position: center;
+    background-size: cover;
+    height: 86.5vh;
+    width: 100%;
+    background-repeat: no-repeat;
 
 }
 .main{
@@ -247,8 +270,8 @@ export default {
     text-align: center;
     height: 645px;
     margin-top: 25px;
-    margin-right: 10%;
-    margin-left: 10%;
+    margin-right: var(--user-main-margin-right);
+    margin-left: var(--user-main-margin-left);
     
 }
 .name-progress-details{
@@ -340,7 +363,7 @@ h5{
     width: 420px;
     height: 290px;
     border-radius: 20px 20px 20px 20px;
-    box-shadow: 0px 0px 30px 0px rgba(0,  0,  0,  0.2)
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
  }
 .name-detail{
     font-size: 25px;

@@ -55,7 +55,7 @@
 
       <div class="accordion-content" v-if="isOpen&&ite==index"  >
           <div class="name-of-hafifot" v-for="info in userInfoFilterd" :key="info"  >
-                <router-link :to="{name:'examsToCheck',path:`/examsToCheck/${info.num}/${info.type}`,params:{examType:info.type,num:info.num}}">{{info.Title}}</router-link>
+                <router-link :to="{name:'examsToCheck',path:`/examsToCheck/${info.num}/${info.type}`,params:{examType:info.type,num:info.num}}" @click="passName(info)">{{info.Title}}</router-link>
           </div>
       </div>
     </div>   
@@ -81,7 +81,6 @@ export default {
   },
   data(){
     return{
-      examTitles:[],
       examTitlesFiltered:[],
       userData:[],
       isOpen:false,
@@ -91,12 +90,14 @@ export default {
       isLoad:false,
       isAdmin:false,
       testsNames:[],
-      aveColor:null,
       showOptions:null,
       gradrPerExam: 0
     }
   },
   methods:{
+    passName(info){
+      localStorage.setItem("infoName",info.Title)
+    },
     asyncParse(str){
         return new Promise((resolve)=>{
           resolve(JSON.parse(str))

@@ -1,55 +1,74 @@
 <template>
-    <div class="loader-spinner" v-if="!isLoadForSpinner">
-          <loadingSpinner />
-    </div>
-  <div class="title">{{}}</div>
+    <div class="loader-spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
 
-  <div class="no-permission-mess" v-if="!isExamsPer">
-    <h1>אין לך הרשאות לעמוד זה...</h1>
-  </div>
+   <div class="title-timer">
+        <div class="title" v-if="!isAlreadySub&&isLoadForSpinner">{{examsName.subject}}</div>
+        <div class="timer" v-if="!isAlreadySub&&isLoadForSpinner" > <timer :totalTime="4500" /> </div>
+   </div>
+ 
+  
+   <form class="exam-box" v-if="!isAlreadySub&&isLoadForSpinner">
+      <div class="exam" v-for="(item,index) in examData.exam" :key="index">
+          <span class="que-index">{{index+1+"."}}</span> 
 
-   <form class="exam-box" v-if="!isAlreadySub&&isLoadForSpinner&&isExamsPer">
-      <div class="exam" v-for="(question,index) in examData" :key="index">
-          <div class="question">
-              <div class="que-index">{{index+1+"."}}</div> 
-               <div>{{question.Title}}</div> 
-          </div> 
-          <div class="american-answer-options" v-if="question.type=='american'">
-                <label class="answer-items" :class="{'checked': examUserData[question.Title] === option}" v-for="(option,inner) in question.options" :key="inner" :ref="'inputRef_' + index + inner"> 
-                  <div><input type="radio"  v-model="examUserData[question.Title]"  :value="option" @change="clickHandler($event,examUserData[question.Title]+index,index,inner)" :name="option"  :id="option" :ref="'inputRef_' + index" /></div>
-                  <div class="label-text">{{option}} </div>
-                </label>
-                      <span v-if="false" :ref="'warning_' + index">אנא בחר באחת מהאפשרויות</span>
+            <div class="regular-que" v-if="item.type=='regularQue'">
+                <div class="question">
+                    <div class="que-text"> {{item.questions[0]["que"]}}</div>
+                      <div class="open-que" v-if="item.questions[0].type=='open'" :ref="'inputRef_' + item.id">
+                            <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,index,inner,subIndex,item.id)"
+                              v-model="item.inputAns" >
+                            </textarea>
+                      </div>
+                </div>
+            </div>
 
-          </div>
-          
-          <div class="open-que" v-if="question.type=='open'" :ref="'inputRef_' + index">
-            <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,examUserData[question.Title]+index,index,inner)" v-model="examUserData[question.Title]"   ></textarea>
-          </div>
+
+            <div class="sub-que" v-if="item.type=='subQue'">
+                <div class="question" v-for="(question,subIndex) in item.questions" :key="subIndex" >
+                    <div class="que-text"> {{getHebLetters(subIndex)}}. {{question.que}} </div>
+                
+                    <div class="open-que" v-if="question.type=='open'" :ref="'inputRef_' + question.id">
+                        <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,index,inner,subIndex,question.id)"
+                          v-model="question.inputAns" >
+                        </textarea>
+                    </div>
+                    
+                    <div class="american-answer-options" v-if="question.type=='american'">
+                        <label class="answer-items" :class="{'checked': examUserData[question.Title] === option}" v-for="(option,inner) in question.options" :key="inner" :ref="'inputRef_' + index + inner"> 
+                            <div><input type="radio"  v-model="question.inputAns"  :value="option" @change="clickHandler($event,index,inner,subIndex,question.id)" :name="option"  :id="option" :ref="'inputRef_' + index" /></div>
+                            <div class="label-text">{{option}} </div>
+                        </label>
+                        <span v-if="false" :ref="'warning_' + index">אנא בחר באחת מהאפשרויות</span>
+                    </div>
+                </div>
+            </div>  
+
+              
        </div>
     </form>
     
-          <div class="send" v-if="!isAlreadySub&&isLoadForSpinner&&isExamsPer">
-              <p class="show-red-Warn" v-if="showRedWarn">* אנא בדוק שענית על כל השאלות</p>
-                    <button class="submit-btn" @click="sendData" >סיים</button>
-          </div>
+      <div class="send" v-if="!isAlreadySub&&isLoadForSpinner">
+          <p class="show-red-Warn" v-if="showRedWarn">* אנא בדוק שענית על כל השאלות</p>
+              <button class="submit-btn" @click="sendData" >סיים</button>
+      </div>
 
-    <div class="alreadySubmitted" v-if="isAlreadySub&&isLoadForSpinner">
-        כבר הגשת מבחן זה...
-    </div>
+      <div class="alreadySubmitted" v-if="isAlreadySub&&isLoadForSpinner">
+          כבר הגשת מבחן זה...
+      </div>
 
 </template>
 
 <script>
 import axios from 'axios';
 import loadingSpinner from '../components/loadingSpinner.vue'
+import timer from '../components/timer.vue' 
 export default {
   components:{
-    loadingSpinner
+    loadingSpinner,
+    timer
   },
 data(){
   return{
-      urlForTheExams: process.env.NODE_ENV =='development'? `http://localhost:3000/${this.$route.params.Title}/`:`https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('${this.$route.params.Title}')/Items`,
       examData:[],
       examUserData:{},
       isUserDataEmpty:true,
@@ -58,73 +77,76 @@ data(){
       token:'',
       userName:'',
       userId:'',
-      isExamsPer:true,
       isAlreadySub:null,
       isLoadForSpinner:false,
       examExistData:[],
       subRouterIsShow:false,
       showRedWarn:false,
       showRedWarnToAmerican:false,
-   }
+      showExitAlert:true,
+      postS:null
+    }
 },
 methods:{
-      asyncParse(str){
-        return new Promise((resolve)=>{
+
+    getHebLetters(index){
+      const hebrewLetters = ["א","ב","ג","ד","ה","ו","ז","ח","ט","י","כ","ל","מ","נ","ס","ע","פ","צ","ק","ר","ש","ת"]
+      return hebrewLetters[index % hebrewLetters.length]
+    },
+
+    asyncParse(str){
+       return new Promise((resolve)=>{
           resolve(JSON.parse(str))
-        })
-      },
+       })
+    },
 
   
-      clickHandler(event,theRef,index,inner){
-        this.showRedWarn=false
-        const v = this.$refs[`inputRef_${index}${inner}`]
+      clickHandler(event,index,inner,subIndex,id){
+         console.log(id)
+          this.showRedWarn=false
+          const v = this.$refs[`inputRef_${index}${inner}`]
+          console.log(v)
            const pressedAnswer = event.target.value;
-             if(pressedAnswer.trim()){
-                 this.isUserDataEmpty=false
-                 this.boolIfEmpty[index]=this.isUserDataEmpty
-                 console.log(this.boolIfEmpty)
-             }
-            else{ 
-                this.boolIfEmpty[index]=true
-                console.log(this.boolIfEmpty)              
-                console.log("is empty")
-                // event.target.classList.add("text-aria-placeholder")
-            }
-         },
+           this.message = pressedAnswer
 
-         
-      async getToken(){
-          const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
-          this.token = res.data.FormDigestValue
-          console.log(this.token)
+                if(pressedAnswer.trim()){
+                    this.isUserDataEmpty=false
+                    this.boolIfEmpty[id]=this.isUserDataEmpty
+                    console.log(this.boolIfEmpty)
+                }
+                else{ 
+                    this.boolIfEmpty[id]=true
+                    console.log(this.boolIfEmpty)              
+                    console.log("is empty")
+                    // event.target.classList.add("text-aria-placeholder")
+                }
       },
 
-      postDataFormat(){
-        Object.entries(this.examUserData).forEach(data=>{
-           const [key,value] = data
-           this.dataToPost.push({Que:key,Ans:value})
-          })
-            console.log(this.dataToPost)
+         
+       getToken(){
+           return axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo").then((res=>res.data.FormDigestValue))
        },
 
+ 
       async postExams(){
+        var dataToPost = [...this.examData.exam]
         var res = null
          console.log(this.examsName.subject)
            if(this.$isSharePointUrl){
-              await this.getToken();
+             this.token = await this.getToken();
               res = await axios.post(this.$sharePointUrl+"getByTitle('pending tests')/Items",{
-              Title:this.userName,
-              exam:JSON.stringify(this.dataToPost),
-              num:this.userId,
-              type: this.$route.params.Title,
-              name:this.examsName.subject
+                Title:this.userName,
+                exam:JSON.stringify(dataToPost),
+                num:this.userId,
+                type: this.$route.params.Title,
+                name:this.examsName.subject
             },
 
             { 
               headers:{
                     'X-RequestDigest':this.token,
                 }
-            })      
+            }) 
           }
           
           else{
@@ -133,7 +155,7 @@ methods:{
               value:[
                 {
                   Title:'sdsdsd',
-                  exam:this.dataToPost,
+                  exam:dataToPost,
                   num:this.userId,
                   type: this.$route.params.Title,
                   name:this.examsName.subject
@@ -160,33 +182,34 @@ methods:{
            if(allowed==true){
              this.showRedWarn = false
              this.subRouterIsShow = true
-             console.log(this.examUserData)
-          }
+           }
              else{
                this.showRedWarn=true
              }           
         },
-      showAlertConfirm(){
-          this.$swal({
-          title:"האם את\ה בטוח",
-          text:"האם אתה בטוח שברצונך להגיש מבחן זו ?",
-          type:'warning',
-          showCancelButton:true,
-          confirmButtonColor:"var(--main-background-color)",
-          confirmButtonText:'כן, הגש מבחן'
-         }).then((result)=>{
+      showAlertConfirmBeforeSend(){
+          this.$swal({  
+            title:"האם אתה בטוח שברצונך להגיש מבחן זו ?",
+            text:"אם תגיש לא תוכל/י לחזור עליו...",
+            icon:'warning',
+            showCancelButton:true,
+            confirmButtonColor:"var(--main-background-color)",
+            confirmButtonText:'כן, הגש מבחן',
+            cancelButtonText:"ביטול"
+          }).then((result)=>{
               if(result.value){
-                 this.postDataFormat()
-                 if(this.postExams()){
-                  this.$swal({
-                    title:'Send',
-                    text:'נשלח בהצלחה',
-                    type:'success',
-                    confirmButtonColor:"var(--main-background-color)",
-                    confirmButtonText:'סיים'
-                  })
+                  if(this.postExams()){
+                   this.showExitAlert = false
+                    this.$swal({
+                      title:'נשלח בהצלחה',
+                      icon:'success',
+                      confirmButtonColor:"var(--main-background-color)",
+                      confirmButtonText:'סיים'
+                    })
+                      console.log(this.showExitAlert)
                       this.$router.push({name:'submitted',params:{Title:this.$route.params.Title}})
-              }
+                       
+                   }
               else{
                   this.$swal(
                   'Not Send',
@@ -194,26 +217,26 @@ methods:{
                   'not succeeded'
                 )
               }
+                console.log(this.$route)
            }
          })            
       },
 
         async sendData(){
            this.submit()
-           for(let i=0; i < this.boolIfEmpty.length; i++){
-             console.log(this.$refs[`inputRef_${i}`])
-             var value = this.$refs[`inputRef_${i}`].children[0]
+            for(let i=0; i < this.boolIfEmpty.length; i++){
+              console.log(this.$refs[`inputRef_${i}`])
+              var value = this.$refs[`inputRef_${i}`].children[0]
+
              if(this.boolIfEmpty[i]==true){
                this.$refs[`inputRef_${i}`].scrollIntoView({behavior:"smooth",block:"center"});
-               if(this.examData[i].type=='open'){
-                  value.classList.add("text-aria-placeholder")
-               }
-                   return alert(`אנא הכנס תשובה בשאלה ${i+1}`)
+                   value.classList.add("text-aria-placeholder")
+                    return alert(`אנא הכנס תשובה בשאלה ${i+1}`)
 
              }
            }
           if(this.subRouterIsShow==true){
-            this.showAlertConfirm()
+            this.showAlertConfirmBeforeSend()
           }
         },
 
@@ -232,25 +255,188 @@ methods:{
       },
 
       pushToArrToCheckIfEmpty(){
-        this.examData.forEach(data=>{
-          this.boolIfEmpty.push(true)
+        this.examData.exam.forEach(data=>{
+           data.questions.forEach(que=>{
+              this.boolIfEmpty.push(true)
+          })
         })
           console.log(this.boolIfEmpty)
+      },
+      handlePageReload(event){
+        event.preventDefault()
+        event.returnValue = ''
+      },
+      async postSh(){
+        var inst = ["*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.", "*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים."]
+        var data = {
+         "exam": [
+          {
+            "type": "subQue",
+            "questions": [
+              {
+                "type": "open",
+                "que": "הסבר מהו  IMAGEומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו (4 נק')",
+                "inputAns": "",
+                "id": 0,
+                "points": 4,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? (2  נק')",
+                "inputAns": "",
+                "id": 1,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "subQue",
+            "questions": [
+              {
+                "type": "open",
+                "que": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג'? (3 נק')",
+                "inputAns": "",
+                "id": 2,
+                "points": 3,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט את שלבי התקנת המשואה לאחר התקנת האימג' (2 נק')",
+                "inputAns": "",
+                "id": 3,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ? (2 נק')",
+                "inputAns": "",
+                "id": 4,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים. (2 נק')",
+                "inputAns": "",
+                "id": 5,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "subQue",
+            "questions": [
+              {
+                "type": "open",
+                "que": "איזה 2 מערכות קיימות ברשת הMOIP? ומה הקונבנציה של כל מערכת? (2 נק')",
+                "inputAns": "",
+                "id": 6,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?(2 נק')",
+                "inputAns": "",
+                "id": 7,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "ציין בקצרה מה השלבים לאחר ההפצת אימג'? (2 נק')",
+                "inputAns": "",
+                "id": 8,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "מה הדומיין של MOIP? (1 נק')",
+                "inputAns": "",
+                "id": 9,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10. (3 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "",
+            "id": 10,
+            "points": 3,
+            "pointsReceived": "",
+            "comments": ""
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב (2 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "",
+            "id": 11,
+            "points": 2,
+            "pointsReceived": "",
+            "comments": ""
+          },
+          {
+            
+          }
+        ]
       }
+       this.token = await this.getToken();
+        const res = await axios.post(this.$sharePointUrl+`getByTitle('${this.$route.params.Title}')/Items`,{
+                Title:"0",
+                instructions:JSON.stringify(inst),
+                exam:JSON.stringify(data),
+                 
+            },
+
+            { 
+              headers:{
+                    'X-RequestDigest':this.token,
+                }
+            }) 
+      }
+        
 },
-
-
+ 
 async beforeMount(){
   console.log(this.$route.params)
   this.userName=localStorage.getItem("userName")
   console.log(this.userName)
-  this.examsName = localStorage.getItem("examsName")
-  this.examsName = JSON.parse(this.examsName)
-   this.examsName = this.examsName.filter(data=>data.Title==this.$route.params.Title)[0]
-  console.log(this.examsName)
+  const examsName = localStorage.getItem("examsName")
+  const examsNameParsed = JSON.parse(examsName)
+   this.examsName = examsNameParsed.filter(data=>data.Title==this.$route.params.Title)[0]
+    console.log(this.examsName)
      this.examExistData = await this.checkIfExamExist()
      console.log("yess") 
-    
+     var res = null
+
           if(this.$isSharePointUrl){
                try{
                   console.log(this.examExistData)
@@ -270,62 +456,94 @@ async beforeMount(){
                     console.log(this.isAlreadySub)
 
 
-              return axios.get(this.$sharePointUrl+`getByTitle('${this.$route.params.Title}')/Items`)
-              .then(response=>{
-                return  response.data.value;
-              })
-              .then(data =>{
-                  const promiseAnswers = Promise.all(data.map((item)=>{
-                        return this.asyncParse(item.options).then((inner)=>{
-                              item['options'] = inner
-                              return {item}
-                          })
-                      }))
-                      this.examData = data
-                      console.log(this.examData)
-                      const myTimeOut = setTimeout(this.spinner,170)
-                      this.pushToArrToCheckIfEmpty()
+                res = await axios.get(this.$sharePointUrl+`getByTitle('${this.$route.params.Title}')/Items`)
+                var examData = res.data.value
+                  this.examData = examData;
 
-              })
-              .catch(error=>{
-                 console.log(error)
-                   this.isExamsPer = false
-                   console.log(this.isExamsPer)
-                   this.isLoadForSpinner=true
-                 
-              })
-          }
+                    const promiseAnswers = await Promise.all(this.examData.map((item)=>{
+                          return this.asyncParse(item.exam).then((inner)=>{
+                                item.exam = inner
+                                return {item}
+                            })
+                        }))   
+                            this.examData = this.examData[0]              
+            }
 
           else{
-              return axios.get(this.$sharePointUrl+`${this.$route.params.Title}`)
-              .then(response=>{
-                  this.examData = response.data.value;
+              res = await axios.get(this.$sharePointUrl+`${this.$route.params.Title}`)
+                  var examData = res.data.value;
+                  this.examData = examData[0]
+                   this.isAlreadySub=false
+   
+           }
+                  // this.postSh()
                   console.log(this.examData)
-                  this.isAlreadySub=false
                   const myTimeOut = setTimeout(this.spinner,170)
                   this.pushToArrToCheckIfEmpty()
-              })
-               .catch(error=>{
-                 if(error.response.status === 404){
-                   this.isExamsPer = false
-                   console.log(this.isExamsPer)
-                   this.isLoadForSpinner=true
-                 }
-               })
-           }
-
+                  
 },
 
-mounted(){
-  this.examData.forEach((question)=>{ 
-      this.examUserData[question.Title] = ""  
-   })
-        console.log(this.examUserData)
- }
+  mounted(){
+    window.addEventListener('beforeunload',this.handlePageReload)
+   },
+
+  beforeRouteLeave(to,from,next){
+    if(this.showExitAlert){
+        this.$swal({
+          title:"את/ה בטוח/ה שברצונך לצאת ממבחן זה ?",
+          text:"אם תצא/י השינויים לא ישמרו !",
+          icon:'warning',
+          showCancelButton:true,
+          confirmButtonText:"צא/י",
+          cancelButtonText:"הישאר/י",
+          confirmButtonColor:"var(--main-background-color)"
+        }).then((result)=>{
+          if(result.isConfirmed){
+            next()
+          }
+          else{
+            next(false)
+          }
+        })
+    }
+    else{
+      next()
+    }
+  },
+  beforeUnmount(){
+    window.removeEventListener('beforeunload', this.handlePageReload)
+  }
 }
 </script>
 
 <style scoped>
+.title-timer{
+   top:50px;
+   display:flex;
+   width: 90%;
+   position:relative;
+   align-items:center;
+   right: 50%;
+   transform:translateX(50%);
+   margin-bottom:20px;
+
+}
+.timer{
+  position:relative;
+  right: 80%;
+  transform:translateX(80%);
+  font-size:25px;
+  }
+.title{ 
+  /* top:30px; */
+  font-size:45px;
+  font-weight:700;
+  position:relative;
+  right: 50%;
+  transform:translateX(50%);
+  text-align:center;
+   /* width: 200px; */
+}
 .loader-spinner{
   position:relative;
   width: 100%;
@@ -338,9 +556,9 @@ mounted(){
 
  }
 .exam{
-    display: flex;
     flex-direction: column;
     align-items: center;
+    display: flex;
     width: 75%;
     min-height: 400px;
     margin-top: 80px;
@@ -376,26 +594,25 @@ form{
   font-size: 22px;
   }
    .que-index{
-    margin-left: 20px;
     font-size: 27px;
+    position: relative;
+    left: 45%;
+    top: 30px;
+    transform: translate(45%,30px);
+
  }
 .question{
-    min-height: 80px;
-    width: 80%;
     position: relative;
-    padding: 1em 32px;
+    margin: 1em 0;
+    min-height: 350px;
     display: flex;
-     align-items: center;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
     font-size: 24px;
     font-weight: 700;
  }
- /* .line{
-   width: 90%;
-    border-bottom: 1px solid rgba(0,0,0,.1);
-    position: relative;
-    margin-top:15% 
- } */
- .american-answer-options{
+  .american-answer-options{
    /* padding: 25px 30px 20px 30px; */
    margin-top: 60px;
    margin-bottom: 50px;
@@ -444,6 +661,16 @@ textarea{
   outline: none;
   font-size: 20px;
 }
+ .que-text{
+  width: 80%;
+}
+.sub-que, .regular-que{
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+  width: 80%;
+
+ }
 .open-que{
     position: relative;
     display: flex;

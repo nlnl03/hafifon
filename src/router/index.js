@@ -7,8 +7,10 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import examsToCheck from '../views/hafifonAdmin/examsToCheck.vue'
  import openPermForExams from '../views/hafifonAdmin/openPermForExams.vue'
  import Quiz from '../views/Quiz.vue'
+ import beforeStartingExam from '../views/beforeStartingExam.vue'
  import exams from '../views/exams.vue'
  import submitted from '../views/submitted.vue'
+ import noPermissionMessage from '../views/noPermissionMessage.vue'
  import practiceResult from '../views/practiceResult'
 import displayCheckedExams from '../views/displayCheckedExams'
 
@@ -65,9 +67,21 @@ const routes = [
     props: (route)=>({...route.params})
   },
   {
+    path:'/exams/:Title/beforeStarting',
+    name:'beforeStartingExam',
+    component:beforeStartingExam,
+    props: (route)=>({...route.params})
+  },
+  {
     path: '/exams/:Title/submitted',
     name: 'submitted',
     component: submitted,
+    props: (route)=>({...route.params})
+  },
+  {
+    path: '/exams/:Title/noPermissionMessage',
+    name: 'noPermission',
+    component: noPermissionMessage,
     props: (route)=>({...route.params})
   },
   {
