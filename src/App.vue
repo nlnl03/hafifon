@@ -149,20 +149,30 @@ export default {
   --exams-form-width:1400px;
   --box-check-width: 1200px ;
   --user-main-margin-right: 18%;
-  --user-main-margin-left: 15%
+  --user-main-margin-left: 15%;
+  --home-btn-position:150px;
+  --scroll-top-btn-position:110px;
+  --scroll-top-btn-size:60px;
+  --permission-box-width: 55%
 }
  
 
 @media (max-width:1280px) {
     :root{
-      --user-link-pos:50px ;
+      --user-link-pos:70px ;
+      --home-btn-position:100px;
       --box-check-width:1050px;
       --user-main-margin-right: -1%;
-      --user-main-margin-left: -3%
+      --user-main-margin-left: -3%;
+      --scroll-top-btn-position: 40px;
+      --scroll-top-btn-size:50px;
+      --permission-box-width:70%
+
     }
     form[class="exam"]{
       --exams-form-width:1150px;
     }
+    
      
 }
 @font-face {
@@ -196,9 +206,9 @@ export default {
     position: fixed;
     z-index: 100000;
     bottom:70px;
-    right: 110px;
-    height: 60px;
-    width: 60px;
+    right: var(--scroll-top-btn-position);
+    height: var(--scroll-top-btn-size);
+    width: var(--scroll-top-btn-size);
     border-radius: 50%;
     background: var(--main-background-color);
     border:none;
@@ -211,7 +221,6 @@ export default {
   .scroll-to-top:hover{
     background-color:  #3b999b;
     box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-
   }
  
 

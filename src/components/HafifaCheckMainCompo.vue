@@ -302,7 +302,7 @@ export default {
        border: none;
        transition: all 0.2s ease-in-out;
        min-height: 70px;
-       background-color: rgb(150 149 149 / 39%);
+       /* background-color: rgb(150 149 149 / 39%); */
     }
      button:hover{
        background-color: #cac8c88e;

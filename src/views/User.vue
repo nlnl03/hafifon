@@ -492,12 +492,12 @@ h5{
     text-decoration: none;
     color:black;
     background: rgba(218, 220, 220, 0.78);
-    padding: 0.5em 0.8em;
+    padding: 0.6em 0.8em;
     font-size: 15px;
     border-radius: 13px;
   }
   .exam-Checked-router:hover{
-    background-color: var(--main-background-color);
+    background-color: #449ea0;
 
   }
   .spinner{

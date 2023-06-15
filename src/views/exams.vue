@@ -3,7 +3,7 @@
 
    <div class="title-timer">
         <div class="title" v-if="!isAlreadySub&&isLoadForSpinner">{{examsName.subject}}</div>
-        <div class="timer" v-if="!isAlreadySub&&isLoadForSpinner" > <timer :totalTime="4500" /> </div>
+        <div class="timer" v-if="!isAlreadySub&&isLoadForSpinner" > <timer :totalTime="5" :routeName="routerName" /> </div>
    </div>
  
   
@@ -75,6 +75,7 @@ data(){
       boolIfEmpty:[],
       dataToPost:[],
       token:'',
+      routerName:null,
       userName:'',
       userId:'',
       isAlreadySub:null,
@@ -84,7 +85,9 @@ data(){
       showRedWarn:false,
       showRedWarnToAmerican:false,
       showExitAlert:true,
-      postS:null
+      postS:null,
+      urlForId:"https://portal.army.idf/sites/hafifon383/_api/web/sitegroups/getbyname('מבקרי חפיפון')/id",
+      groupId:null
     }
 },
 methods:{
@@ -208,7 +211,7 @@ methods:{
                     })
                       console.log(this.showExitAlert)
                       this.$router.push({name:'submitted',params:{Title:this.$route.params.Title}})
-                       
+                       this.deletePer()
                    }
               else{
                   this.$swal(
@@ -266,6 +269,26 @@ methods:{
         event.preventDefault()
         event.returnValue = ''
       },
+       getIdOfgroup(){
+          return axios.get(this.urlForId).then((res=>res.data.value))
+         },
+         async deletePer(){
+           this.groupId = await this.getIdOfgroup()
+           console.log(this.groupId)
+              const res = await axios.post(this.$sharePointUrl+`getByTitle('${this.$route.params.Title}')/roleassignments/getbyprincipalid('${this.groupId}')`,{
+            '__metadata':{'type':'SP.Data.IsPermissionActiveListItem'},
+            },
+            {
+                headers:{
+                    'X-HTTP-Method':"DELETE",
+                    'IF-MATCH':"*",
+                    'X-RequestDigest':this.token,
+                    'Accept':"application/json;odata=verbose",
+                    'Content-Type':"application/json;odata=verbose"
+                }
+            })
+        },
+
       async postSh(){
         var inst = ["*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.", "*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים."]
         var data = {
@@ -427,6 +450,7 @@ methods:{
  
 async beforeMount(){
   console.log(this.$route.params)
+  this.routerName = this.$route.params.Title
   this.userName=localStorage.getItem("userName")
   console.log(this.userName)
   const examsName = localStorage.getItem("examsName")
@@ -488,7 +512,10 @@ async beforeMount(){
    },
 
   beforeRouteLeave(to,from,next){
-    if(this.showExitAlert){
+    var prevExit = JSON.parse(localStorage.getItem("prevExit"))
+    console.log(prevExit)
+    console.log(this.showExitAlert)
+    if(this.showExitAlert&&prevExit!=false){
         this.$swal({
           title:"את/ה בטוח/ה שברצונך לצאת ממבחן זה ?",
           text:"אם תצא/י השינויים לא ישמרו !",
@@ -509,6 +536,8 @@ async beforeMount(){
     else{
       next()
     }
+        localStorage.setItem("prevExit",true)
+
   },
   beforeUnmount(){
     window.removeEventListener('beforeunload', this.handlePageReload)

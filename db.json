@@ -1176,7 +1176,7 @@
               {
                 "type": "open",
                 "que": "הסבר מהו  IMAGEומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו (4 נק')",
-                "inputAns": "fgf",
+                "inputAns": "kjh",
                 "id": 0,
                 "points": 4,
                 "pointsReceived": "",
@@ -1185,7 +1185,7 @@
               {
                 "type": "open",
                 "que": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? (2  נק')",
-                "inputAns": "jh",
+                "inputAns": "hjug",
                 "id": 1,
                 "points": 2,
                 "pointsReceived": "",
@@ -1199,7 +1199,7 @@
               {
                 "type": "open",
                 "que": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג'? (3 נק')",
-                "inputAns": "jh",
+                "inputAns": "uih",
                 "id": 2,
                 "points": 3,
                 "pointsReceived": "",
@@ -1208,7 +1208,7 @@
               {
                 "type": "open",
                 "que": "פרט את שלבי התקנת המשואה לאחר התקנת האימג' (2 נק')",
-                "inputAns": "jh",
+                "inputAns": "uiy",
                 "id": 3,
                 "points": 2,
                 "pointsReceived": "",
@@ -1217,7 +1217,7 @@
               {
                 "type": "open",
                 "que": "פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ? (2 נק')",
-                "inputAns": "kjh",
+                "inputAns": "uih",
                 "id": 4,
                 "points": 2,
                 "pointsReceived": "",
@@ -1226,7 +1226,7 @@
               {
                 "type": "open",
                 "que": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים. (2 נק')",
-                "inputAns": "kjh",
+                "inputAns": "uih",
                 "id": 5,
                 "points": 2,
                 "pointsReceived": "",
@@ -1240,7 +1240,7 @@
               {
                 "type": "open",
                 "que": "איזה 2 מערכות קיימות ברשת הMOIP? ומה הקונבנציה של כל מערכת? (2 נק')",
-                "inputAns": "kjh",
+                "inputAns": "uih",
                 "id": 6,
                 "points": 2,
                 "pointsReceived": "",
@@ -1249,7 +1249,7 @@
               {
                 "type": "open",
                 "que": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?(2 נק')",
-                "inputAns": "kjh",
+                "inputAns": "ui",
                 "id": 7,
                 "points": 2,
                 "pointsReceived": "",
@@ -1258,7 +1258,7 @@
               {
                 "type": "open",
                 "que": "ציין בקצרה מה השלבים לאחר ההפצת אימג'? (2 נק')",
-                "inputAns": "jkh",
+                "inputAns": "hiu",
                 "id": 8,
                 "points": 2,
                 "pointsReceived": "",
@@ -1267,7 +1267,7 @@
               {
                 "type": "open",
                 "que": "מה הדומיין של MOIP? (1 נק')",
-                "inputAns": "kjh",
+                "inputAns": "h",
                 "id": 9,
                 "points": 1,
                 "pointsReceived": "",
@@ -1283,7 +1283,7 @@
                 "type": "open"
               }
             ],
-            "inputAns": "kjh",
+            "inputAns": "f",
             "id": 10,
             "points": 3,
             "pointsReceived": "",
@@ -1297,7 +1297,7 @@
                 "type": "open"
               }
             ],
-            "inputAns": "kjh",
+            "inputAns": "ui",
             "id": 11,
             "points": 2,
             "pointsReceived": "",

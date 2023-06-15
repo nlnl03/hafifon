@@ -157,6 +157,7 @@ export default {
 }
 .exams-drop-down{
     height: 52%;
+    text-align: center;
 }
 .nav-bar{ 
     width: 600px;
@@ -200,7 +201,7 @@ a{
     font-size: 40px;
     top: 32px;
     height: 60px;
-    right: 150px;
+    right: var( --home-btn-position);
 
  }
  

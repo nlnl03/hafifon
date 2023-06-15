@@ -79,8 +79,7 @@ export default {
               }
                 console.log(val)
                 console.log(isAllowCondition)
-              
-          },
+           },
           async checkTheCurrentPerm(){
               var res = null
               if(this.$isSharePointUrl){
@@ -157,7 +156,7 @@ export default {
     display: flex;
     position: relative;
     justify-content: center;
-    width: 55%;
+    width: var(--permission-box-width);
     height: 700px;
     right: 50%;
     left: 50%;
@@ -254,9 +253,10 @@ input:focus + .slider{
     box-shadow: 0 0 1px var(--main-background-color);
 }
 input:checked + .slider::before{
-    -webkit-transform:translateX(26px);
+    /* -webkit-transform:translateX(26px);
     -ms-transform:translateX(26px);
-    transform:translateX(26px);
+    transform:translateX(26px); */
+    right: 7%;
 }
 .slider.round{
     border-radius: 34px;
