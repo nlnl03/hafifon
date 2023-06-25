@@ -958,6 +958,7 @@
         ],
         "exam": [
           {
+            "part":"חלק א' – בסיס (27 נקודות)",
             "type": "subQue",
             "questions": [
               {
@@ -1089,8 +1090,80 @@
             "points": 2,
             "pointsReceived": "",
             "comments": ""
+          },
+          {
+            "type":"subQue",
+            "titleQue":"לקוח מתלונן כי לא מצליח לפתוח את ה-PST שלו:",
+            "questions":[
+              {
+                "type": "open",
+                "que": "הסבר כיצד נבצע תיקון לPST. (2 נק')",
+                "inputAns": "",
+                "id": 12,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט כיצד תפעל במקרה התיקון לא עבד. (נק' 1)",
+                "inputAns": "",
+                "id": 13,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type":"subQue",
+            "titleQue":"כאשר לקוח מתחבר למחשב מופיעה לו הודעת שגיאה, ציין את פתרונן של השגיאות הבאות:",
+            "questions":[
+              {
+                "type": "open",
+                "que": "(נק' 1) \"התחום שצוין אינו זמין\"",
+                "inputAns": "",
+                "id": 13,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "(נק' 1) \"החשבון שצוין אינו זמין\"",
+                "inputAns": "",
+                "id": 14,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "(נק' 1) \"הכרטיס החכם חסום\"",
+                "inputAns": "",
+                "id": 15,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "מה עושים כאשר בכוונתנו להיכנס עם הכרטיס למחשב אך אין אופציה של \"הכנס כרטיס חכם\" והאופציה היחידה שמופיעה היא \"ADMINISTRATOR\" ? פרטי את כל דרך הפעולה (2 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "",
+            "id": 16,
+            "points": 2,
+            "pointsReceived": "",
+            "comments": ""
           }
-        ]
+        ],
+        "time":2700
       }
     ]
   },
@@ -1139,7 +1212,9 @@
   },
   "currentUser": {
     "Title": "נועם לביא - גדוד 383/לשכה/ע. קצין טכני",
-    "Id": 12345
+    "Id": 12345,
+    "LoginName": "i:0#.w|army\\s9053078"
+
   },
   "testsNames": {
     "value": [
@@ -1460,12 +1535,12 @@
       {
         "Title": "בוחן 1",
         "type": "exam1",
-        "isAllow": true
+        "isAllow": false
       },
       {
         "Title": "בוחן 2",
         "type": "exam2",
-        "isAllow": true
+        "isAllow": false
       },
       {
         "Title": "בוחן 3",

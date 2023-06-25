@@ -3,7 +3,7 @@
       <loadingSpinner />
  </div>
 
-  <div class="box" v-if="isAdmin">
+  <div class="box">
     <div class="box-flex" v-if="isLoad" >
       <div class="count-students-cicrcle">
         <div class="count-students-items">
@@ -88,7 +88,6 @@ export default {
       getBtnVal:null,
       userInfoFilterd:[],
       isLoad:false,
-      isAdmin:false,
       testsNames:[],
       showOptions:null,
       gradrPerExam: 0
@@ -234,22 +233,13 @@ export default {
   },
 
   async beforeMount(){
-    this.isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"))
-    console.log(this.isAdmin)
-      if(!this.isAdmin){
-        alert("מצטערים, אך אין לך גישה לעמוד זה...")
-        this.$router.go(-1)
-      }
-      else{
-        this.isAdmin = true
-        var testsNames = JSON.parse(localStorage.getItem("examsName"))
-        this.testsNames = testsNames
+      var testsNames = JSON.parse(localStorage.getItem("examsName"))
+      this.testsNames = testsNames
         console.log(this.testsNames)
           await this.getData()    
           await this.filterTitles()
           const myTimeOut = setTimeout(this.timeOutForSpinner,250)
-      }
-   }, 
+    }, 
   
  }
 

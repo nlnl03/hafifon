@@ -96,7 +96,7 @@ export default {
        isGradeAve:false,
        isLoadForSpinner:false,
        isCalculated:false,
-        onlyExam:null
+       onlyExam:null
      }
   },
     methods:{

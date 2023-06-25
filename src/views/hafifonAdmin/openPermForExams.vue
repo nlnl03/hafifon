@@ -1,5 +1,5 @@
 <template>
-<div class="main" v-if="isAdmin">
+<div class="main">
     <div class="title">פתיחת הרשאות</div>
     
     <div class="permission">
@@ -28,8 +28,7 @@ export default {
             token:null,
             currentPermission:[],
             Id:null,
-            isload:false,
-            isAdmin:false
+            isload:false
         }
     },
     methods:{
@@ -43,7 +42,7 @@ export default {
             console.log(this.groupId)
          },
         async getTargetRoleDefenitionId(){
-            const res = await axios.get("https://portal.army.idf/sites/hafifon383/_api/web/roledefinitions/getbyname('קריאה')/id")
+            const res = await axios.get("https://portal.army.idf/sites/hafifon383/_api/web/roledefinitions/getbyname('שליטה מלאה')/id")
             this.targetRoleDefId = res.data.value
             console.log(this.targetRoleDefId)
               
@@ -131,22 +130,15 @@ export default {
     },
     
     async beforeMount(){
-        this.isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"))
-        console.log(this.isAdmin)
-        if(!this.isAdmin){
-            alert("מצטערים, אך אין לך גישה לעמוד זה...")
-            this.$router.go(-1)
+        if(this.$isSharePointUrl){
+            await this.getIdOfgroup()
+            this.getTargetRoleDefenitionId()
+            this.token = await this.getToken()
         }
-        else{
-           if(this.$isSharePointUrl){
-                await this.getIdOfgroup()
-                this.getTargetRoleDefenitionId()
-                this.token = await this.getToken()
-            }
-                this.checkTheCurrentPerm()
-                this.isload = true
-        }
-     },
+            this.checkTheCurrentPerm()
+            this.isload = true
+    }
+      
 
 }
 </script>

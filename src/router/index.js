@@ -5,6 +5,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import User from '../views/User.vue'
  import MainCheckPage from '../views/hafifonAdmin/MainCheckPage.vue'
  import examsToCheck from '../views/hafifonAdmin/examsToCheck.vue'
+ import uploadEditExams from '../views/hafifonAdmin/uploadEditExams.vue'
  import openPermForExams from '../views/hafifonAdmin/openPermForExams.vue'
  import Quiz from '../views/Quiz.vue'
  import beforeStartingExam from '../views/beforeStartingExam.vue'
@@ -13,6 +14,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import noPermissionMessage from '../views/noPermissionMessage.vue'
  import practiceResult from '../views/practiceResult'
 import displayCheckedExams from '../views/displayCheckedExams'
+import notFound from '../views/notFound'
 
 const routes = [
   {
@@ -53,6 +55,11 @@ const routes = [
     name: 'openPerm',
     component: openPermForExams,
     props:true 
+  },
+  {
+    path:'/Admin/uploadEditExams',
+    name:'uploadEditExams',
+    component:uploadEditExams
   },
   {
     path: '/examsToCheck/:num/:examType/submitted',
@@ -101,6 +108,12 @@ const routes = [
     name: 'result',
     component: practiceResult,
     props: (route)=>({...route.params})
+  },
+  {
+    path:'/:catchAll(.*)',
+    name:'notFound',
+    component:notFound,
+    meta:{notFound: true}
   }
 ]
 

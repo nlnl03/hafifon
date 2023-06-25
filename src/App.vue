@@ -1,12 +1,11 @@
 <template>
-  
-    <MainNavbar/>
+    <MainNavbar v-if="!isNotFoundRoute"/>
     <div v-if="scroll >=300">
       <button class="scroll-to-top" @click="scrollToTop">
           &#9650;
       </button>
     </div>
-    <router-view/>
+    <router-view  :key="$route.fullPath">  </router-view>
   
 </template>
 
@@ -25,6 +24,7 @@ export default {
         urlForToken: process.env.NODE_ENV =='development'? `http://localhost:3000/`:"https://portal.army.idf/sites/hafifon383/_api/contextinfo",
         Id:null,
         userName:null,
+        userNum:null,
         isAdmin:null,
         scroll:null
       }
@@ -45,43 +45,25 @@ export default {
       async getCurrentUser(){
          const res = await axios.get(this.currentUser)
           this.currentUserData = res.data;
+          var userNum = this.currentUserData.LoginName.split('s')
+          this.userNum = userNum[1]
           this.Id=this.currentUserData.Id
           const Title = this.currentUserData.Title.split(' -')
           this.userName = Title[0]
-           localStorage.setItem("userName",this.userName)
-          localStorage.setItem("userId",this.Id)
+            localStorage.setItem("userName",this.userName)
+            localStorage.setItem("userId",this.Id)
+            localStorage.setItem("userNum",this.userNum)
           console.log(this.Id)
           // console.log(this.currentUserData)
         },
         showScrollBtn(){
           this.scroll = window.scrollY
         },
-
-    
-    async checkIfAdmin(){
-            var res = null
-            if(this.$isSharePointUrl){
-                res = await axios.get(this.$sharePointUrl+"getByTitle('AdminCheck')/Items")
-            }
-            else{
-                 res = await axios.get(this.$sharePointUrl + "AdminCheck")
-            }
-                // console.log(res.data.value)
-                if(res.data.value.length){
-                    this.isAdmin = true
-                }
-                else{
-                    this.isAdmin = false
-                 }
-                // console.log("isAdmin: "+ this.isAdmin)
-                sessionStorage.setItem("isAdmin",this.isAdmin)
-        },
         
  },
 
         beforeMount(){
           this.getCurrentUser()
-          this.checkIfAdmin()
       },
 
        created(){
@@ -90,6 +72,11 @@ export default {
         unmounted(){
           window.removeEventListener('scroll', this.showScrollBtn)
         },
+        computed:{
+          isNotFoundRoute(){
+            return this.$route.matched.some(record => record.meta.notFound)
+          }
+        }
     }
 
 </script>

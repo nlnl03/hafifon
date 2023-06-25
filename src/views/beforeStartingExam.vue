@@ -10,7 +10,7 @@
                    {{inst}}
                </div>
            </div>
-            <router-link :to="{name:'exams',params:{Title:this.$route.params.Title}}" class="start-btn" @click="startBtn">
+            <router-link :to="{name:'exams',params:{Title:this.$route.params.Title}}" class="start-btn">
                 <div class="router-text">התחל</div>  
             </router-link>
     </div>
@@ -96,7 +96,7 @@ methods:{
 .box{
     height: 530px;
     width: 800px;
-    background:rgba(255, 255, 255, 0.829);
+    background: #fff;
     box-shadow: 0 0 15px 0 rgb(0 0 0 / 20%);
     position: relative;
     right: 50%;

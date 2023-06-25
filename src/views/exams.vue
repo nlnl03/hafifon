@@ -9,8 +9,9 @@
   
    <form class="exam-box" v-if="!isAlreadySub&&isLoadForSpinner">
       <div class="exam" v-for="(item,index) in examData.exam" :key="index">
-          <span class="que-index">{{index+1+"."}}</span> 
-
+        <div class="part-text">{{item.part}}</div>
+          <div class="que-index">{{index+1+"."}}</div> 
+            <div class="title-que" v-if="item.titleQue">{{item.titleQue}}</div>
             <div class="regular-que" v-if="item.type=='regularQue'">
                 <div class="question">
                     <div class="que-text"> {{item.questions[0]["que"]}}</div>
@@ -85,9 +86,9 @@ data(){
       showRedWarn:false,
       showRedWarnToAmerican:false,
       showExitAlert:true,
-      postS:null,
       urlForId:"https://portal.army.idf/sites/hafifon383/_api/web/sitegroups/getbyname('מבקרי חפיפון')/id",
-      groupId:null
+      groupId:null,
+      isTime:true
     }
 },
 methods:{
@@ -132,6 +133,7 @@ methods:{
 
  
       async postExams(){
+        console.log("you in post func")
         var dataToPost = [...this.examData.exam]
         var res = null
          console.log(this.examsName.subject)
@@ -166,7 +168,7 @@ methods:{
               ]
             })
           }
-            if(res.status=='200'||res.status=='201'){
+            if(res.status>=200 && res.status<300){
               return true
             }
             else{
@@ -444,7 +446,8 @@ methods:{
                     'X-RequestDigest':this.token,
                 }
             }) 
-      }
+      },
+       
         
 },
  
@@ -495,20 +498,20 @@ async beforeMount(){
 
           else{
               res = await axios.get(this.$sharePointUrl+`${this.$route.params.Title}`)
-                  var examData = res.data.value;
-                  this.examData = examData[0]
-                   this.isAlreadySub=false
-   
-           }
-                  // this.postSh()
-                  console.log(this.examData)
-                  const myTimeOut = setTimeout(this.spinner,170)
-                  this.pushToArrToCheckIfEmpty()
+              var examData = res.data.value;
+                this.examData = examData[0]
+                 this.isAlreadySub=false
+          }
+                // this.postSh()
+                console.log(this.examData)
+                const myTimeOut = setTimeout(this.spinner,170)
+                this.pushToArrToCheckIfEmpty()
                   
 },
 
   mounted(){
     window.addEventListener('beforeunload',this.handlePageReload)
+ 
    },
 
   beforeRouteLeave(to,from,next){
@@ -595,7 +598,7 @@ async beforeMount(){
   }
   .exam:first-child{
     border-top:none;
-    margin-top:75px
+    margin-top:85px
   }
 .show-red-Warn-american{
   display:inline;
@@ -628,8 +631,14 @@ form{
     left: 45%;
     top: 30px;
     transform: translate(45%,30px);
-
  }
+ .title-que{
+   position:relative;
+   left: 25%;
+   font-size: 22px;
+   font-weight: 700;
+   top: 30px;
+  }
 .question{
     position: relative;
     margin: 1em 0;
@@ -650,6 +659,12 @@ form{
    direction: ltr;
    width: 63%;
    position: relative;
+}
+.part-text{
+  font-size: 30px;
+  position: relative;
+  font-weight: 700;
+  top:30px
 }
 .answer-items{
     min-height: 45px;

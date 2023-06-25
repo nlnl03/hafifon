@@ -17,14 +17,17 @@
                       </div>
                    </li>
 
-                   <li class="exams-drop-down" @mouseover="isOpen = true" @mouseleave="isOpen = false" >
+                   <li class="exams-drop-down" @mouseover="isOpen = true"  @mouseleave="isOpen = false"  >
                         <span >ממשק מנהלים</span>
                              <ul class="admin-drop-down-menu" v-if="isOpen">
                                 <li class="admin-drop-down-list">
-                                    <router-link class="admin-routers" :to="{name:'MainCheckPage'}"> בדיקת מבחנים</router-link>
+                                    <button class="admin-routers"  @click="openAdminComp('MainCheckPage')"> בדיקת מבחנים</button>
                                 </li>
                                 <li class="admin-drop-down-list">
-                                    <router-link class="admin-routers" :to="{name: 'openPerm'}"> פתיחת הרשאות למבחנים</router-link>
+                                    <button class="admin-routers"  @click="openAdminComp('openPerm')"> פתיחת הרשאות למבחנים</button>
+                                </li>
+                                 <li class="admin-drop-down-list">
+                                    <button class="admin-routers"  @click="openAdminComp('uploadEditExams')"> עריכה והעלאת מבחנים</button>
                                 </li>
                              </ul>
                     </li>
@@ -56,13 +59,13 @@
 import axios from 'axios'
 export default {
     name: 'MainNavbar',
-    data(){
+     data(){
         return{
             isExamsDropOpen: false,
             isOpen:false,
             examsPerm:[],
             examsName:[],
-            isAdmin:false,
+            isAdmin:null,
             url: process.env.NODE_ENV =='development'? `http://localhost:3000/testsNames/`:"https://portal.army.idf/sites/hafifon383/_api/web/Lists/getByTitle('testsNames')/Items",
           }
     },
@@ -79,6 +82,15 @@ export default {
             localStorage.setItem("examsName",JSON.stringify(this.examsName))
             this.examsName=this.examsName.filter(name=>name.Title!=='finalTest')
             // console.log(this.examsName)
+        },
+        openAdminComp(nameOfRoute){
+            console.log(nameOfRoute)
+            if(this.isAdmin){
+                this.$router.push({name:nameOfRoute})
+            }
+            else{
+                alert("מצטערים, אך אין לך גישה לעמוד זה...")
+            }
         },
 
         async checkIfhasPermToExams(name){
@@ -103,20 +115,49 @@ export default {
                     this.examsPerm = examsPerm.filter(data=>data.type==title)[0]
                     console.log(this.examsPerm)
                 }
+                    // this.isAdmin = sessionStorage.getItem("isAdmin")
+                    console.log(this.isAdmin)
+                    if(this.examsPerm.isAllow==true||this.isAdmin==true){
+                        console.log("admin "+this.isAdmin)
+                        console.log("premission "+this.examsPerm.isAllow)
 
-                    if(this.examsPerm.isAllow||this.isAdmin){
                         this.$router.push({name:'beforeStartingExam',params:{Title:title}})
                     }
                     else{
+                        console.log("no permission")
                         this.$router.push({name:'noPermission',params:{Title:title}})
                     } 
-        }
+                    console.log(window.location.href)
+        },
+        async checkIfAdmin(){
+             var url = null  
+            if(this.$isSharePointUrl){
+               url = this.$sharePointUrl+"getByTitle('AdminCheck')/Items"
+             }
+            else{
+                 url = this.$sharePointUrl + "AdminCheck"
+            }
+                return axios.get(url).then(res=>res.data.value)
+                .then(results=>{
+                    if(results.length){
+                        return  true
+                    }
+                    else{
+                        return false
+                    }
+                 })
+                 
+                // console.log("isAdmin: "+ this.isAdmin)
+                // sessionStorage.setItem("isAdmin",this.isAdmin)
+        },
         
     },
      async beforeMount(){
         //  await this.$isSharePointUrl
          this.getNameOfExams()
-         this.isAdmin = sessionStorage.getItem("isAdmin")
+        this.isAdmin = await this.checkIfAdmin()
+        console.log(this.isAdmin)
+          
      },
     
 }
@@ -157,6 +198,7 @@ export default {
 }
 .exams-drop-down{
     height: 52%;
+    z-index: 10000;
     text-align: center;
 }
 .nav-bar{ 
@@ -214,6 +256,7 @@ a{
     position: absolute;
     left:var(--user-link-pos);
     top: 37px;
+    z-index: 1;
     text-decoration: none;
     font-size: 20px;
     padding: 0.2em 1em;
@@ -267,16 +310,26 @@ a{
     cursor: pointer;
   }
   .admin-drop-down-menu{
-      height: 120px;
+      height: 220px;
       width: 150px;
       right:-10%;
     }
     .admin-routers{
-        padding: 0.75em;
+    padding: 0.5em;
+        background: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .admin-routers:hover{
+             background-color: #f3f3f3;
+
     }
    .drop-down-list, .admin-drop-down-list{
         border-bottom: 1px solid #f3f3f3;
         width: 100%;
+            z-index: 10000;
+
     }
   .drop-down-list :hover{
       border-radius: 5px;
