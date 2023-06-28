@@ -198,7 +198,6 @@ export default {
 }
 .exams-drop-down{
     height: 52%;
-    z-index: 10000;
     text-align: center;
 }
 .nav-bar{ 
@@ -206,7 +205,6 @@ export default {
     height: 100%;
     margin-right: 45px;
     margin-left: 45px;
-
  }
  ul{
     padding: 0;

@@ -1,6 +1,6 @@
 <template>
  <div class="main-page" >
-    <h1>האיזור האישי</h1>
+     <h1>האיזור האישי</h1>
     <div class="under-line"></div>
       <div class="main">
         <div class="right-side-flex">
@@ -105,18 +105,7 @@ export default {
            resolve(JSON.parse(str))
           })
         },
-        // async getExamsNames(){
-        //   var res=null
-        //   if(this.$isSharePointUrl){
-        //     res = await axios.get(this.$sharePointUrl+"getByTitle('testsNames')/Items")
-        //   }
-        //   else{
-        //     res = await axios.get(this.$sharePointUrl+"testsNames")
-        //   }
-        //      this.examsNames = res.data.value
-        //     console.log(this.examsNames)
-          
-        // },
+        
 
         async parseData(){
           this.examsNames = localStorage.getItem("examsName")

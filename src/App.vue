@@ -170,16 +170,20 @@ export default {
 *, body{
       margin: 0;
       padding: 0;
-      font-family: Assistant-Regular;
+      font-family: Assistant-Regular !important;
       direction: rtl;
-
+ 
   }
   body{
     min-height: 100vh;
     height: 100vh;
     min-width: 100vw;
+    line-height: normal !important;
     width: 100vw;
     overflow-x: hidden;
+  }
+  *, *:before, *:after{
+    box-sizing:revert
   }
   button{
         outline: none;
@@ -210,5 +214,22 @@ export default {
     box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
   }
  
+h4{
+  font-weight: bold;
+  line-height: unset;
+}
+ h2{
+   line-height: unset;
+   letter-spacing:unset;
+   display: block;
+   font-size: 1.5em;
+   font-weight: bold;
+ }
+ h1{
+   font-weight:bold ;
+   margin-bottom: 10px;
+   line-height: unset;
+   letter-spacing:unset
+ }
 
  </style>

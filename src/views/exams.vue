@@ -3,7 +3,7 @@
 
    <div class="title-timer">
         <div class="title" v-if="!isAlreadySub&&isLoadForSpinner">{{examsName.subject}}</div>
-        <div class="timer" v-if="!isAlreadySub&&isLoadForSpinner" > <timer :totalTime="5" :routeName="routerName" /> </div>
+        <div class="timer" v-if="!isAlreadySub&&isLoadForSpinner" > <timer :totalTime="500" :routeName="routerName" /> </div>
    </div>
  
   
@@ -11,7 +11,6 @@
       <div class="exam" v-for="(item,index) in examData.exam" :key="index">
         <div class="part-text">{{item.part}}</div>
           <div class="que-index">{{index+1+"."}}</div> 
-            <div class="title-que" v-if="item.titleQue">{{item.titleQue}}</div>
             <div class="regular-que" v-if="item.type=='regularQue'">
                 <div class="question">
                     <div class="que-text"> {{item.questions[0]["que"]}}</div>
@@ -25,8 +24,10 @@
 
 
             <div class="sub-que" v-if="item.type=='subQue'">
+                <div class="title-que" v-if="item.titleQue">{{item.titleQue}}</div>
+
                 <div class="question" v-for="(question,subIndex) in item.questions" :key="subIndex" >
-                    <div class="que-text"> {{getHebLetters(subIndex)}}. {{question.que}} </div>
+                    <div class="que-text"> <span class="sub-que-letter">{{getHebLetters(subIndex)}}.</span> {{question.que}} </div>
                 
                     <div class="open-que" v-if="question.type=='open'" :ref="'inputRef_' + question.id">
                         <textarea id="" cols="30" rows="10" placeholder="הכנס תשובה" @input="clickHandler($event,index,inner,subIndex,question.id)"
@@ -631,13 +632,15 @@ form{
     left: 45%;
     top: 30px;
     transform: translate(45%,30px);
+    font-weight: 700;
  }
  .title-que{
    position:relative;
-   left: 25%;
-   font-size: 22px;
+   font-size: 28px;
    font-weight: 700;
-   top: 30px;
+   margin-bottom: 70px;
+   top: 24px;
+   left: 35px;
   }
 .question{
     position: relative;
@@ -661,7 +664,7 @@ form{
    position: relative;
 }
 .part-text{
-  font-size: 30px;
+  font-size: 32px;
   position: relative;
   font-weight: 700;
   top:30px
@@ -704,10 +707,12 @@ textarea{
   border: 1px solid rgba(169, 169, 169, 0.774);
   outline: none;
   font-size: 20px;
+  font-weight: normal;
 }
  .que-text{
-  width: 80%;
-}
+  width: 90%;
+  font-size: 25px;
+ }
 .sub-que, .regular-que{
   /* display: flex;
   flex-direction: column;
@@ -715,6 +720,10 @@ textarea{
   width: 80%;
 
  }
+ .sub-que-letter{
+   font-size: 28px;
+   margin-left: 15px;
+  }
 .open-que{
     position: relative;
     display: flex;

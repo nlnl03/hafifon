@@ -164,7 +164,8 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
                 type:'warning',
                 showCancelButton:true,
                 confirmButtonColor:"var(--main-background-color)",
-                confirmButtonText:'כן, שלח בדיקה'
+                confirmButtonText:'כן, שלח בדיקה',
+                showLoaderOnConfirm:true,
               }).then((result)=>{
                   resolve(result)
               })

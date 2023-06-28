@@ -1,16 +1,10 @@
 <template>
- <div class="choose-box">
-     <div class="edit-or-upload">
+ <div class="choose-box" >
+     <div class="edit-or-upload"  >
          <button class="upload">העלת מבחן חדש</button>
-         <button class="edit">עריכת מבחן קיים</button>
-     </div>
-     <select @change="selectBtn($event)" class="select-exams" v-if="selectOpened">
-         <option value="" disabled selected hidden>בחר מבחן</option>
-         <option v-for="name in examNames" :value="name.subject" :key="name.subject" >
-             {{name.subject}}
-         </option>
-     </select>
-
+         <button class="edit" @click="triggerEdit">עריכת מבחן קיים</button>
+     </div>     
+    
      <div class="next-btn" v-if="selectOpened">
          <button  @click="nextBtn" :disabled="!isChecked">המשך</button>
      </div>
@@ -24,7 +18,9 @@ export default {
             examNames:[],
             selectedOption:'',
             isChecked:false,
-            selectOpened:false
+            selectOpened:false,
+            showUploadBtn:true,
+            showEditBtn:true
             
         }
     },
@@ -35,11 +31,35 @@ export default {
                 this.isChecked = true
             } 
             console.log(event.target.value)
+        },
+         
+        triggerEdit(){
+            const selectHtml = `
+                <select ref="mySelect" @change="selectBtn($event)" class="select-exams" >
+                    <option value="" disabled selected hidden>בחר מבחן</option>
+                        ${this.examNames.map(name => `<option value="${name.subject}">${name.subject}</option>`).join('')}
+                </select>`
+                                                            
+             console.log(selectHtml)
+
+            this.$swal({
+                title:'בחר את הבחינה שברצונך לערוך:',
+                html: selectHtml,
+                confirmButtonText:'המשך' ,
+                showLoaderOnConfirm:true,
+                inputValidator: () =>{
+                    const selectedOption = this.$refs.mySelect.value
+                    return selectedOption === '' ? 'אנא בחר באחת מהאפשרויות' : null
+                } 
+            }).then(result =>{
+                     
+              }) 
         }
     },
     beforeMount(){
         this.examNames = JSON.parse(localStorage.getItem("examsName"))
         console.log(this.examNames)
+
     }
 }
 </script>
@@ -86,7 +106,7 @@ export default {
     font-size: 20px;
     font-weight: 700;
 }
-.edit{
+/* .edit{
 
-}
+} */
  </style>

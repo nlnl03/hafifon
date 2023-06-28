@@ -2,25 +2,38 @@
   <div class="loader-spinner" v-if="!isLoad">
         <loadingSpinner />
   </div>
-
+    
 <div class="main" v-if="isLoad">
     <h1>תרגולים</h1>
    <div class="text-under-line"></div>
+   
+
    <div class="container-cards">
-    <div class="flex-cards">
-      <div class="items" v-for="practice in practices" :key="practice">
-        <router-link class="router-text" :to="{name:'beforeEnterQuiz', params:{practices:JSON.stringify(practice),title:practice.Title}}">
-          <img class="image-of-items" :src="require(`@/assets/${practice.Img}`)">
-          <div class="inner-flex">
-            <h4 class="text">
-                {{practice.Subject}}
-            </h4>
-            <span class="num-of-que">מספר שאלות: {{practice.numOfQue}}</span>
-            </div>
-        </router-link>
-      </div>
-    </div>
-  </div>
+    
+         <div class="timeline" v-for="practice in practices" :key="practice">
+          <div class="fg" > 
+            <q-timeline color="secondary">
+              <q-timeline-entry :subtitle="`שבוע ${practice.timeline}`">
+                <div class="flex-cards">
+                  <div class="items" v-for="item in practice.items" :key="item">
+                    <router-link class="router-text"
+                    :to="{name:'beforeEnterQuiz', params:{practices:JSON.stringify(item.exam),title:item.Title}}">
+                      <img class="image-of-items" :src="require(`@/assets/${item.Img}`)">
+                        <div class="inner-flex">
+                          <h4 class="text">
+                              {{item.Subject}}
+                          </h4>
+                          <span class="num-of-que">מספר שאלות: {{item.numOfQue}}</span>
+                        </div>
+                    </router-link>
+                  </div>
+                </div>
+              </q-timeline-entry>             
+            </q-timeline>
+          </div>
+        </div>
+     
+   </div>
 </div>
 </template>
 
@@ -39,7 +52,8 @@ export default {
       practices:[],
       isLoad:false,
       timeOut:null,
-      }
+      weekOrganize:["ראשון","שני","שלישי","רביעי"]
+    }
   },
   methods:{
     async getPractices(){
@@ -51,7 +65,7 @@ export default {
           res = await axios.get(this.$sharePointUrl+"practice")
         }
           this.practices = res.data.value
-            // console.log(this.practices)
+            console.log(this.practices)
             this.isLoad = true;
     }
   },
@@ -153,7 +167,10 @@ h1{
    width: 100%;
  }
  .image-of-items{
-  width: 100%;
-  height: 60%;
-   }
+    width: 100%;
+    height: 60%;
+ }
+ .timeline{
+   width: 80%;
+ }
  </style>

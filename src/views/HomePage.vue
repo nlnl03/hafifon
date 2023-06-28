@@ -125,18 +125,12 @@ import loadingSpinner from '../components/loadingSpinner.vue'
       flex-direction: column;
       justify-content: center;
     }
-/* .btns{
-   display: flex;
-   flex-direction: row;
-    background-color: blue;
-} */
-
+ 
  .loading-spinner{
    position: relative;
    top:0;
 }
 h1{
    font-size: 50px;
-   margin-bottom: 10px;
  }
 </style>
