@@ -6,15 +6,19 @@
 <div class="main" v-if="isLoad">
     <h1>תרגולים</h1>
    <div class="text-under-line"></div>
-   
+   <select name="" id="" @change="filterPractices($event)">
+     <option value="" disabled selected hidden>בחר מבחן</option>
+     <option :value="practice.timeline" v-for="practice in practices" :key="practice" >
+       שבוע {{practice.timeline}}
+     </option>
+   </select>
 
-   <div class="container-cards">
-    
-         <div class="timeline" v-for="practice in practices" :key="practice">
-          <div class="fg" > 
-            <q-timeline color="secondary">
-              <q-timeline-entry :subtitle="`שבוע ${practice.timeline}`">
-                <div class="flex-cards">
+   <div class="container-cards" >
+     <div class="fdfdfa">
+         <div class="timeline" ref="timeline" >
+             <q-timeline color="secondary" > 
+              <q-timeline-entry :subtitle="`שבוע ${practice.timeline}`" v-for="practice in practices" :key="practice" :value="practice.timeline">
+                <div class="flex-cards" >
                   <div class="items" v-for="item in practice.items" :key="item">
                     <router-link class="router-text"
                     :to="{name:'beforeEnterQuiz', params:{practices:JSON.stringify(item.exam),title:item.Title}}">
@@ -30,9 +34,8 @@
                 </div>
               </q-timeline-entry>             
             </q-timeline>
-          </div>
-        </div>
-     
+         </div>
+      </div>
    </div>
 </div>
 </template>
@@ -67,6 +70,29 @@ export default {
           this.practices = res.data.value
             console.log(this.practices)
             this.isLoad = true;
+    },
+    filterPractices(event){
+      const optionValue = event.target.value
+      const timelineFiltered = this.$refs["timeline"].children[0].children[optionValue-1]
+      console.log(timelineFiltered)
+      for(var i = 0; i<this.practices.length;i++){
+          if(i!==optionValue-1){
+            console.log(i)
+            const hideItem = this.$refs["timeline"].children[0].children[i]
+            hideItem.style.display = 'none'
+          }
+          else{
+            const showItem = this.$refs["timeline"].children[0].children[i]
+            showItem.style.display = 'block'
+
+             const timeLine = this.$refs["timeline"].children[0].children[i].children[0]
+             const timeLinePoint = this.$refs["timeline"].children[0].children[i].children[1]
+
+             timeLine.style.display = 'none'
+             timeLinePoint.style.display = 'none'
+          }
+       }
+      
     }
   },
   async beforeMount(){
@@ -114,9 +140,13 @@ h1{
 }
 .container-cards{
     margin-top: 100px;
-    width: 1180px;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-left: auto;
     margin-right: auto;
+
  }
 .flex-cards{
     position: relative;
@@ -124,8 +154,7 @@ h1{
     right:80px;
     display: flex;
     justify-content: flex-start;
-    width: 95%;
-
+ 
 }
 .items{
     flex-direction: column;
@@ -171,6 +200,10 @@ h1{
     height: 60%;
  }
  .timeline{
-   width: 80%;
- }
+   display: flex;
+   align-items: center;
+  }
+  .fdfdfa{
+    width: 80%;
+  }
  </style>

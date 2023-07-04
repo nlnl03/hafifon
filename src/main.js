@@ -5,9 +5,13 @@ import router from './router'
 // import './quasar'
   import { Quasar } from 'quasar'
 import quasarUserOptions from './quasar-user-options'
+import iconSet from 'quasar/icon-set/fontawesome-v5.js'
+import '@quasar/extras/fontawesome-v5/fontawesome-v5.css'
+
  import VueSweetalert2 from 'vue-sweetalert2';
  import 'sweetalert2/dist/sweetalert2.min.css'
- const app = createApp(App).use(Quasar, {quasarUserOptions})
+ 
+ const app = createApp(App).use(Quasar, {quasarUserOptions}).use(iconSet)
  
  app.config.globalProperties.$sharePointUrl = process.env.NODE_ENV =='production'? "https://portal.army.idf/sites/hafifon383/_api/web/Lists/" : "http://localhost:3000/" 
  app.config.globalProperties.$isSharePointUrl = process.env.NODE_ENV =='production'

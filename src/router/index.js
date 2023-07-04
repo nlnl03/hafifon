@@ -6,6 +6,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import MainCheckPage from '../views/hafifonAdmin/MainCheckPage.vue'
  import examsToCheck from '../views/hafifonAdmin/examsToCheck.vue'
  import uploadEditExams from '../views/hafifonAdmin/uploadEditExams.vue'
+ import editExams from '../views/hafifonAdmin/editExams.vue'
  import openPermForExams from '../views/hafifonAdmin/openPermForExams.vue'
  import Quiz from '../views/Quiz.vue'
  import beforeStartingExam from '../views/beforeStartingExam.vue'
@@ -60,6 +61,11 @@ const routes = [
     path:'/Admin/uploadEditExams',
     name:'uploadEditExams',
     component:uploadEditExams
+  },
+  {
+    path:'/Admin/uploadEditExams/:title',
+    name:'editExams',
+    component:editExams
   },
   {
     path: '/examsToCheck/:num/:examType/submitted',
