@@ -127,7 +127,13 @@ export default {
     ::-webkit-scrollbar-thumb:hover{
       background: rgb(117, 116, 116);
     }
- 
+ .q-timeline--dense--right .q-timeline__dot {
+    right: -130px;
+ }
+ .q-timeline__dot:before{
+   top: 2px;
+   left: -3px;
+ }
 :root{
   --main-background-color: #4EADAF;
   --user-link-pos: 100px;
@@ -140,7 +146,9 @@ export default {
   --home-btn-position:150px;
   --scroll-top-btn-position:110px;
   --scroll-top-btn-size:60px;
-  --permission-box-width: 55%
+  --permission-box-width: 55%;
+  --exam-edit-box-width:50%;
+  --exam-edit-flexbox-width:80%
 }
  
 
@@ -153,8 +161,9 @@ export default {
       --user-main-margin-left: -3%;
       --scroll-top-btn-position: 40px;
       --scroll-top-btn-size:50px;
-      --permission-box-width:70%
-
+      --permission-box-width:70%;
+      --exam-edit-box-width:68%;
+      --exam-edit-flexbox-width:85%
     }
     form[class="exam"]{
       --exams-form-width:1150px;
@@ -172,8 +181,11 @@ export default {
       padding: 0;
       font-family: Assistant-Regular !important;
       direction: rtl;
- 
   }
+  .fa, .fas, .q-icon {
+    font-family: 'Font Awesome 5 Free' !important;
+    font-weight: 900;
+}
   body{
     min-height: 100vh;
     height: 100vh;

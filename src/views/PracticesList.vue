@@ -6,15 +6,28 @@
 <div class="main" v-if="isLoad">
     <h1>תרגולים</h1>
    <div class="text-under-line"></div>
+
+    <div class="q-pa-md" style="max-width:300px;">
+      <div class="q-gutter-md">
+        <q-select v-model="selectedValue" :options="practices" option-value="timeline" label="מיין לפי שבוע" >
+          
+        </q-select>
+      </div>
+    </div>
+
+
+
+
+
    <select name="" id="" @change="filterPractices($event)">
-     <option value="" disabled selected hidden>בחר מבחן</option>
+     <option value="" disabled selected hidden>מיין לפי שבוע</option>
      <option :value="practice.timeline" v-for="practice in practices" :key="practice" >
        שבוע {{practice.timeline}}
      </option>
    </select>
 
    <div class="container-cards" >
-     <div class="fdfdfa">
+     <div class="without-timeline">
          <div class="timeline" ref="timeline" >
              <q-timeline color="secondary" > 
               <q-timeline-entry :subtitle="`שבוע ${practice.timeline}`" v-for="practice in practices" :key="practice" :value="practice.timeline">
@@ -53,9 +66,15 @@ export default {
   data(){
     return{
       practices:[],
+      selectedValue:null,
       isLoad:false,
       timeOut:null,
-      weekOrganize:["ראשון","שני","שלישי","רביעי"]
+      weekOrganize:["ראשון","שני","שלישי","רביעי"],
+      fhdh:[
+        {label:'fgkflg',value:'dfhudfh'},
+        {label:'aaaa',value:'dddd'},
+        {label:'qdf',value:'avcvd'}
+      ]
     }
   },
   methods:{
@@ -97,6 +116,8 @@ export default {
   },
   async beforeMount(){
       this.timeOut = setTimeout(this.getPractices,200)
+      console.log(this.fhdh)
+
   }
 }
 </script>
@@ -203,7 +224,8 @@ h1{
    display: flex;
    align-items: center;
   }
-  .fdfdfa{
+  .without-timeline{
     width: 80%;
+    margin-right: 50px;
   }
  </style>

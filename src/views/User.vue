@@ -407,7 +407,21 @@ h5{
     grid-template-rows: repeat(3,1fr);
     background: #fff;
     gap: 25px 25px;
+        animation: growOut 250ms ease-in-out forwards;
+
   }
+  @keyframes growOut{
+    0%{
+        transform: scale(0);
+     }
+     80%{
+        transform: scale(1.1);
+     }
+    100%{
+        transform: scale(1);
+     }    
+}
+
  .average{
     border-top:6px solid var(--main-background-color);
     grid-area: 2/2/3/3;

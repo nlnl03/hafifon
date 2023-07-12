@@ -27,7 +27,7 @@
                                     <button class="admin-routers"  @click="openAdminComp('openPerm')"> פתיחת הרשאות למבחנים</button>
                                 </li>
                                  <li class="admin-drop-down-list">
-                                    <button class="admin-routers"  @click="openAdminComp('uploadEditExams')"> עריכה והעלאת מבחנים</button>
+                                    <button class="admin-routers"  @click="openAdminComp('uploadEditExams')"> עריכה, מחיקה והעלאת מבחנים</button>
                                 </li>
                              </ul>
                     </li>

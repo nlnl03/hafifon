@@ -93,12 +93,9 @@ data(){
     }
 },
 methods:{
-
-    getHebLetters(index){
-      const hebrewLetters = ["א","ב","ג","ד","ה","ו","ז","ח","ט","י","כ","ל","מ","נ","ס","ע","פ","צ","ק","ר","ש","ת"]
-      return hebrewLetters[index % hebrewLetters.length]
-    },
-
+      getHebLetters(subIndex){
+          return this.$getHebLetters(subIndex)
+      },
     asyncParse(str){
        return new Promise((resolve)=>{
           resolve(JSON.parse(str))
