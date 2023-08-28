@@ -4,27 +4,24 @@
   </div>
     
 <div class="main" v-if="isLoad">
-    <h1>תרגולים</h1>
+    <h1>שיעורים ותרגולים</h1>
    <div class="text-under-line"></div>
 
-    <div class="q-pa-md" style="max-width:300px;">
-      <div class="q-gutter-md">
-        <q-select v-model="selectedValue" :options="practices" option-value="timeline" label="מיין לפי שבוע" >
+    <div class="select-timeline" >
+         <q-select outlined v-model="selectedValue" :options="practices"  :option-value="option => option.timeline" :option-label="option => `שבוע ${option.timeline}`" label="מיין לפי שבוע" 
+            @update:model-value="filterPractices"  dir="rtl"/>
           
-        </q-select>
-      </div>
     </div>
+ 
 
 
 
-
-
-   <select name="" id="" @change="filterPractices($event)">
+   <!-- <select name="" id="" @change="filterPractices($event)">
      <option value="" disabled selected hidden>מיין לפי שבוע</option>
      <option :value="practice.timeline" v-for="practice in practices" :key="practice" >
        שבוע {{practice.timeline}}
      </option>
-   </select>
+   </select> -->
 
    <div class="container-cards" >
      <div class="without-timeline">
@@ -34,7 +31,7 @@
                 <div class="flex-cards" >
                   <div class="items" v-for="item in practice.items" :key="item">
                     <router-link class="router-text"
-                    :to="{name:'beforeEnterQuiz', params:{practices:JSON.stringify(item.exam),title:item.Title}}">
+                    :to="{name:'beforeEnterQuiz', params:{practices:JSON.stringify(item.exam),title:item.Title, week:`week${practice.timeline}`}}">
                       <img class="image-of-items" :src="require(`@/assets/${item.Img}`)">
                         <div class="inner-flex">
                           <h4 class="text">
@@ -69,29 +66,32 @@ export default {
       selectedValue:null,
       isLoad:false,
       timeOut:null,
-      weekOrganize:["ראשון","שני","שלישי","רביעי"],
-      fhdh:[
-        {label:'fgkflg',value:'dfhudfh'},
-        {label:'aaaa',value:'dddd'},
-        {label:'qdf',value:'avcvd'}
-      ]
+       
     }
   },
   methods:{
     async getPractices(){
-      var res = null
-        if(this.$isSharePointUrl){
-          res = await axios.get(this.$sharePointUrl+"getByTitle('tirgulim')/Items")
+         if(this.$isSharePointUrl){
+            const res = await axios.get(this.$sharePointUrl+"getByTitle('tirgulim')/Items")
+            this.practices = res.data.value
+              const promiseItems = await Promise.all(this.practices.map((item)=>{
+                 return this.$asyncParse(item.items).then((inner)=>{
+                   item.items = inner
+                     return {item}
+                })
+              }))   
         }
         else{
-          res = await axios.get(this.$sharePointUrl+"practice")
+            const res = await axios.get(this.$sharePointUrl+"practice")
+            this.practices = res.data.value
         }
-          this.practices = res.data.value
             console.log(this.practices)
-            this.isLoad = true;
-    },
-    filterPractices(event){
-      const optionValue = event.target.value
+             this.isLoad = true;
+     },
+    filterPractices(){
+      console.log(this.selectedValue.timeline)
+      const optionValue = this.selectedValue.timeline
+      console.log("value: "+optionValue)
       const timelineFiltered = this.$refs["timeline"].children[0].children[optionValue-1]
       console.log(timelineFiltered)
       for(var i = 0; i<this.practices.length;i++){
@@ -118,7 +118,8 @@ export default {
       this.timeOut = setTimeout(this.getPractices,200)
       console.log(this.fhdh)
 
-  }
+  },
+ 
 }
 </script>
 
@@ -167,8 +168,22 @@ h1{
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
+        animation: growOut-e0b47cf6 500ms ease-in-out forwards;
+
 
  }
+   @keyframes growOut{
+    0%{
+        transform: scale(0);
+     }
+     80%{
+        transform: scale(1.1);
+     }
+    100%{
+        transform: scale(1);
+     }    
+}
+
 .flex-cards{
     position: relative;
     flex-wrap: wrap;
@@ -228,4 +243,14 @@ h1{
     width: 80%;
     margin-right: 50px;
   }
+  .select-timeline{
+    margin-top: 30px;
+     display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .q-select{
+    width: 180px;
+  }
+ 
  </style>

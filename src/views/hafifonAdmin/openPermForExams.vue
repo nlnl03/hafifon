@@ -1,8 +1,12 @@
 <template>
 <div class="main">
     <div class="title">פתיחת הרשאות</div>
+
+   <div class="type-user-num">
+        <q-input label="הקלד/י מס' אישי" dir="rtl"/>
+    </div>
     
-    <div class="permission">
+    <!-- <div class="permission">
         <div class="permisson-items" v-for="(per,index) in currentPermission" :key="per">
             <div class="permission-flex">
                 <span class="permission-title">{{per.Title}}:</span>
@@ -12,14 +16,22 @@
                 </label> 
             </div>    
         </div>
+    </div> -->
+
+    <div class="perm-table">
+        <permTable />
     </div>
 </div>
     
 </template>
 
 <script>
-import axios from 'axios'   
+import axios from 'axios'
+import permTable from '@/components/permissionTable.vue'   
 export default {
+    components:{
+        permTable
+    },
     data(){
         return{
             urlForId:"https://portal.army.idf/sites/hafifon383/_api/web/sitegroups/getbyname('מבקרי חפיפון')/id",
@@ -28,7 +40,7 @@ export default {
             token:null,
             currentPermission:[],
             Id:null,
-            isload:false
+            isload:false,
         }
     },
     methods:{
@@ -146,6 +158,7 @@ export default {
 <style scoped>
 .main{
     display: flex;
+    flex-direction: column;
     position: relative;
     justify-content: center;
     width: var(--permission-box-width);
@@ -257,4 +270,18 @@ input:checked + .slider::before{
     border-radius: 34px;
 }
 
- </style>
+.type-user-num{
+    height: 70px;
+    position: relative;
+    
+         display: flex;
+    justify-content: center;
+    align-items: center;
+
+   }
+  .perm-table{
+      margin-top: 70px;
+      display: flex;
+      justify-content: center;
+   }
+  </style>

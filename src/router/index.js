@@ -98,13 +98,13 @@ const routes = [
     props: (route)=>({...route.params})
   },
   {
-    path: '/Practices/:title',
+    path: '/Practices/:week/:title/beforeEnterQuiz',
     name: 'beforeEnterQuiz',
     component: beforeEnterQuiz,
     props: (route)=>({...route.params})
   },
   {
-    path: '/Practices/:title/quiz',
+    path: '/Practices/:week/:title',
     name: 'quiz',
     component: Quiz,
     props: (route)=>({...route.params})

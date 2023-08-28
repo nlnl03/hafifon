@@ -12,6 +12,7 @@
 <script>
 import MainNavbar from '@/components/MainNavbar.vue'
 import axios from 'axios'
+ 
 export default {
     name: 'App',
     components:{
@@ -48,8 +49,17 @@ export default {
           var userNum = this.currentUserData.LoginName.split('s')
           this.userNum = userNum[1]
           this.Id=this.currentUserData.Id
-          const Title = this.currentUserData.Title.split(' -')
-          this.userName = Title[0]
+          var Title = this.currentUserData.Title
+
+          if(Title.includs(' -')){
+            Title = Title.split(' -')
+            this.userName = Title[0]
+          }
+          else{
+            Title = Title.split('/')
+            this.userName = Title[Title.length-1]
+          }
+          
             localStorage.setItem("userName",this.userName)
             localStorage.setItem("userId",this.Id)
             localStorage.setItem("userNum",this.userNum)
@@ -62,8 +72,9 @@ export default {
         
  },
 
-        beforeMount(){
+      beforeMount(){
           this.getCurrentUser()
+          
       },
 
        created(){
@@ -131,9 +142,28 @@ export default {
     right: -130px;
  }
  .q-timeline__dot:before{
-   top: 2px;
-   left: -3px;
+   top: 2px !important;
+   left: -3px !important;
  }
+  .q-field__label {
+    left: 12px !important;
+    transform-origin: 150px !important;
+  }
+  .select-timeline .q-field__native{
+    margin-right: 10px !important;
+    margin-top: 3px;
+  }
+  /* .scroll .q-field__label{
+    left: 85px !important;
+    transform-origin: 80px !important;
+  }
+  .scroll .q-field__native{
+    margin-right: 3px !important;
+    margin-top: 10px;
+   } */
+   .rtl-input{
+     direction: rtl !important;
+   }
 :root{
   --main-background-color: #4EADAF;
   --user-link-pos: 100px;
@@ -186,6 +216,13 @@ export default {
     font-family: 'Font Awesome 5 Free' !important;
     font-weight: 900;
 }
+.material-icons, .material-icons-outlined, .material-icons-round, .material-icons-sharp, .material-icons-two-tone{
+      font-family: "Material Icons" !important;
+}
+  .q-field__control, .q-item.q-router-link--active, .q-item--active{
+    color: var(--main-background-color) !important;
+  }
+
   body{
     min-height: 100vh;
     height: 100vh;
@@ -195,7 +232,7 @@ export default {
     overflow-x: hidden;
   }
   *, *:before, *:after{
-    box-sizing:revert
+    box-sizing:revert !important
   }
   button{
         outline: none;
@@ -205,6 +242,16 @@ export default {
      width: 48em !important;
      border-radius:10px !important ;
   }
+  .delete-swal{
+     height: 450px;
+     width: 43em !important;
+     border-radius:10px !important ;
+  }
+  .choose-to-remove-swal, .choose-to-edit{
+    width: 550px !important;
+    height: 370px !important;
+}
+
   .scroll-to-top{
     position: fixed;
     z-index: 100000;
@@ -227,21 +274,42 @@ export default {
   }
  
 h4{
-  font-weight: bold;
-  line-height: unset;
+  font-weight: bold !important;
+  line-height: unset !important;
 }
  h2{
-   line-height: unset;
-   letter-spacing:unset;
-   display: block;
-   font-size: 1.5em;
-   font-weight: bold;
+   line-height: unset !important;
+   letter-spacing:unset !important;
+   display: block !important;
+   font-size: 1.5em !important;
+   font-weight: bold !important;
  }
  h1{
-   font-weight:bold ;
+   font-weight:bold !important ;
    margin-bottom: 10px;
-   line-height: unset;
-   letter-spacing:unset
+   line-height: unset !important;
+   letter-spacing:unset !important
  }
+ .q-table th{
+  font-size: 19px !important;
+  font-weight: 700 !important;
+}
+.q-table td{
+  font-size: 15px !important;
+}
+.q-table{
+  padding: 10px !important;
+} 
+.text-right {
+    text-align: center !important;
+}
+.q-table__container {
+    max-height: 495px;
+}
+.q-timeline__subtitle{
+  font-size: 22px !important;
+  position: relative;
+  left: 30px;
 
- </style>
+}
+  </style>

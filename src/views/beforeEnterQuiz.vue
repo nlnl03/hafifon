@@ -29,9 +29,10 @@ name:"beforeEnterQuiz",
   data(){
     return{
       results:[],
-      Subject:'',
+    //   Subject:'',
       isLoadForSpinner:false,
       timeOut:null,
+      timeLine:null
 
     }
 },
@@ -41,13 +42,31 @@ name:"beforeEnterQuiz",
         },
 
         async getData(){
+            const weekParam = this.$route.params.week.split('k')
+            this.timeLine = JSON.parse(weekParam[1])
+            console.log(this.timeLine)
+                var results = null
             if(this.$isSharePointUrl){
                 const res = await axios.get(this.$sharePointUrl+"getByTitle('tirgulim')/Items")
-                this.results = res.data.value
-                this.results = this.results.filter(data=>data.Title == this.$route.params.title)[0]
-                this.Subject = this.results.Subject
-                // console.log(this.Subject)
+                 results = res.data.value
+                 const promiseItems = await Promise.all(results.map((item)=>{
+                    return this.$asyncParse(item.items).then((inner)=>{
+                     item.items = inner
+                        return {item}
+                    })
+                 }))   
+
             }
+            else{
+                const res = await axios.get(this.$sharePointUrl+"practice")
+                results = res.data.value
+            }
+                 
+                console.log(results[this.timeLine-1].items)
+                results = results[this.timeLine-1].items.filter(data=>data["Title"] == this.$route.params.title)[0]
+                this.Subject = results.Subject 
+                console.log(this.Subject)
+
                 this.isLoadForSpinner = true
         }
       
@@ -56,6 +75,7 @@ name:"beforeEnterQuiz",
 
     async beforeMount(){
         this.timeOut = await setTimeout(this.getData,150)
+        console.log(this.$route.params)
     }
 }
 </script>

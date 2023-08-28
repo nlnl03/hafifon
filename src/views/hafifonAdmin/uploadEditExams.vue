@@ -2,35 +2,11 @@
  <div class="choose-box" >
      <div class="edit-or-upload">
          <button class="edit" @click="triggerEdit">עריכת בוחן קיים</button>
-         <button class="upload" @click="fixed = true">העלת בוחן חדש</button>
+         <button class="upload" @click="openModal">העלת בוחן חדש</button>
          <button class="remove" @click="removeExamBtn">מחיקת בחנים</button>
-         <q-input v-model="text" label="שם הבוחן" ref="nameInput"/>
-     </div>     
-     <div class="q-pa-md q-gutter-sm" >
-        <q-dialog v-model="fixed" >
-            <q-card style="min-width:45vw; border-radius:10px" >
-                <q-card-section>
-                    <div class="text-h5" style="display:flex; justify-content:center; font-weight:700">
-                        מלא/י את הפרטים הבאים:
-                    </div>
-                </q-card-section>
-                <q-separator />
-
-                 <q-card-section style="max-height:50vh; display:flex; flex-wrap:wrap; flex-direction:column; align-items:center" class="scroll" >
-                     <p v-for="n in 7" :key="n">
-                          <q-input v-model="text" label="שם הבוחן" ref="nameInput" style="width:150px" />
-                     </p>
-                </q-card-section>
-                <q-separator />
-
-                <q-card-actions>
-                    <q-btn flat label="ביטול" color="primary" v-close-popup />
-                    <q-btn flat label="המשך" color="primary" v-close-popup />
-                </q-card-actions>
-
-            </q-card>
-        </q-dialog>
-    </div>
+      </div>     
+        {{dialogVisible}}
+            <addExam  :dialog-visible="dialogVisible" @update:dialog-visible="updateDialogVisible" />
 
      <div class="next-btn" v-if="selectOpened">
          <button  @click="nextBtn" :disabled="!isChecked">המשך</button>
@@ -41,8 +17,12 @@
 
 <script>
 import axios from 'axios'
+import addExam from '@/components/addExam.vue'
 import {QInput} from 'quasar'
 export default {
+    components:{
+        addExam
+    },
     data(){
         return{
             examNames:[],
@@ -55,11 +35,14 @@ export default {
             selectedOption:'',
             name:'',
             inputValue:'',
-            fixed:false
+            dialogVisible:false
         }
     },
     methods:{
-         
+         openModal(){
+             this.dialogVisible = true
+             console.log(this.dialogVisible)
+         },
         triggerEdit(){                               
              console.log(this.selectHtml)
 
@@ -68,6 +51,9 @@ export default {
                 html: this.selectHtml,
                 confirmButtonText:'המשך',
                 confirmButtonColor:"var(--main-background-color)",
+                customClass:{
+                    popup:'choose-to-edit'
+                },
                 showLoaderOnConfirm:true,
                 didOpen: ()=>{
                     const selectedOption = document.getElementById("mySelect")
@@ -104,6 +90,9 @@ export default {
                 title:'בחר את הבחינה שברצונך למחוק:',
                 html: this.selectHtml,
                 confirmButtonText:'המשך',
+                customClass:{
+                    popup: 'choose-to-remove-swal'
+                },
                 confirmButtonColor:"var(--main-background-color)",
                     didOpen: ()=>{
                         const selectedOption = document.getElementById("mySelect")
@@ -128,6 +117,9 @@ export default {
                             showCancelButton:true,
                             cancelButtonText:"ביטול",
                             showLoaderOnConfirm:true,
+                             customClass:{
+                                popup: 'delete-swal'
+                            },
                         })
                     }
                   })
@@ -145,28 +137,20 @@ export default {
                     return name
              },
 
-            async addNewExamBtn(){
-              
-             },
+            
 
-             async createNewExamList(nameInputed){
-                 const siteUrl = this.$sharePointUrl;
-                 const listData = {
-                     '__metadata':{'type': 'SP.List'},
-                     'Title': nameInputed,
-                 }
-                 try{
-                    const res = await axios.post(siteUrl, listData, {
-                        headers:{
-                            'Accept':'application.json;odata=verbose',
-                            'Content-Type':'application.json;odata=verbose'
-                        }
-                    })
-                 }
-                 catch{
-                     console.error(error)
-                 }
-                 
+             
+             //  handleOutsideClick(event){
+            //      console.log(event)
+            //      console.log(this.$el.contains(event.target))
+            //      if(this.fixed && !this.$el.contains(event.target)){
+            //          this.cancelDialog()
+            //      }
+                   
+            //  },
+             updateDialogVisible(newVal){
+                 this.dialogVisible = newVal
+                  console.log(this.dialogVisible)
              }
         
 
@@ -180,7 +164,8 @@ export default {
                         ${this.examNames.map(name => `<option value="${name.Title}" :label="${name.subject}">${name.subject}</option>`).join('')}
                 </select>`
 
-    }
+    },
+    
 }
 </script>
 
@@ -226,7 +211,8 @@ export default {
     font-size: 20px;
     font-weight: 700;
 }
-/* .edit{
-
-} */
- </style>
+.custom-swal-popup{
+    width: 150px !important;
+    height: 300px !important;
+}
+</style>

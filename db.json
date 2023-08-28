@@ -34,10 +34,10 @@
   "practice": {
     "value": [
       {
-        "timeline":1,
-        "items":[
+        "timeline": 1,
+        "items": [
           {
-            "Subject": "הכרת הפלוגה",
+            "Subject": "הכרת הגדוד",
             "Title": "aboutThePloga",
             "Img": "printer.jpg",
             "exam": [
@@ -154,8 +154,8 @@
                   "ממשק גרפי המשמש להתקנת דרייברים על המחשב",
                   "ממשק קריטריאלי המשמע לביצוע פקודות שונות במחשב"
                 ],
-                  "correctAnswer": "1",
-                  "type": "american"
+                "correctAnswer": "1",
+                "type": "american"
               },
               {
                 "Title": "של המחשב ?(ייתכן וקיימת יותר מתשובה אחת נכונה) MAC-כיצד ניתן להשיג את כתובת ה",
@@ -165,8 +165,8 @@
                   "hostname -דרך פקודת",
                   " getmac -דרך פקודת"
                 ],
-                  "correctAnswer": "2",
-                  "type": "american"
+                "correctAnswer": "2",
+                "type": "american"
               },
               {
                 "Title": "? איזה פקודות לא נצטרך להריץ כאדמיניסטרטור",
@@ -176,8 +176,8 @@
                   "Chkdsk",
                   "Gpupdate /force /sync"
                 ],
-                  "correctAnswer": "2",
-                  "type": "american"
+                "correctAnswer": "2",
+                "type": "american"
               },
               {
                 "Title": "? איזה פקודה נותנת מידע מורחב על הגדרות הרשת של המחשב",
@@ -187,8 +187,8 @@
                   "Ping",
                   "Systeminfo"
                 ],
-                  "correctAnswer": "3",
-                  "type": "american"
+                "correctAnswer": "3",
+                "type": "american"
               },
               {
                 "Title": "? ping מה היא פקודת",
@@ -198,8 +198,8 @@
                   "פקודה המחזירה את הגדרות הרשת הבסיסיות",
                   "פקודה הבודקת אם לעמדה יש רשת או לא"
                 ],
-                  "correctAnswer": "2",
-                  "type": "american"
+                "correctAnswer": "2",
+                "type": "american"
               },
               {
                 "Title": "(רגיל מחזיר ping-מלבד מה ש) ? מה נוסיף ומה יוחזר ping-בפקודת ה",
@@ -209,17 +209,17 @@
                   "נוסיף שם מחשב, נקבל כתובת ip",
                   "נוסיף כתובת ip, נקבל שם מחשב"
                 ],
-                  "correctAnswer": "3",
-                  "type": "american"
+                "correctAnswer": "3",
+                "type": "american"
               }
             ]
           },
           {
             "Subject": "תרגול חומרה,  bios, boot order",
-            "Title": "aboutThePloga",
+            "Title": "bios",
             "Img": "bios.png",
             "numOfQue": "3",
-            "week":3,
+            "week": 3,
             "exam": [
               {
                 "Title": "? כמה דרכי פנייה יש למחלקת משוב",
@@ -335,14 +335,14 @@
         ]
       },
       {
-        "timeline":2,
-        "items":[
+        "timeline": 2,
+        "items": [
           {
             "Subject": "תפעול מחשב",
             "Title": "pcOperation",
             "Img": "pc.jpg",
             "numOfQue": "5",
-            "week":2,
+            "week": 2,
             "exam": [
               {
                 "Title": "? כמה דרכי פנייה יש למחלקת משוב",
@@ -417,8 +417,8 @@
                   "יציאה פיזית ותקלות ומענה טלפוני לדרג רב\"ט ומעלה",
                   "מתן דרג ב' לתקלות בפלוגה, מתן הרשאות בשרתים, כתיבת נהלים ועדכונם והעברת שיעורי חפיפה"
                 ],
-                  "correctAnswer": "1",
-                  "type": "american"
+                "correctAnswer": "1",
+                "type": "american"
               },
               {
                 "Title": ":היא PC האחריות של מחלקת",
@@ -428,8 +428,8 @@
                   "יציאה פיזית לתקלות בקרייה ומחוצה לה (לקוחות של הגדוד) לדרגי סא\"ל ומטה ולימוד החפיפה",
                   "מענה טלפוני לדרגים של סא\"ל ומטה"
                 ],
-                  "correctAnswer": "2",
-                  "type": "american"
+                "correctAnswer": "2",
+                "type": "american"
               },
               {
                 "Title": "? מהן היציאות בחפיפה",
@@ -439,8 +439,8 @@
                   "במידה ונצטרך חימום נקודה (למעט בניין צה\"ל קומות 6-9, בניין ט\"ד, מבנה הגדוד, אגף התקשוב ובניין מאה) ",
                   "במידה ונצטרך שינוי VLAN (הוצא הכנס)"
                 ],
-                  "correctAnswer": "1",
-                  "type": "american"
+                "correctAnswer": "1",
+                "type": "american"
               },
               {
                 "Title": "? מתי נפנה לתקנ\"ם",
@@ -450,18 +450,17 @@
                   "במידה ונצטרך חימום נקודה (למעט בניין צה\"ל קומות 6-9, בניין ט\"ד, מבנה הגדוד, אגף התקשוב ובניין מאה)",
                   "(הוצא הכנס) VLAN במידה ונצטרך שינוי"
                 ],
-                  "correctAnswer": "1",
-                  "type": "american"
+                "correctAnswer": "1",
+                "type": "american"
               }
             ]
           },
-          
           {
             "Subject": "דיסקים ומ\"ה",
             "Title": "aboutThePloga",
             "Img": "disc.png",
             "numOfQue": "11",
-            "week":3,
+            "week": 3,
             "exam": [
               {
                 "Title": "? כמה דרכי פנייה יש למחלקת משוב",
@@ -579,7 +578,7 @@
             "Title": "server&commands",
             "Img": "fileServer.jpg",
             "numOfQue": "9",
-            "week":4,
+            "week": 4,
             "exam": [
               {
                 "Title": "? כמה דרכי פנייה יש למחלקת משוב",
@@ -700,7 +699,7 @@
             "Title": "printer&scanner&laptops",
             "Img": "printer.jpg",
             "numOfQue": "6",
-            "week":4,
+            "week": 4,
             "exam": [
               {
                 "Title": "? כמה דרכי פנייה יש למחלקת משוב",
@@ -818,7 +817,7 @@
             "Title": "AD&DSAM",
             "Img": "active-directory-logo2.png",
             "numOfQue": "11",
-            "week":4,
+            "week": 4,
             "exam": [
               {
                 "Title": "השלם מהבנק מילים את הפעולות שניתן לעשות ב-DSAM (laps, ביטלוקר, דיג'ויין)",
@@ -975,7 +974,7 @@
         ],
         "exam": [
           {
-            "part":"חלק א' – בסיס (27 נקודות)",
+            "part": "חלק א' – בסיס (27 נקודות)",
             "type": "subQue",
             "questions": [
               {
@@ -1109,9 +1108,9 @@
             "comments": ""
           },
           {
-            "type":"subQue",
-            "titleQue":"לקוח מתלונן כי לא מצליח לפתוח את ה-PST שלו:",
-            "questions":[
+            "type": "subQue",
+            "titleQue": "לקוח מתלונן כי לא מצליח לפתוח את ה-PST שלו:",
+            "questions": [
               {
                 "type": "open",
                 "que": "הסבר כיצד נבצע תיקון לPST. (2 נק')",
@@ -1133,9 +1132,9 @@
             ]
           },
           {
-            "type":"subQue",
-            "titleQue":"כאשר לקוח מתחבר למחשב מופיעה לו הודעת שגיאה, ציין את פתרונן של השגיאות הבאות:",
-            "questions":[
+            "type": "subQue",
+            "titleQue": "כאשר לקוח מתחבר למחשב מופיעה לו הודעת שגיאה, ציין את פתרונן של השגיאות הבאות:",
+            "questions": [
               {
                 "type": "open",
                 "que": "\"התחום שצוין אינו זמין\" (נק' 1)",
@@ -1180,7 +1179,7 @@
             "comments": ""
           }
         ],
-        "time":2700
+        "time": 2700
       }
     ]
   },
@@ -1231,7 +1230,6 @@
     "Title": "נועם לביא - גדוד 383/לשכה/ע. קצין טכני",
     "Id": 12345,
     "LoginName": "i:0#.w|army\\s9053078"
-
   },
   "testsNames": {
     "value": [
@@ -1258,17 +1256,18 @@
     ]
   },
   "pendingTests": {
-    "value":[
+    "value": [
       {
         "Title": "sdsdsd",
         "exam": [
           {
+            "part": "חלק א' – בסיס (27 נקודות)",
             "type": "subQue",
             "questions": [
               {
                 "type": "open",
                 "que": "הסבר מהו  IMAGEומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו (4 נק')",
-                "inputAns": "kjh",
+                "inputAns": "jkhjhjh",
                 "id": 0,
                 "points": 4,
                 "pointsReceived": "",
@@ -1277,7 +1276,7 @@
               {
                 "type": "open",
                 "que": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? (2  נק')",
-                "inputAns": "hjug",
+                "inputAns": "hjh",
                 "id": 1,
                 "points": 2,
                 "pointsReceived": "",
@@ -1291,7 +1290,7 @@
               {
                 "type": "open",
                 "que": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג'? (3 נק')",
-                "inputAns": "uih",
+                "inputAns": "jjj",
                 "id": 2,
                 "points": 3,
                 "pointsReceived": "",
@@ -1300,7 +1299,7 @@
               {
                 "type": "open",
                 "que": "פרט את שלבי התקנת המשואה לאחר התקנת האימג' (2 נק')",
-                "inputAns": "uiy",
+                "inputAns": "hh",
                 "id": 3,
                 "points": 2,
                 "pointsReceived": "",
@@ -1309,7 +1308,7 @@
               {
                 "type": "open",
                 "que": "פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ? (2 נק')",
-                "inputAns": "uih",
+                "inputAns": "h",
                 "id": 4,
                 "points": 2,
                 "pointsReceived": "",
@@ -1318,7 +1317,7 @@
               {
                 "type": "open",
                 "que": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים. (2 נק')",
-                "inputAns": "uih",
+                "inputAns": "h",
                 "id": 5,
                 "points": 2,
                 "pointsReceived": "",
@@ -1332,7 +1331,7 @@
               {
                 "type": "open",
                 "que": "איזה 2 מערכות קיימות ברשת הMOIP? ומה הקונבנציה של כל מערכת? (2 נק')",
-                "inputAns": "uih",
+                "inputAns": "h",
                 "id": 6,
                 "points": 2,
                 "pointsReceived": "",
@@ -1341,7 +1340,7 @@
               {
                 "type": "open",
                 "que": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?(2 נק')",
-                "inputAns": "ui",
+                "inputAns": "h",
                 "id": 7,
                 "points": 2,
                 "pointsReceived": "",
@@ -1350,7 +1349,7 @@
               {
                 "type": "open",
                 "que": "ציין בקצרה מה השלבים לאחר ההפצת אימג'? (2 נק')",
-                "inputAns": "hiu",
+                "inputAns": "h",
                 "id": 8,
                 "points": 2,
                 "pointsReceived": "",
@@ -1367,43 +1366,112 @@
               }
             ]
           },
-        
-        {
-          "type": "regularQue",
-          "questions": [
-            {
-              "que": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10. (3 נק')",
-              "type": "open"
-            }
-          ],
-            "inputAns": "f",
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10. (3 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "jkhb",
             "id": 10,
             "points": 3,
             "pointsReceived": "",
             "comments": ""
-        },
-        {
-          "type": "regularQue",
-          "questions": [
-            {
-              "que": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב (2 נק')",
-              "type": "open"
-            }
-          ],
-          "inputAns": "ui",
-          "id": 11,
-          "points": 2,
-          "pointsReceived": "",
-          "comments": ""
-        }
-      ],
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב (2 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "klhj",
+            "id": 11,
+            "points": 2,
+            "pointsReceived": "",
+            "comments": ""
+          },
+          {
+            "type": "subQue",
+            "titleQue": "לקוח מתלונן כי לא מצליח לפתוח את ה-PST שלו:",
+            "questions": [
+              {
+                "type": "open",
+                "que": "הסבר כיצד נבצע תיקון לPST. (2 נק')",
+                "inputAns": "klj",
+                "id": 12,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט כיצד תפעל במקרה התיקון לא עבד. (נק' 1)",
+                "inputAns": "klj",
+                "id": 13,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "subQue",
+            "titleQue": "כאשר לקוח מתחבר למחשב מופיעה לו הודעת שגיאה, ציין את פתרונן של השגיאות הבאות:",
+            "questions": [
+              {
+                "type": "open",
+                "que": "\"התחום שצוין אינו זמין\" (נק' 1)",
+                "inputAns": "kj",
+                "id": 14,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "\"החשבון שצוין אינו זמין\" (נק' 1)",
+                "inputAns": "j",
+                "id": 15,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "\"הכרטיס החכם חסום\" (נק' 1)",
+                "inputAns": "lkj",
+                "id": 16,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "מה עושים כאשר בכוונתנו להיכנס עם הכרטיס למחשב אך אין אופציה של \"הכנס כרטיס חכם\" והאופציה היחידה שמופיעה היא \"ADMINISTRATOR\" ? פרטי את כל דרך הפעולה (2 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "lkj",
+            "id": 17,
+            "points": 2,
+            "pointsReceived": "",
+            "comments": ""
+          }
+        ],
         "num": "12345",
         "type": "exam2",
         "name": "בוחן 2"
       }
     ]
-  },   
-          
+  },
   "students": {
     "value": [
       {

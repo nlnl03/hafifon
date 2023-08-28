@@ -198,7 +198,10 @@ methods:{
             showCancelButton:true,
             confirmButtonColor:"var(--main-background-color)",
             confirmButtonText:'כן, הגש מבחן',
-            cancelButtonText:"ביטול"
+            cancelButtonText:"ביטול",
+            customClass:{
+              popup: 'submit-swal'
+            },
           }).then((result)=>{
               if(result.value){
                   if(this.postExams()){

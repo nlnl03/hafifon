@@ -268,9 +268,10 @@ export default {
         else{
           res = await axios.get(this.$sharePointUrl+"practice")
           this.examData = res.data.value
+          console.log(this.examData)
           this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
           this.examData = this.examData.exam
-          // console.log(this.examData)
+          console.log(this.examData)
         }
               this.examData.forEach(que=>{
                 if(que.type==null){

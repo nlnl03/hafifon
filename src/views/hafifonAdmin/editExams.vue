@@ -76,8 +76,16 @@ import axios from 'axios'
         },
         async getExamForEdit(){
             var res = null
-            if(this.isSharePointUrl){
-                 res = await axios.get(this.$sharePointUrl+`getByTitle('${this.$route.params.title})`)
+            if(this.$isSharePointUrl){
+                 res = await axios.get(this.$sharePointUrl+`getByTitle('${this.$route.params.title}')/Items`)
+
+                    const promiseItems = await Promise.all(res.data.value.map((item)=>{
+                        return this.$asyncParse(item.exam).then((inner)=>{
+                            item.exam = inner
+                            return {item}
+                        })
+                    }))   
+
             }
             else{
                 res = await axios.get(this.$sharePointUrl+this.$route.params.title)
