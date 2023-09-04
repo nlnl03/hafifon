@@ -7,6 +7,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  import examsToCheck from '../views/hafifonAdmin/examsToCheck.vue'
  import uploadEditExams from '../views/hafifonAdmin/uploadEditExams.vue'
  import editExams from '../views/hafifonAdmin/editExams.vue'
+ import examDeletedMessage from '../views/examDeletedMessage.vue'
  import openPermForExams from '../views/hafifonAdmin/openPermForExams.vue'
  import Quiz from '../views/Quiz.vue'
  import beforeStartingExam from '../views/beforeStartingExam.vue'
@@ -86,6 +87,12 @@ const routes = [
     props: (route)=>({...route.params})
   },
   {
+    path: '/exams/:Title/deletedMessage',
+    name: 'examDeletedMessage',
+    component: examDeletedMessage,
+    props: (route)=>({...route.params})
+  },
+  {
     path: '/exams/:Title/submitted',
     name: 'submitted',
     component: submitted,
@@ -115,6 +122,7 @@ const routes = [
     component: practiceResult,
     props: (route)=>({...route.params})
   },
+
   {
     path:'/:catchAll(.*)',
     name:'notFound',

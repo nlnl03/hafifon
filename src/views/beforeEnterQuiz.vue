@@ -6,9 +6,14 @@
               {{Subject}}
           </div>
           <div class="quiz-info">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui nesciunt eius corrupti expedita necessitatibus voluptatum cumque odit deleniti aspernatur ex, pariatur assumenda labore. Vitae quasi et esse at doloremque ut aliquam, voluptate ab totam aspernatur eius earum reiciendis iste dolor aperiam saepe error eos culpa nobis nisi repellendus inventore quis, temporibus odit? Recusandae autem repellat vitae tempore repudiandae accusantium in illo quidem? Impedit, perspiciatis dignissimos. At numquam non corporis architecto quidem quaerat, ad accusantium ab fuga voluptas minima quam cupiditate ipsam, accusamus praesentium tenetur assumenda, quasi sunt adipisci aliquid necessitatibus? Doloribus ipsum praesentium, ipsa sapiente cumque voluptatem iure error repellendus.
-          </div>
-          <div class="start-back-buttons">
+             שלושה משפטים על הנושא  
+           </div>
+           <div class="enter-powerPoint">
+               <a class="powerPoint-link" :href="powerpointUrl()" target="_blank">
+                   <span class="powerPoint-link-text">למצגת</span>
+               </a>
+            </div>
+          <div class="start-back-buttons">  
               <button class="back-btn" @click="goBack()">בחזרה לתרגולים</button>
               <router-link class="start-btn" :to="{name:'quiz'}"> התחל תרגול</router-link>
           </div>
@@ -33,12 +38,16 @@ name:"beforeEnterQuiz",
       isLoadForSpinner:false,
       timeOut:null,
       timeLine:null
-
     }
 },
     methods:{
         goBack(){
             this.$router.go(-1)
+        },
+
+        powerpointUrl(){
+            const url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/שבוע ${this.timeLine}/${this.Subject}.pptx`
+            return url
         },
 
         async getData(){
@@ -62,7 +71,7 @@ name:"beforeEnterQuiz",
                 results = res.data.value
             }
                  
-                console.log(results[this.timeLine-1].items)
+                // console.log(results[this.timeLine-1].items)
                 results = results[this.timeLine-1].items.filter(data=>data["Title"] == this.$route.params.title)[0]
                 this.Subject = results.Subject 
                 console.log(this.Subject)
@@ -106,9 +115,10 @@ name:"beforeEnterQuiz",
 }
 .start-back-buttons{
     height: 70px;
-    position: relative;
+    position: absolute;
+    width: 90%;
     display: flex;
-    top:20px;
+    bottom:10px;
     align-items: center;
     justify-content: flex-end;
     margin: 0 35px;
@@ -146,7 +156,7 @@ button{
 }
  
 .quiz-subject{
-    height: 70px;
+    min-height: 70px;
     padding-top: 15px;
     font-size: 40px;
     font-weight: 600;
@@ -154,8 +164,33 @@ button{
     border-bottom: 1px solid lightgray;
 }
 .quiz-info{
-    margin: 10px;
+    margin: 25px 10px;
     font-size: 17px;
 }
+.powerPoint-link{
+    border: 1px solid var(--main-background-color);
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: var(--main-background-color);
+    color: white;
+    display: inline-block;
+    text-decoration: none;
+    height: 35px;
+    width: 85px;
+
+}
+   .enter-powerPoint{
+        position: absolute;
+        bottom: 110px;
+        width: 100%;
+   }
+    .powerPoint-link-text{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        font-size: 17px;
+        
+    }
 
 </style>

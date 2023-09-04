@@ -4,11 +4,19 @@
          
     <div class="box" v-if="isLoadForSpinner">
         <div class="name-of-exam">{{title}}</div>
+            <div class="edit-remove-btns" v-if="isAdmin">
+                <div class="edit-btn">
+                    <router-link :to="{name:'editExams',params:{title:name}}" style="color: black;"  > <q-icon name="fas fa-edit" size="26px" /> </router-link>
+                </div>
+                
+                <deleteExam :examName="name"/>         
+            </div>
+         
         <h2 class="instructions-title">לפני שמתחילים אנא קרא/י את ההוראות:</h2>
            <div class="instructions">
                <div class="instructions-items" v-for="inst in instructions" :key="inst">
                    {{inst}}
-               </div>
+               </div>   
            </div>
             <router-link :to="{name:'exams',params:{Title:this.$route.params.Title}}" class="start-btn">
                 <div class="router-text">התחל</div>  
@@ -21,15 +29,19 @@
 <script>
 import axios from 'axios'
 import loadingSpinner from '../components/loadingSpinner.vue'
-export default {
+import deleteExam from '../components/deleteExam.vue'
+ export default {
     components:{
-        loadingSpinner
-    },
+        loadingSpinner,
+        deleteExam
+     },
 data(){
     return{
         title:null,
         isLoadForSpinner:false,
-        instructions:[]
+        instructions:[],
+        name:'',
+        isAdmin:null
     }
 },
 methods:{
@@ -68,10 +80,12 @@ methods:{
    async beforeMount(){
         var examNames = localStorage.getItem("examsName")
         examNames = JSON.parse(examNames)
-        this.title = examNames.filter(item=>item.Title==this.$route.params.Title)[0]
-        this.title = this.title.subject
-        console.log(this.title)
+        var title = examNames.filter(item=>item.Title==this.$route.params.Title)[0]
+        this.title = title.subject
+        this.name = title.Title
+        console.log(this.name)
         this.getInstructions()
+        this.isAdmin = sessionStorage.getItem("isAdmin")
         const myTimeOut = setTimeout(this.spinner,250)
  
     }
@@ -105,15 +119,17 @@ methods:{
     border-radius: 20px;
 }
 .name-of-exam{
-    top: 30px;
+    top: 45px;
     font-size: 45px;
     font-weight: 700;
+     /* right: 50%; */
+    /* transform: translateX(50%); */
     position: relative;
     text-align: center;
 }
 .instructions-title{
     position: relative;
-    margin-top: 70px;
+    margin-top: 90px;
     margin-right: 30px;
     font-size: 25px;
 }
@@ -154,4 +170,35 @@ methods:{
     align-items: center;
     justify-content: center;
 }
+.title-flex{
+    height: 80px;
+}
+.edit-remove-btns{
+    width: 200px;
+    position: absolute;
+    right: 75%;
+    top: 45px;
+    display: flex;
+ }
+.edit-btn, .remove-btn{
+      cursor: pointer;
+      position: relative;
+      border-radius: 45%;
+      border: none ;
+      width: 47px;
+      height: 47px;
+      margin: 5px 7px;
+      background: rgba(7, 57, 80, 0.24);
+ }
+ .edit-btn{
+     text-decoration: none;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     
+ }
+ .edit-btn:hover, .remove-btn:hover{
+      background: rgb(145, 144, 144);
+      border: none;
+  }
 </style>

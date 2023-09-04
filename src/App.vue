@@ -27,7 +27,8 @@ export default {
         userName:null,
         userNum:null,
         isAdmin:null,
-        scroll:null
+        scroll:null,
+        currentUserData:[]
       }
     },
       methods:{
@@ -46,14 +47,18 @@ export default {
       async getCurrentUser(){
          const res = await axios.get(this.currentUser)
           this.currentUserData = res.data;
+          console.log(this.currentUserData)
           var userNum = this.currentUserData.LoginName.split('s')
           this.userNum = userNum[1]
+          // console.log(this.userNum)
           this.Id=this.currentUserData.Id
+          // console.log(this.Id)
           var Title = this.currentUserData.Title
-
-          if(Title.includs(' -')){
+            
+           if(Title.includes(' -')){
             Title = Title.split(' -')
             this.userName = Title[0]
+            console.log(Title)
           }
           else{
             Title = Title.split('/')
@@ -63,7 +68,7 @@ export default {
             localStorage.setItem("userName",this.userName)
             localStorage.setItem("userId",this.Id)
             localStorage.setItem("userNum",this.userNum)
-          console.log(this.Id)
+          // console.log(this.Id)
           // console.log(this.currentUserData)
         },
         showScrollBtn(){
@@ -312,4 +317,5 @@ h4{
   left: 30px;
 
 }
+
   </style>

@@ -24,7 +24,7 @@
                                     <button class="admin-routers"  @click="openAdminComp('MainCheckPage')"> בדיקת מבחנים</button>
                                 </li>
                                 <li class="admin-drop-down-list">
-                                    <button class="admin-routers"  @click="openAdminComp('openPerm')"> פתיחת הרשאות למבחנים</button>
+                                    <button class="admin-routers"  @click="openAdminComp('openPerm')">פתיחת הרשאות</button>
                                 </li>
                                  <li class="admin-drop-down-list">
                                     <button class="admin-routers"  @click="openAdminComp('uploadEditExams')"> עריכה, מחיקה והעלאת מבחנים</button>
@@ -44,7 +44,7 @@
 
                      <li>
                         <div>
-                            <router-link :to="{name: 'PracticesList'}">תרגולים</router-link>
+                            <router-link :to="{name: 'PracticesList'}">חומרי לימוד</router-link>
                         </div>
                      </li>
                 </ul>
@@ -147,17 +147,16 @@ export default {
                     }
                  })
                  
-                // console.log("isAdmin: "+ this.isAdmin)
-                // sessionStorage.setItem("isAdmin",this.isAdmin)
-        },
+         },
         
     },
      async beforeMount(){
         //  await this.$isSharePointUrl
          this.getNameOfExams()
         this.isAdmin = await this.checkIfAdmin()
-        console.log(this.isAdmin)
-          
+        sessionStorage.setItem("isAdmin",this.isAdmin)
+         console.log("isAdmin: "+ this.isAdmin)
+
      },
     
 }

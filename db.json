@@ -37,7 +37,7 @@
         "timeline": 1,
         "items": [
           {
-            "Subject": "הכרת הגדוד",
+            "Subject": "שיעור חפיפה 1- הכרת הגדוד",
             "Title": "aboutThePloga",
             "Img": "printer.jpg",
             "exam": [
@@ -142,7 +142,7 @@
             ]
           },
           {
-            "Subject": "CMD",
+            "Subject": "שיעור חפיפה 2- חומרה ומחשבים",
             "Title": "CMD",
             "Img": "CMD.png",
             "exam": [
@@ -215,7 +215,7 @@
             ]
           },
           {
-            "Subject": "תרגול חומרה,  bios, boot order",
+            "Subject": "שיעור חפיפה 3- ממשקים במחשב",
             "Title": "bios",
             "Img": "bios.png",
             "numOfQue": "3",
@@ -338,7 +338,7 @@
         "timeline": 2,
         "items": [
           {
-            "Subject": "תפעול מחשב",
+            "Subject": "שיעור חפיפה 4- דומיין ותפעול מחשב",
             "Title": "pcOperation",
             "Img": "pc.jpg",
             "numOfQue": "5",
@@ -456,7 +456,7 @@
             ]
           },
           {
-            "Subject": "דיסקים ומ\"ה",
+            "Subject": "שיעור חפיפה 5- תקשורת",
             "Title": "aboutThePloga",
             "Img": "disc.png",
             "numOfQue": "11",
@@ -574,7 +574,7 @@
             ]
           },
           {
-            "Subject": "שרתי קבצים מחשבים ופקודות",
+            "Subject": "שיעור חפיפה 6- דיסקים ותוכנות",
             "Title": "server&commands",
             "Img": "fileServer.jpg",
             "numOfQue": "9",
@@ -695,7 +695,7 @@
             ]
           },
           {
-            "Subject": "מדפסות, סורקים ולפטופים",
+            "Subject": "שיעור חפיפה 7- התקנים חיצוניים",
             "Title": "printer&scanner&laptops",
             "Img": "printer.jpg",
             "numOfQue": "6",
@@ -813,7 +813,7 @@
             ]
           },
           {
-            "Subject": "DSAM-ו AD תרגול",
+            "Subject": "שיעור 8 ",
             "Title": "AD&DSAM",
             "Img": "active-directory-logo2.png",
             "numOfQue": "11",

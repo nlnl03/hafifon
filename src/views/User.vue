@@ -18,7 +18,7 @@
               </div>
 
           <div class="inner-left-flex">
-                <img class="user-image" src="http://www.portalhr.leshem.idf/KioskServlet?infoOrPic=pic"> 
+                <img class="user-image" :src="imgSrc()"> 
           </div>
       </div>
     </div>
@@ -81,8 +81,9 @@ export default {
    },
   data(){
     return{
-       userDetails:[],
+      userDetails:[],
        gradesAvera: [],
+       userNum:'',
        userName:'',
        isFinished:false,
        userId:'',
@@ -100,6 +101,10 @@ export default {
      }
   },
     methods:{
+      imgSrc(){
+        const imgUrl = `https://hm.mail.idf/owa/service.svc/s/GetPersonaPhoto?email=s${this.userNum}%40army.idf.il&size=HR120x120`;
+        return imgUrl
+      },
       asyncParse(str){
         return new Promise((resolve)=>{
            resolve(JSON.parse(str))
@@ -231,6 +236,7 @@ export default {
      },
 
     async beforeMount(){
+      this.userNum = localStorage.getItem("userNum")
       await this.asyncSetTimeout()
       this.getUserName()
       this.isFinished = true

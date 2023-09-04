@@ -35,9 +35,10 @@
                       <img class="image-of-items" :src="require(`@/assets/${item.Img}`)">
                         <div class="inner-flex">
                           <h4 class="text">
-                              {{item.Subject}}
+                              {{item.Subject[0]}}
                           </h4>
-                          <span class="num-of-que">מספר שאלות: {{item.numOfQue}}</span>
+                          <span class="lesson-name">{{item.Subject[1]}}</span>
+                          <span class="num-of-que">מספר תרגולים: </span>
                         </div>
                     </router-link>
                   </div>
@@ -66,7 +67,7 @@ export default {
       selectedValue:null,
       isLoad:false,
       timeOut:null,
-       
+        
     }
   },
   methods:{
@@ -85,6 +86,12 @@ export default {
             const res = await axios.get(this.$sharePointUrl+"practice")
             this.practices = res.data.value
         }
+            this.subject = this.practices.filter(inner=>{
+              // console.log(inner)
+              inner.items.filter(i=>{
+                 i.Subject=i.Subject.split('-')
+               })
+            })
             console.log(this.practices)
              this.isLoad = true;
      },
@@ -112,12 +119,16 @@ export default {
           }
        }
       
-    }
+    },
+    filterLessonsName(subject){
+      // const name = subject.split('-')
+      // this.lessonName = name[1]
+      // return name[0] 
+     }
   },
   async beforeMount(){
       this.timeOut = setTimeout(this.getPractices,200)
-      console.log(this.fhdh)
-
+ 
   },
  
 }
@@ -214,17 +225,17 @@ h1{
 
 }
  h4{
-   font-size: 25px;
-   padding: 10px;
+   font-size: 32px;
+   padding: 15px;
    position: relative;
     color: black;
   text-align: center;
  }
  .num-of-que{
-    font-size:22px;
+    font-size: 20px;
     margin-bottom: 30px;
     display: inline-block;
-    color:#666;
+    color:#807f7f;
  }
  .router-text{
    text-decoration: none;
@@ -245,12 +256,19 @@ h1{
   }
   .select-timeline{
     margin-top: 30px;
-     display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
   }
   .q-select{
     width: 180px;
   }
- 
+ .lesson-name{
+   margin-bottom: 10px;
+   font-size: 21px;
+   color: #605e5e;
+   font-weight: 600;
+   margin-right: 0.5em;
+   margin-left: 0.5em
+ }
  </style>
