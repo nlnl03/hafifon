@@ -21,16 +21,20 @@ export default {
         },
 
         async deleteReq(){
-            this.token = await this.getToken()
+            
             try{
+                this.token = await this.getToken()
                 console.log(this.examName)
+
                 const res = await axios.post(this.$sharePointUrl+ `getByTitle('${this.examName}')`,{
-                    methods:"DELETE",
                     headers:{
-                        "Accept":"application/json;odata=verbose",
-                        "IF-MATCH": "*",
-                        "X-RequestDigest": this.token,
-                         "X-HTTP-method": "DELETE",
+                        // "Authorization": `Bearer ${this.token}`,
+                        'X-HTTP-Method':"DELETE",
+                        'IF-MATCH':"*",
+                        'X-RequestDigest':this.token,
+                        'Accept':"application/json;odata=verbose",
+                        'Content-Type':"application/json;odata=verbose"
+
                     }
                
                  })

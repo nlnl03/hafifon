@@ -1,7 +1,8 @@
 <template>
     <div class="spiner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
+
   <div class="main-container" v-if="isLoadForSpinner" >
-      <div class="about-quiz" v-if="!isShow">
+     <div class="about-quiz" v-if="!isShow">
           <div class="quiz-subject">
               {{Subject}}
           </div>
@@ -92,8 +93,8 @@ name:"beforeEnterQuiz",
 <style scoped>
 .spiner{
     position: relative;
-      display: flex;
-      top:100px
+    display: flex;
+    top:100px
  }
 .main-container{
     height: 813px;

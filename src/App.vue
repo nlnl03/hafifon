@@ -1,11 +1,11 @@
 <template>
-    <MainNavbar v-if="!isNotFoundRoute"/>
+    <MainNavbar v-if="!isNotFoundRoute" />
     <div v-if="scroll >=300">
       <button class="scroll-to-top" @click="scrollToTop">
           &#9650;
       </button>
     </div>
-    <router-view  :key="$route.fullPath">  </router-view>
+    <router-view  :key="$route.fullPath" />
   
 </template>
 
@@ -144,12 +144,22 @@ export default {
       background: rgb(117, 116, 116);
     }
  .q-timeline--dense--right .q-timeline__dot {
-    right: -130px;
+    right: -170px;
+    top: -5px !important;
  }
- .q-timeline__dot:before{
-   top: 2px !important;
-   left: -3px !important;
+ .q-timeline__dot::after{
+    top: 18px !important;
+    bottom: -4px !important;
+    left: 11px !important;
+
+  }
+  .q-timeline__dot:before {
+    height: 25px !important;
+    width: 25px !important;
+    top: 4px !important;
  }
+
+
   .q-field__label {
     left: 12px !important;
     transform-origin: 150px !important;
@@ -203,7 +213,9 @@ export default {
     form[class="exam"]{
       --exams-form-width:1150px;
     }
-    
+    .perm-table .q-pa-md{
+      width: 70% !important;
+    }
      
 }
 @font-face {
@@ -236,9 +248,11 @@ export default {
     width: 100vw;
     overflow-x: hidden;
   }
-  *, *:before, *:after{
-    box-sizing:revert !important
-  }
+  /* *, *:before, *:after{
+    box-sizing:revert !important;
+    box-sizing: border-box !important;
+
+  } */
   button{
         outline: none;
      }

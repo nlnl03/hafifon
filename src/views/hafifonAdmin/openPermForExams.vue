@@ -1,29 +1,14 @@
 <template>
-<div class="main">
-    <div class="title">פתיחת הרשאות</div>
-
-   <div class="type-user-num">
-        <q-input label="הקלד/י מס' אישי" dir="rtl"/>
-    </div>
-    
-    <!-- <div class="permission">
-        <div class="permisson-items" v-for="(per,index) in currentPermission" :key="per">
-            <div class="permission-flex">
-                <span class="permission-title">{{per.Title}}:</span>
-                <label class="switch" v-if="isload">
-                    <input type="checkbox" :checked="per.isAllow" @click="openPerm(per,index)" :ref="per+index">
-                    <span class="slider round"></span>
-                </label> 
-            </div>    
+     <div class="main">
+         <div class="type-user-num">
+            <q-input label="הקלד/י מס' אישי" dir="rtl"/>
+         </div>
+            
+        <div class="perm-table">
+            <permTable @childEvent="handleChildEvent"/>
         </div>
-    </div> -->
-
-    <div class="perm-table">
-        <permTable />
-    </div>
-</div>
-    
-</template>
+     </div>
+    </template>
 
 <script>
 import axios from 'axios'
@@ -34,33 +19,51 @@ export default {
     },
     data(){
         return{
-            urlForId:"https://portal.army.idf/sites/hafifon383/_api/web/sitegroups/getbyname('מבקרי חפיפון')/id",
-            groupId:null,
+            urlForId:"https://portal.army.idf/sites/hafifon383/_api/web/siteusers",
+            userId:null,
             targetRoleDefId:null,
             token:null,
             currentPermission:[],
             Id:null,
             isload:false,
+ 
         }
     },
     methods:{
          
          async getToken(){
-          return axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo").then((res=> res.data.FormDigestValue))
-      },
-        async getIdOfgroup(){
-            const res = await axios.get(this.urlForId)
-            this.groupId = res.data.value
-            console.log(this.groupId)
+            return axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo").then((res=> res.data.FormDigestValue))
          },
+
+        async getIdOfUser(userNum){
+            try{
+                const res = await axios.get(this.urlForId+`?$filter=Email eq 's${userNum}@army.idf.il'`)
+                const userData = res.data.value
+                
+                if(userData.length > 0){
+                    this.userId = userData[0].Id
+                    console.log(this.userId)
+                }
+                else{
+                    throw new Error("user not found")
+                }
+                
+            }catch(error){
+                throw new Error('error fetching user id' + error.message)
+            }
+            
+            
+         },
+
         async getTargetRoleDefenitionId(){
             const res = await axios.get("https://portal.army.idf/sites/hafifon383/_api/web/roledefinitions/getbyname('שליטה מלאה')/id")
             this.targetRoleDefId = res.data.value
             console.log(this.targetRoleDefId)
               
         },
-        async setNewPermForGroup(per){
-             return axios.post(this.$sharePointUrl+`getByTitle('${per.type}')/roleassignments/addroleassignment(principalid='${this.groupId}' ,roledefid='${this.targetRoleDefId}')`,{
+        
+        async setNewPermForGroup(name){
+             return axios.post(this.$sharePointUrl+`getByTitle('${name}')/roleassignments/addroleassignment(principalid=${this.userId} ,roledefid='${this.targetRoleDefId}')`,{
              
              },
 
@@ -72,25 +75,48 @@ export default {
                  
           },
 
-          async openPerm(per,index){
-              var isAllowCondition = null
-               var val = this.$refs[per+index]
-               await this.getPermListId(per)
+          handleChildEvent(col,row,index){
+             this.$swal({
+                title:"האם את\ה בטוח\ה שברצונך לעדכן הרשאות אלו ? ",
+                icon:"warning",
+                showCancelButton:true,
+                confirmButtonText:"כן",
+                confirmButtonColor:"var(--main-background-color)",
+                cancelButtonText:"ביטול",
+              }).then(res=>{
+                if(res.isConfirmed){
+                    this.openPerm(col,row,index)
+                }
+                else{
+                    row[col.name] = !row[col.name]
+                }
+              })
+          },
 
-              if(val.checked){
-                    isAllowCondition = true
-                     this.setNewPermForGroup(per)
-                    this.updatePerm(isAllowCondition)
+          async openPerm(col,row,index){
+                 console.log(row)
+                 if(this.$isSharePointUrl){
+                    await this.getIdOfUser(row.userNum)
+                    await this.getTargetRoleDefenitionId()
+                    this.token = await this.getToken()
+                    await this.getPermListId(row.userNum)
+                 }
+
+
+              if(row[col.name]){   
+                console.log("open per")                 
+                    this.setNewPermForGroup(col.name)
+                    this.updatePerm(col.name,row[col.name])
               }
               
               else{
-                  isAllowCondition = false
-                  this.updatePerm(isAllowCondition)
-                  this.deletePer(per)
+                console.log("delete per")
+                   this.updatePerm(col.name,row[col.name])
+                  this.deletePer(col.name)
               }
-                console.log(val)
-                console.log(isAllowCondition)
-           },
+              
+            },
+
           async checkTheCurrentPerm(){
               var res = null
               if(this.$isSharePointUrl){
@@ -102,10 +128,10 @@ export default {
                 this.currentPermission = res.data.value
                  
           },
-        async updatePerm(isAllowCondition){
+        async updatePerm(name,per){
               const res = await axios.post(this.$sharePointUrl+`getByTitle('isPermissionActive')/Items('${this.Id}')`,{
             '__metadata':{'type':'SP.Data.IsPermissionActiveListItem'},
-               isAllow:isAllowCondition
+                [name]:per
         },
         {
             headers:{
@@ -119,7 +145,7 @@ export default {
     },
 
           async deletePer(per){
-              const res = await axios.post(this.$sharePointUrl+`getByTitle('${per.type}')/roleassignments/getbyprincipalid('${this.groupId}')`,{
+              const res = await axios.post(this.$sharePointUrl+`getByTitle('${per}')/roleassignments/getbyprincipalid('${this.userId}')`,{
             '__metadata':{'type':'SP.Data.IsPermissionActiveListItem'},
             },
             {
@@ -133,8 +159,8 @@ export default {
             })
         },
 
-          async getPermListId(per){
-              const res = await axios.get(this.$sharePointUrl+`getByTitle('isPermissionActive')/items?$filter=type eq '${per.type}'`)
+          async getPermListId(userNum){
+              const res = await axios.get(this.$sharePointUrl+`getByTitle('isPermissionActive')/items?$filter=userNum eq '${userNum}'`)
               this.Id = res.data.value[0].ID
               console.log(this.Id)
           }
@@ -142,13 +168,13 @@ export default {
     },
     
     async beforeMount(){
-        if(this.$isSharePointUrl){
-            await this.getIdOfgroup()
-            this.getTargetRoleDefenitionId()
-            this.token = await this.getToken()
-        }
-            this.checkTheCurrentPerm()
-            this.isload = true
+        // if(this.$isSharePointUrl){
+        //     await this.getIdOfUser()
+        //     this.getTargetRoleDefenitionId()
+        //     this.token = await this.getToken()
+        // }
+            // this.checkTheCurrentPerm()
+            // this.isload = true
     }
       
 
@@ -156,17 +182,19 @@ export default {
 </script>
 
 <style scoped>
-.main{
+     .main{
+        width: 100%;
+         margin-top: 50px;
+        box-sizing: border-box !important;
+    }
+.perm-flex{
     display: flex;
     flex-direction: column;
     position: relative;
     justify-content: center;
     width: var(--permission-box-width);
     height: 700px;
-    right: 50%;
-    left: 50%;
-    transform: translate(50%,8%);
-    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.212);
+     box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.212);
     border-radius:20px ;
 }
 .title{
@@ -280,7 +308,7 @@ input:checked + .slider::before{
 
    }
   .perm-table{
-      margin-top: 70px;
+      margin-top: 30px;
       display: flex;
       justify-content: center;
    }

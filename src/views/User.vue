@@ -17,8 +17,8 @@
                 </div>
               </div>
 
-          <div class="inner-left-flex">
-                <img class="user-image" :src="imgSrc()"> 
+          <div class="inner-left-flex" >
+                <img class="user-image" :src="imgUrl" v-if="showImg" ref="myImage"> 
           </div>
       </div>
     </div>
@@ -97,13 +97,26 @@ export default {
        isGradeAve:false,
        isLoadForSpinner:false,
        isCalculated:false,
-       onlyExam:null
+       onlyExam:null,
+       showImg:false,
+       imgUrl:'',
+       dataParsed:[]
      }
   },
     methods:{
       imgSrc(){
-        const imgUrl = `https://hm.mail.idf/owa/service.svc/s/GetPersonaPhoto?email=s${this.userNum}%40army.idf.il&size=HR120x120`;
-        return imgUrl
+        this.imgUrl = `https://hm.mail.idf/owa/service.svc/s/GetPersonaPhoto?email=s${this.userNum}@army.idf.il&UA=0&size=HR96x96&sc=1701085407934`;
+        if(this.imgUrl.split('').filter(c => c === '?').length > 1){
+          var charToRemove = '?'
+          var indexToRemove = this.imgUrl.indexOf(charToRemove)
+          var modifiedString = this.imgUrl.slice(0, indexToRemove) + this.imgUrl.slice(indexToRemove + 1)
+          this.imgUrl = modifiedString
+          console.log(this.imgUrl)
+          
+         }
+         this.showImg = true
+         console.log(this.showImg)
+         
       },
       asyncParse(str){
         return new Promise((resolve)=>{
@@ -232,11 +245,29 @@ export default {
               else{
                 this.average = ave/length
               }
+             },
+
+             async getNewPractice(){
+              const res = await axios.get(this.$sharePointUrl + "getByTitle('practices')/Items")
+              var data = res.data.value
+              console.log(data)
+                this.dataParsed = res.data.value
+
+              const promiseData = await Promise.all(this.dataParsed.map((item)=>{
+                return this.asyncParse(item.practiceData).then((inner)=>{
+                  item['practiceData'] = inner
+                    return {item}
+                })
+              }))
+
+                
+              console.log(this.dataParsed)
              }
      },
 
     async beforeMount(){
       this.userNum = localStorage.getItem("userNum")
+      this.imgSrc()
       await this.asyncSetTimeout()
       this.getUserName()
       this.isFinished = true
@@ -245,6 +276,8 @@ export default {
       this.calcGradesAve()
       this.isLoadForSpinner=true
       //  this.timeOut = await setTimeout(,200)
+
+      this.getNewPractice()
       },
  }
 </script>
@@ -413,7 +446,8 @@ h5{
     grid-template-rows: repeat(3,1fr);
     background: #fff;
     gap: 25px 25px;
-        animation: growOut 250ms ease-in-out forwards;
+    border-radius: 24px;
+    animation: growOut 250ms ease-in-out forwards;
 
   }
   @keyframes growOut{
@@ -506,7 +540,7 @@ h5{
     border-radius: 13px;
   }
   .exam-Checked-router:hover{
-    background-color: #449ea0;
+    background-color: #ccc;
 
   }
   .spinner{

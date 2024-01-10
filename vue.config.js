@@ -1,14 +1,12 @@
-module.exports={
-    publicPath:"",
+module.exports = {
+  publicPath: "",
 
-    pluginOptions: {
-      quasar: {
-        importStrategy: 'kebab',
-        rtlSupport: true
-      }
-    },
+  pluginOptions: {
+    quasar: {
+      importStrategy: 'kebab',
+      rtlSupport: true
+    }
+  },
 
-    transpileDependencies: [
-      'quasar'
-    ]
-}
+  transpileDependencies: ['quasar']
+};
