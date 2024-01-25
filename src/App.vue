@@ -256,16 +256,16 @@ export default {
   button{
         outline: none;
      }
-  .swal2-popup{
+  /* .swal2-popup{
      height: 470px;
      width: 48em !important;
      border-radius:10px !important ;
-  }
-  .delete-swal{
+  } */
+  /* .delete-swal{
      height: 450px;
      width: 43em !important;
      border-radius:10px !important ;
-  }
+  } */
   .choose-to-remove-swal, .choose-to-edit{
     width: 550px !important;
     height: 370px !important;

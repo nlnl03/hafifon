@@ -8,43 +8,46 @@
    <div class="text-under-line"></div>
 
     <div class="select-timeline" >
-         <q-select outlined v-model="selectedValue" :options="practices"  :option-value="option => option.timeline" :option-label="option => `שבוע ${option.timeline}`" label="מיין לפי שבוע" 
+         <q-select outlined v-model="selectedValue" :options="weeks"  :option-value="option => option.id" :option-label="option => `שבוע ${option.id}`" label="מיין לפי שבוע" 
             @update:model-value="filterPractices"  dir="rtl"/>
           
     </div>
  
 
+<!-- <div>
+  <h2> weeka</h2>
+  <div v-for="week in weeks" :key="week.id">
+    <h3>{{week.Title}}</h3>
+    <div v-for="lesson in weekLessons(week.id)" :key="lesson.id" @click="goToLesson(lesson.id)">
+      <p>{{lesson.Title}}</p>
+    </div>
 
+  </div>
+</div> -->
 
-   <!-- <select name="" id="" @change="filterPractices($event)">
-     <option value="" disabled selected hidden>מיין לפי שבוע</option>
-     <option :value="practice.timeline" v-for="practice in practices" :key="practice" >
-       שבוע {{practice.timeline}}
-     </option>
-   </select> -->
-
+  
    <div class="container-cards" >
      <div class="without-timeline">
          <div class="timeline" ref="timeline" >
              <q-timeline color="secondary" > 
-              <q-timeline-entry :subtitle="`שבוע ${practice.timeline}`" v-for="(practice,index) in practicesFilltered" :key="index" :value="practice.timeline">
-                <div class="flex-cards" >
-                  <div v-for="(item,midIndex) in practice.items" :key="midIndex" >
+              <q-timeline-entry :subtitle="`שבוע ${week.id}`" v-for="(week,index) in weeks" :key="index" :value="week.id">
+                <div class="flex-cards" v-if="showCards">
+                  <div v-for="(item,midIndex) in weekLessons(week.id)" :key="midIndex" >
                     <div class="card" @mouseenter="expandCard(item,index,midIndex)" >
                       <div class="card-content" :ref="item+midIndex">
                         
                           <div class="inner-flex">
                             <img class="image-of-items" :src="require(`@/assets/${item.Img}`)">
                             <h4 class="text">
-                                {{item.Subject[0]}}
+                                {{item.Title}}
                             </h4>
-                            <span class="lesson-name">{{item.Subject[1]}}</span>
+                            <span class="lesson-name">{{item.description}}</span>
                             <span class="num-of-que">מספר תרגולים: </span>
                           </div>
 
                           <div class="expanded-content" v-if="(ite === index && midIte === midIndex) && this.isFinished" :style="{ maxHeight: ite === index && midIte === midIndex ? expandedHeight : '0' }">
                               <q-btn class="powerPoint-link" @click="powerpointUrl(index,midIndex,item.Subject)" label="מצגת" color="secondary"/>
-                              <q-btn class="tirgulim-link" label="תרגולים" color="secondary"/>
+                              <q-btn class="tirgulim-link" label="תרגולים" @click="openTirgulimModal(item.id,index)" color="secondary"/>
                           </div>
 
                         </div>
@@ -81,7 +84,10 @@ export default {
       activeCard: null,
       expandedHeight: '200px',
       isFinished: false,
-       practicesFilltered:[]
+       practicesFilltered:[],
+       weeks:[],
+       lesson:[],
+       showCards:false
     }
   },
   methods:{
@@ -97,17 +103,18 @@ export default {
               }))   
         }
         else{
-            const res = await axios.get(this.$sharePointUrl+"practice")
+            const res = await axios.get(this.$sharePointUrl+"tirgulim")
             this.practices = res.data.value
         }   
 
             this.practicesFilltered = JSON.parse(JSON.stringify(this.practices));
 
-            this.practicesFilltered.forEach(inner => {
+             this.practicesFilltered.forEach(inner => {
                 inner.items.forEach(i => {
                     i.Subject=i.Subject.split('-')
                 })
             })
+
             console.log(this.practices)
             console.log(this.practicesFilltered)
              this.isLoad = true;
@@ -115,11 +122,11 @@ export default {
 
     filterPractices(){
       console.log(this.selectedValue.timeline)
-      const optionValue = this.selectedValue.timeline
+      const optionValue = this.selectedValue.id
       console.log("value: "+optionValue)
       const timelineFiltered = this.$refs["timeline"].children[0].children[optionValue-1]
       console.log(timelineFiltered)
-      for(var i = 0; i<this.practices.length;i++){
+      for(var i = 0; i<this.weeks.length;i++){
           if(i!==optionValue-1){
             console.log(i)
             const hideItem = this.$refs["timeline"].children[0].children[i]
@@ -142,9 +149,9 @@ export default {
      expandCard(item,index,midIndex){
       this.ite = index
       this.midIte = midIndex    
-        console.log(midIndex , item)
+        // console.log(midIndex , item)
 
-      console.log(this.$refs[item+midIndex])
+      // console.log(this.$refs[item+midIndex])
       var expandDiv = this.$refs[item+midIndex].children[0]
       expandDiv.style.height = '90%'
       // console.log(expandDiv)
@@ -163,35 +170,84 @@ export default {
         var nameOfPowerP = this.practices[index].items[midIndex].Subject
         console.log(nameOfPowerP)
             const url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/שבוע ${index+1}/${nameOfPowerP}.pptx`
-             window.location.href = url
+             window.open(url, '_blank')
       },
+        getTirgulimNames(itemId){
+          console.log(itemId)
+           if(this.$isSharePointUrl){
+            return axios.get(this.$sharePointUrl + `getByTitle('practices')/Items?$filter=lessonId eq ${itemId}`)
+              .then(res => res.data.value) 
+           }
+          else{
+            return axios.get(this.$sharePointUrl + `practices`)
+              .then(res => res.data.value)
+              .then((results)=>results.filter(item=>item.lessonId==itemId))  
+          }
+        },
 
-     async getData(){
-        var results = null
+     async openTirgulimModal(lessonId,index){
+        console.log(index)
+        var tirgulimNames = await this.getTirgulimNames(lessonId)
+        console.log(tirgulimNames)
 
-        if(this.$isSharePointUrl){
-            const res = await axios.get(this.$sharePointUrl+"getByTitle('tirgulim')/Items")
-            results = res.data.value
-              const promiseItems = await Promise.all(results.map((tirgulim)=>{
-                  return this.$asyncParse(tirgulim.items).then((inner)=>{
-                   tirgulim.items = inner
-                      return {tirgulim}
-                  })
-              }))   
-        }
+        const buttonsHtml = tirgulimNames.map(button => `
+            <button id="${button.id}"> ${button.Title}</button>
+        `).join('')
+        
+      if(tirgulimNames.length>1){
+          this.$swal({
+              html:`
+                <div class="tirgulim-btns">
+                  ${buttonsHtml}
+                </div>
+              `,
+              showConfirmButton:false,
+              showLoaderOnConfirm:true,
+              didOpen: () => {
+                tirgulimNames.forEach(button => {
+                  const buttonElement = document.getElementById(button.id);
+                  if(buttonElement){
+                    buttonElement.addEventListener('click', () => {
+                      console.log(button)
+                      this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:button.id, title:button.routeName}})
+                      this.$swal.close()
+                    })
+                  }
+                })
+              }
+          })
+      }
 
-        else{
-            const res = await axios.get(this.$sharePointUrl+"practice")
-            results = res.data.value
-        }
-                results = results[this.timeLine-1].items.filter(data=>data["Title"] == this.$route.params.title)[0]
-                this.Subject = results.Subject 
-                console.log(this.Subject)
-     }
-  },
+      else if(tirgulimNames.length==1){
+        console.log(tirgulimNames[0])
+        this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:tirgulimNames[0].id, title:tirgulimNames[0].routeName}})
+      }
+    },
+
+
+    async getSome(){
+      const res = await axios.get(this.$sharePointUrl+ "weeks")
+      this.weeks = res.data.value
+      console.log(this.weeks)
+      this.loadLesson()
+    },
+
+    async loadLesson(){
+      const res = await axios.get(this.$sharePointUrl + "lessons")
+      this.lessons = res.data.value
+      console.log(this.lessons)
+      this.showCards = true
+    },
+
+    weekLessons(weekId){
+      return this.lessons.filter(lesson=>lesson.weekId === weekId)
+    },
+        
+   },
   async beforeMount(){
+    this.getSome()
       this.timeOut = setTimeout(this.getPractices,200)
- 
+
   },
  
 }

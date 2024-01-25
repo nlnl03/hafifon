@@ -4,17 +4,18 @@
         <form v-for="(question,index) in examData" :key="index"  >
           <div v-if="index==ite">
               <div class="question" v-if="question.type!= null"> 
-                  <span class="questions-text">{{question.Title}}</span> 
+                  <span class="questions-text">{{question.label}}</span> 
                   <div class="current-que">{{ite+1}}/{{examData.length}}</div> 
               </div> 
 
-              <div class="answer-options" :ref="question['Title']" v-if="question.type == 'american' " >
-                <div class="answer-items" :style="`--cursor:${inputsCursor}`" v-for="(answer,inner) in question.answers"  :key="inner"> 
-                  <input type="radio" v-model="userData[question.Title]" :ref="answer" :value="answer" @click="clickHandler($event,index,question['Title'])"  :name="question.Title"  :id="answer" :disabled="userData[question.Title]"  />
-                  <label :for="answer"><div class="answers-text"> {{answer}}</div></label>
-                </div>
+              <div class="answer-options" v-if="question.type == 'radio' " >
+                <label v-for="(opt, optIndex) in question.options" :key="optIndex" >
+                  <input type="radio" v-model="question.value" :value="opt" />
+                  <span>{{opt}}</span>
+                </label>
+                 <!-- <q-radio v-for="(opt, optIndex) in question.options" :key="optIndex" :label="opt" v-model="question.value" :val="opt" :color="getRadioColor(question, opt)"  :ripple="false" /> -->
               </div>
-              
+               
               <div class="bank-quiz" v-if=" question.type == 'bankQue' ">
                 <div class="bank-quiz-que"  v-for="(option,midIndex) in Object.keys(question.bankOptions)" :key="option+midIndex" >
                         <div class="option-title" >{{option}}</div>
@@ -237,59 +238,51 @@ export default {
      async getData(){
        var res = null
        if(this.$isSharePointUrl){
-          res = await axios.get(this.$sharePointUrl+`getByTitle('${this.$route.params.title}')/Items`)
+          res = await axios.get(this.$sharePointUrl+`getByTitle('practicesData')/Items?$filter=Title eq '${this.$route.params.title}'`)
           this.examData = res.data.value;
 
-           const promiseAnswers = await Promise.all(this.examData.map((item)=>{
-             return this.asyncParse(item.answers).then((inner)=>{
-                  item['answers'] = inner
+           const promiseData = await Promise.all(this.examData.map((item)=>{
+             return this.asyncParse(item.data).then((inner)=>{
+                  item['data'] = inner
                return {item}
               })
             }))
-             
-            const promiseBankAnswer = await Promise.all(this.examData.map((item)=>{
-              if(item.type=='bankQue'){
-                  return this.asyncParse(item.bankCorrect).then((corr)=>{
-                     item['bankCorrect'] = corr
-                  return {item}
-                })
-              }
-          })) 
-
-            const promiseBankOptions = await Promise.all(this.examData.map((bankOption)=>{
-               if(bankOption.type=='bankQue'){
-                    return this.asyncParse(bankOption.bankOptions).then((opt)=>{
-                    bankOption['bankOptions'] = opt
-                    return {bankOption}
-                  })
-               }
-            }))
        }
+
         else{
-          res = await axios.get(this.$sharePointUrl+"practice")
-          this.examData = res.data.value
+          res = await axios.get(this.$sharePointUrl+`practicesData`)
+          var examData = res.data.value
+          this.examData = examData.filter((item)=> item.weekId == JSON.parse(this.$route.params.week) && item.pracId == JSON.parse(this.$route.params.numOfPrac))[0].data
           console.log(this.examData)
-          this.examData =this.examData.filter(data=>data.Title==this.$route.params.title)[0]
-          this.examData = this.examData.exam
-          console.log(this.examData)
+
         }
-              this.examData.forEach(que=>{
-                if(que.type==null){
-                  this.queWithoutAns++
-                }
-              })
-          console.log(this.examData.length)
-          console.log(this.queWithoutAns)
+
+
+          //     this.examData.forEach(que=>{
+          //       if(que.type==null){
+          //         this.queWithoutAns++
+          //       }
+          //     })
+          // console.log(this.examData.length)
+          // console.log(this.queWithoutAns)
        },
     asyncSetTimeout(){
       return new Promise((res)=>{
         setTimeout(res,500)
       })
+    },
+
+
+
+
+    getRadioColor(question, opt){
+      return question.value === opt ? "positive" : "dark"
     }
   },
 
    
       async beforeMount(){
+        console.log(this.$route.params)
         this.getData()
           await this.asyncSetTimeout()
           // console.log(this.examData)
@@ -486,20 +479,11 @@ button{
     }
  input{
   appearance: none;
-  font-size:27px;
-  display: flex;
-  height: 90%;
-  position: relative;
-  cursor: var(--cursor);
+   cursor: var(--cursor);
 }
 label{
   cursor: var(--cursor);
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top:0;
-  left: 0;
-}
+ }
 .drag-drop{
     display: flex;
     justify-content: center;

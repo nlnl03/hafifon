@@ -11,6 +11,7 @@ import examDeletedMessage from "../views/examDeletedMessage.vue";
 import openPermForExams from "../views/hafifonAdmin/openPermForExams.vue";
 import Quiz from "../views/Quiz.vue";
 import beforeStartingExam from "../views/beforeStartingExam.vue";
+import beforeStartQuiz from "../views/beforeStartQuiz.vue";
 import exams from "../views/exams.vue";
 import submitted from "../views/submitted.vue";
 import noPermissionMessage from "../views/noPermissionMessage.vue";
@@ -25,7 +26,7 @@ const routes = [
     component: HomePage
   },
   {
-    path: "/Practices",
+    path: "/lessons&practices",
     name: "PracticesList",
     component: PracticesList
   },
@@ -104,20 +105,27 @@ const routes = [
     component: noPermissionMessage,
     props: (route) => ({ ...route.params })
   },
+  // {
+  //   path: "/Practices/:week/:title/beforeEnterQuiz",
+  //   name: "beforeEnterQuiz",
+  //   component: beforeEnterQuiz,
+  //   props: (route) => ({ ...route.params })
+  // },
+
   {
-    path: "/Practices/:week/:title/beforeEnterQuiz",
-    name: "beforeEnterQuiz",
-    component: beforeEnterQuiz,
+    path: "/week:week/:title/practice:numOfPrac/beforeStartQuiz",
+    name: "beforeStartQuiz",
+    component: beforeStartQuiz,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/Practices/:week/:title",
+    path: "/week:week/:title/practice:numOfPrac",
     name: "quiz",
     component: Quiz,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/Practices/:title/result",
+    path: "/week:week/:title/practice:numOfPrac/results",
     name: "result",
     component: practiceResult,
     props: (route) => ({ ...route.params })
