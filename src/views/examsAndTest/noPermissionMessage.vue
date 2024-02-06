@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import loadingSpinner from '../components/loadingSpinner.vue'
+import loadingSpinner from '@/components/loadingSpinner.vue'
 export default {
     components:{
         loadingSpinner

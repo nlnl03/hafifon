@@ -51,9 +51,9 @@
 </template>
 
 <script>
-import practiceResult from '../views/practiceResult.vue'
-import loadingSpinner from '../components/loadingSpinner.vue'
-import dragAndDrop from '../components/dragAndDropQuiz.vue'
+import practiceResult from '../quizRoutes/practiceResult.vue'
+import loadingSpinner from '@/components/loadingSpinner.vue'
+import dragAndDrop from '@/components/dragAndDropQuiz.vue'
 import axios from 'axios'
 export default {
   components:{

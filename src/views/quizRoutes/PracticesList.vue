@@ -12,18 +12,6 @@
             @update:model-value="filterPractices"  dir="rtl"/>
           
     </div>
- 
-
-<!-- <div>
-  <h2> weeka</h2>
-  <div v-for="week in weeks" :key="week.id">
-    <h3>{{week.Title}}</h3>
-    <div v-for="lesson in weekLessons(week.id)" :key="lesson.id" @click="goToLesson(lesson.id)">
-      <p>{{lesson.Title}}</p>
-    </div>
-
-  </div>
-</div> -->
 
   
    <div class="container-cards" >
@@ -64,14 +52,12 @@
 </template>
 
 <script>
-import beforeEnterQuiz from './beforeEnterQuiz.vue'
-import loadingSpinner from '../components/loadingSpinner.vue'
+ import loadingSpinner from '@/components/loadingSpinner.vue'
 import axios from 'axios'
 export default {
   name:"PracticesList",
   components:{
-    beforeEnterQuiz,
-    loadingSpinner
+     loadingSpinner
   },
   data(){
     return{

@@ -1,25 +1,28 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
-import PracticesList from "../views/PracticesList.vue";
-import beforeEnterQuiz from "../views/beforeEnterQuiz.vue";
 import User from "../views/User.vue";
+
+import PracticesList from "../views/quizRoutes/PracticesList.vue";
+import Quiz from "../views/quizRoutes/Quiz.vue";
+import beforeStartQuiz from "../views/quizRoutes/beforeStartQuiz.vue";
+import practiceResult from "../views/quizRoutes/practiceResult.vue";
+
 import MainCheckPage from "../views/hafifonAdmin/MainCheckPage.vue";
 import examsToCheck from "../views/hafifonAdmin/examsToCheck.vue";
 // import uploadEditExams from "../views/hafifonAdmin/uploadEditExams.vue";
-import uploadButtons from '../views/hafifonAdmin/uploading/uploadButtons.vue'
-import uploadForm from '../views/hafifonAdmin/uploading/uploadForm.vue'
+import uploadButtons from "../views/hafifonAdmin/uploading/uploadButtons.vue";
+import uploadForm from "../views/hafifonAdmin/uploading/uploadForm.vue";
 import editExams from "../views/hafifonAdmin/editExams.vue";
-import examDeletedMessage from "../views/examDeletedMessage.vue";
 import openPermForExams from "../views/hafifonAdmin/openPermForExams.vue";
-import Quiz from "../views/Quiz.vue";
-import beforeStartingExam from "../views/beforeStartingExam.vue";
-import beforeStartQuiz from "../views/beforeStartQuiz.vue";
-import exams from "../views/exams.vue";
-import submitted from "../views/submitted.vue";
-import noPermissionMessage from "../views/noPermissionMessage.vue";
-import practiceResult from "../views/practiceResult";
-import displayCheckedExams from "../views/displayCheckedExams";
-import notFound from "../views/notFound";
+
+import examDeletedMessage from "../views/examsAndTest/examDeletedMessage.vue";
+import beforeStartingExam from "../views/examsAndTest/beforeStartingExam.vue";
+import exams from "../views/examsAndTest/exams.vue";
+import submitted from "../views/examsAndTest/submitExams.vue";
+import noPermissionMessage from "../views/examsAndTest/noPermissionMessage.vue";
+
+import displayCheckedExams from "../views/userPage/displayCheckedExams";
+import routeNotFound from "../views/routeNotFound.vue";
 import defaultHome from "../views/defaultHome.vue";
 
 const routes = [
@@ -79,11 +82,6 @@ const routes = [
     component: uploadForm,
     props: true
   },
-  // {
-  //   path: "/Admin/uploadEditExams",
-  //   name: "uploadEditExams",
-  //   component: uploadEditExams
-  // },
   {
     path: "/Admin/uploadEditExams/:title",
     name: "editExams",
@@ -154,7 +152,7 @@ const routes = [
   {
     path: "/:catchAll(.*)",
     name: "notFound",
-    component: notFound,
+    component: routeNotFound,
     meta: { notFound: true }
   }
 ];

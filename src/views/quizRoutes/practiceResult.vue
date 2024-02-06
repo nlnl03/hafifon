@@ -55,7 +55,7 @@
 <script>
 import CircleProgress from 'vue3-circle-progress'
 import "vue3-circle-progress/dist/circle-progress.css"
-import loadingSpinner from '../components/loadingSpinner.vue'
+import loadingSpinner from '@/components/loadingSpinner.vue'
  export default {
     name:'practiceResult',
     components:{

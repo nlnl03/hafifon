@@ -62,8 +62,8 @@
 
 <script>
 import axios from 'axios';
-import loadingSpinner from '../components/loadingSpinner.vue'
-import timer from '../components/timer.vue' 
+import loadingSpinner from '@/components/loadingSpinner.vue'
+import timer from '@/components/timer.vue' 
 export default {
   components:{
     loadingSpinner,

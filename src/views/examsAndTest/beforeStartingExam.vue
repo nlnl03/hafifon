@@ -28,8 +28,8 @@
 
 <script>
 import axios from 'axios'
-import loadingSpinner from '../components/loadingSpinner.vue'
-import deleteExam from '../components/deleteExam.vue'
+import loadingSpinner from '@/components/loadingSpinner.vue'
+import deleteExam from '@/components/deleteExam.vue'
  export default {
     components:{
         loadingSpinner,
@@ -99,7 +99,7 @@ methods:{
     top:10%;
 }
 .main{
-    background-image: url("../assets/homePageBackground.png");
+    background-image: url("../../assets/homePageBackground.png");
     background-position: center;
     background-size: cover;
     height: 86.5vh;

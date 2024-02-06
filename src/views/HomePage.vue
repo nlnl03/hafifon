@@ -20,7 +20,7 @@
 
 <script>
 import axios from 'axios'
-import loadingSpinner from '../components/loadingSpinner.vue'
+import loadingSpinner from '@/components/loadingSpinner.vue'
  export default {
    name:'HomePage',
    components:{
