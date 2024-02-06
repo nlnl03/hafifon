@@ -5,7 +5,9 @@ import beforeEnterQuiz from "../views/beforeEnterQuiz.vue";
 import User from "../views/User.vue";
 import MainCheckPage from "../views/hafifonAdmin/MainCheckPage.vue";
 import examsToCheck from "../views/hafifonAdmin/examsToCheck.vue";
-import uploadEditExams from "../views/hafifonAdmin/uploadEditExams.vue";
+// import uploadEditExams from "../views/hafifonAdmin/uploadEditExams.vue";
+import uploadButtons from '../views/hafifonAdmin/uploading/uploadButtons.vue'
+import uploadForm from '../views/hafifonAdmin/uploading/uploadForm.vue'
 import editExams from "../views/hafifonAdmin/editExams.vue";
 import examDeletedMessage from "../views/examDeletedMessage.vue";
 import openPermForExams from "../views/hafifonAdmin/openPermForExams.vue";
@@ -18,10 +20,16 @@ import noPermissionMessage from "../views/noPermissionMessage.vue";
 import practiceResult from "../views/practiceResult";
 import displayCheckedExams from "../views/displayCheckedExams";
 import notFound from "../views/notFound";
+import defaultHome from "../views/defaultHome.vue";
 
 const routes = [
   {
     path: "/",
+    name: "defaultHome",
+    component: defaultHome
+  },
+  {
+    path: "/homePage",
     name: "HomePage",
     component: HomePage
   },
@@ -42,28 +50,40 @@ const routes = [
     component: displayCheckedExams
   },
   {
-    path: "/Admin/MainCheckPage",
+    path: "/admin/MainCheckPage",
     name: "MainCheckPage",
     component: MainCheckPage
   },
 
   {
-    path: "/Admin/examsToCheck/:num/:examType",
+    path: "/admin/examsToCheck/:num/:examType",
     name: "examsToCheck",
     component: examsToCheck,
     props: true
   },
   {
-    path: "/Admin/openPermForExams",
+    path: "/admin/openPermForExams",
     name: "openPerm",
     component: openPermForExams,
     props: true
   },
   {
-    path: "/Admin/uploadEditExams",
-    name: "uploadEditExams",
-    component: uploadEditExams
+    path: "/admin/uploadButtons",
+    name: "uploadButtons",
+    component: uploadButtons,
+    props: true
   },
+  {
+    path: "/admin/uploadForm/:title",
+    name: "uploadForm",
+    component: uploadForm,
+    props: true
+  },
+  // {
+  //   path: "/Admin/uploadEditExams",
+  //   name: "uploadEditExams",
+  //   component: uploadEditExams
+  // },
   {
     path: "/Admin/uploadEditExams/:title",
     name: "editExams",

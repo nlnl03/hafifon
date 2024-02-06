@@ -1,5 +1,5 @@
 <template>
-    <MainNavbar v-if="!isNotFoundRoute" />
+    <MainNavbar v-if="!isNotFoundRoute && !isHomePage" />
     <div v-if="scroll >=300">
       <button class="scroll-to-top" @click="scrollToTop">
           &#9650;
@@ -28,8 +28,8 @@ export default {
         userNum:null,
         isAdmin:null,
         scroll:null,
-        currentUserData:[]
-      }
+        currentUserData:[],
+       }
     },
       methods:{
         scrollToTop(){
@@ -91,8 +91,13 @@ export default {
         computed:{
           isNotFoundRoute(){
             return this.$route.matched.some(record => record.meta.notFound)
+          },
+
+          isHomePage(){
+            return this.$route.path === '/'
           }
-        }
+        },
+        
     }
 
 </script>

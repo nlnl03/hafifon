@@ -152,44 +152,44 @@
     "value": [
       {
         "Title": "תרגול שיעור 2",
-        "id": 1,
+        "Id": 1,
         "lessonId": 2,
         "routeName": "line"
       },
 
       {
         "Title": "תרגול שיעור 3 חלק א",
-        "id": 1,
+        "Id": 1,
         "lessonId": 3,
         "routeName": "bbb"
       },
       {
         "Title": "תרגול שיעור 3 חלק ב",
-        "id": 2,
+        "Id": 2,
         "lessonId": 3,
         "routeName": "ccc"
       },
       {
         "Title": "תרגול שיעור 4 חלק א",
-        "id": 1,
+        "Id": 1,
         "lessonId": 4,
         "routeName": "ddd"
       },
       {
         "Title": "תרגול שיעור 4 חלק ב",
-        "id": 2,
+        "Id": 2,
         "lessonId": 4,
         "routeName": "eee"
       },
       {
         "Title": "תרגול שיעור 5 חלק א",
-        "id": 1,
+        "Id": 1,
         "lessonId": 5,
         "routeName": "fff"
       },
       {
         "Title": "תרגול שיעור 5 חלק ב",
-        "id": 2,
+        "Id": 2,
         "lessonId": 5,
         "routeName": "ggg"
       }
@@ -478,9 +478,233 @@
       {
         "Title": "finalTest",
         "subject": "המבחן הסופי"
+      },
+      {
+        "Title": "finalTest2",
+        "subject": "2המבחן הסופי"
       }
     ]
   },
+
+  "finalTest2": {
+    "value": [
+      {
+        "instructions": [
+          "*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.",
+          "*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים."
+        ],
+        "exam": [
+          {
+            "part": "חלק א' – בסיס (27 נקודות)",
+            "type": "subQue",
+            "questions": [
+              {
+                "type": "open",
+                "que": "הסבר מהו  IMAGEומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו (4 נק')",
+                "inputAns": "",
+                "id": 0,
+                "points": 4,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? (2  נק')",
+                "inputAns": "",
+                "id": 1,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "subQue",
+            "questions": [
+              {
+                "type": "open",
+                "que": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג'? (3 נק')",
+                "inputAns": "",
+                "id": 2,
+                "points": 3,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט את שלבי התקנת המשואה לאחר התקנת האימג' (2 נק')",
+                "inputAns": "",
+                "id": 3,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ? (2 נק')",
+                "inputAns": "",
+                "id": 4,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים. (2 נק')",
+                "inputAns": "",
+                "id": 5,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "subQue",
+            "questions": [
+              {
+                "type": "open",
+                "que": "איזה 2 מערכות קיימות ברשת הMOIP? ומה הקונבנציה של כל מערכת? (2 נק')",
+                "inputAns": "",
+                "id": 6,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?(2 נק')",
+                "inputAns": "",
+                "id": 7,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "ציין בקצרה מה השלבים לאחר ההפצת אימג'? (2 נק')",
+                "inputAns": "",
+                "id": 8,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "מה הדומיין של MOIP? (1 נק')",
+                "inputAns": "",
+                "id": 9,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10. (3 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "",
+            "id": 10,
+            "points": 3,
+            "pointsReceived": "",
+            "comments": ""
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב (2 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "",
+            "id": 11,
+            "points": 2,
+            "pointsReceived": "",
+            "comments": ""
+          },
+          {
+            "type": "subQue",
+            "titleQue": "לקוח מתלונן כי לא מצליח לפתוח את ה-PST שלו:",
+            "questions": [
+              {
+                "type": "open",
+                "que": "הסבר כיצד נבצע תיקון לPST. (2 נק')",
+                "inputAns": "",
+                "id": 12,
+                "points": 2,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "פרט כיצד תפעל במקרה התיקון לא עבד. (נק' 1)",
+                "inputAns": "",
+                "id": 13,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "subQue",
+            "titleQue": "כאשר לקוח מתחבר למחשב מופיעה לו הודעת שגיאה, ציין את פתרונן של השגיאות הבאות:",
+            "questions": [
+              {
+                "type": "open",
+                "que": "\"התחום שצוין אינו זמין\" (נק' 1)",
+                "inputAns": "",
+                "id": 14,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "\"החשבון שצוין אינו זמין\" (נק' 1)",
+                "inputAns": "",
+                "id": 15,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              },
+              {
+                "type": "open",
+                "que": "\"הכרטיס החכם חסום\" (נק' 1)",
+                "inputAns": "",
+                "id": 16,
+                "points": 1,
+                "pointsReceived": "",
+                "comments": ""
+              }
+            ]
+          },
+          {
+            "type": "regularQue",
+            "questions": [
+              {
+                "que": "מה עושים כאשר בכוונתנו להיכנס עם הכרטיס למחשב אך אין אופציה של \"הכנס כרטיס חכם\" והאופציה היחידה שמופיעה היא \"ADMINISTRATOR\" ? פרטי את כל דרך הפעולה (2 נק')",
+                "type": "open"
+              }
+            ],
+            "inputAns": "",
+            "id": 17,
+            "points": 2,
+            "pointsReceived": "",
+            "comments": ""
+          }
+        ],
+        "time": 2700
+      }
+    ]
+  },
+
   "pendingTests": {
     "value": [
       {
@@ -1297,23 +1521,23 @@
     "value": [
       {
         "Title": "שבוע 1",
-        "id": 1
+        "Id": 1
       },
       {
         "Title": "שבוע 2",
-        "id": 2
+        "Id": 2
       },
       {
         "Title": "שבוע 3",
-        "id": 3
+        "Id": 3
       },
       {
         "Title": "שבוע 4",
-        "id": 4
+        "Id": 4
       },
       {
         "Title": "שבוע 5",
-        "id": 5
+        "Id": 5
       }
     ]
   },
@@ -1324,45 +1548,52 @@
         "routeName": "aboutThePloga",
         "Title": "שיעור חפיפה 1",
         "description": "הכרת הגדוד",
-        "id": 1,
+        "Id": 1,
         "weekId": 1,
-        "Img": "printer.jpg"
+        "Img": "printer.jpg",
+        "file": ""
       },
       {
         "routeName": "CMD",
         "Title": "שיעור חפיפה 2",
         "description": "חומרה ומחשבים",
-        "id": 2,
+        "Id": 2,
         "weekId": 1,
-        "Img": "CMD.png"
+        "Img": "CMD.png",
+        "file": ""
       },
       {
         "routeName": "pcOperation",
         "Title": "שיעור חפיפה 3",
         "description": "ממשקים במחשב",
-        "id": 3,
+        "Id": 3,
         "weekId": 1,
         "Img": "pc.jpg",
-        "numOfQue": "10"
+        "numOfQue": "10",
+        "file": ""
       },
       {
         "routeName": "hardware&bios",
         "Title": "שיעור חפיפה 4",
         "description": "דומיין ותפעול מחשב",
-        "id": 4,
+        "Id": 4,
         "weekId": 2,
         "Img": "pc.jpg",
-        "numOfQue": "10"
+        "numOfQue": "10",
+        "file": ""
       },
       {
         "routeName": "discs",
         "Title": "שיעור חפיפה 5",
         "description": "תקשורת",
-        "id": 5,
+        "Id": 5,
         "weekId": 2,
         "Img": "disc.png",
-        "numOfQue": "10"
+        "numOfQue": "10",
+        "file": ""
       }
     ]
-  }
+  },
+
+  "data": [{}]
 }

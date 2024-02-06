@@ -48,9 +48,9 @@
               <li class="admin-drop-down-list">
                 <button
                   class="admin-routers"
-                  @click="openAdminComp('uploadEditExams')"
+                  @click="openAdminComp('uploadButtons')"
                 >
-                  עריכה, מחיקה והעלאת מבחנים
+                  העלאת מבחנים, תרגולים ומצגות
                 </button>
               </li>
             </ul>
@@ -145,24 +145,17 @@
           res = await axios.get(this.$sharePointUrl + "isPermissionActive");
           this.examsPerm = res.data.value;
         }
-        console.log(name);
-        console.log(this.examsPerm);
+            console.log(name);
+            console.log(this.examsPerm);
         if (name !== undefined) {
           title = name.Title;
-          // this.examsPerm = examsPerm.map((data) => data[title])[0];
         }
-        //  else {
-        //   title = "finalTest";
-        //   this.examsPerm = examsPerm.filter((data) => data.type == title)[0];
-        //   console.log(this.examsPerm);
-        // }
-        console.log(this.isAdmin);
-        // console.log(this.examsPerm[title]);
-
+         console.log(this.isAdmin);
+ 
         if (this.examsPerm[title] == true || this.isAdmin) {
           console.log("admin " + this.isAdmin);
           console.log("premission " + this.examsPerm.isAllow);
-
+          console.log(this.examsPerm[title])
           this.$router.push({
             name: "beforeStartingExam",
             params: { Title: title }
@@ -171,8 +164,7 @@
           console.log("no permission");
           this.$router.push({ name: "noPermission", params: { Title: title } });
         }
-        // console.log(window.location.href);
-      },
+       },
 
       async checkIfAdmin() {
         var url = null;

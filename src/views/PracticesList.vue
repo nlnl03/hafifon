@@ -8,7 +8,7 @@
    <div class="text-under-line"></div>
 
     <div class="select-timeline" >
-         <q-select outlined v-model="selectedValue" :options="weeks"  :option-value="option => option.id" :option-label="option => `שבוע ${option.id}`" label="מיין לפי שבוע" 
+         <q-select outlined v-model="selectedValue" :options="weeks"  :option-value="option => option.Id" :option-label="option => `שבוע ${option.Id}`" label="מיין לפי שבוע" 
             @update:model-value="filterPractices"  dir="rtl"/>
           
     </div>
@@ -30,9 +30,9 @@
      <div class="without-timeline">
          <div class="timeline" ref="timeline" >
              <q-timeline color="secondary" > 
-              <q-timeline-entry :subtitle="`שבוע ${week.id}`" v-for="(week,index) in weeks" :key="index" :value="week.id">
+              <q-timeline-entry :subtitle="`שבוע ${week.Id}`" v-for="(week,index) in weeks" :key="index" :value="week.Id">
                 <div class="flex-cards" v-if="showCards">
-                  <div v-for="(item,midIndex) in weekLessons(week.id)" :key="midIndex" >
+                  <div v-for="(item,midIndex) in weekLessons(week.Id)" :key="midIndex" >
                     <div class="card" @mouseenter="expandCard(item,index,midIndex)" >
                       <div class="card-content" :ref="item+midIndex">
                         
@@ -46,8 +46,8 @@
                           </div>
 
                           <div class="expanded-content" v-if="(ite === index && midIte === midIndex) && this.isFinished" :style="{ maxHeight: ite === index && midIte === midIndex ? expandedHeight : '0' }">
-                              <q-btn class="powerPoint-link" @click="powerpointUrl(index,midIndex,item.Subject)" label="מצגת" color="secondary"/>
-                              <q-btn class="tirgulim-link" label="תרגולים" @click="openTirgulimModal(item.id,index)" color="secondary"/>
+                              <q-btn class="powerPoint-link" @click="powerpointUrl(index,item.file)" label="מצגת" color="secondary"/>
+                              <q-btn class="tirgulim-link" label="תרגולים" @click="openTirgulimModal(item.Id,index)" color="secondary"/>
                           </div>
 
                         </div>
@@ -91,39 +91,11 @@ export default {
     }
   },
   methods:{
-    async getPractices(){
-         if(this.$isSharePointUrl){
-            const res = await axios.get(this.$sharePointUrl+"getByTitle('tirgulim')/Items")
-            this.practices = res.data.value
-              const promiseItems = await Promise.all(this.practices.map((item)=>{
-                 return this.$asyncParse(item.items).then((inner)=>{
-                   item.items = inner
-                     return {item}
-                })
-              }))   
-        }
-        else{
-            const res = await axios.get(this.$sharePointUrl+"tirgulim")
-            this.practices = res.data.value
-        }   
-
-            this.practicesFilltered = JSON.parse(JSON.stringify(this.practices));
-
-             this.practicesFilltered.forEach(inner => {
-                inner.items.forEach(i => {
-                    i.Subject=i.Subject.split('-')
-                })
-            })
-
-            console.log(this.practices)
-            console.log(this.practicesFilltered)
-             this.isLoad = true;
-     },
-
+    
     filterPractices(){
       console.log(this.selectedValue.timeline)
-      const optionValue = this.selectedValue.id
-      console.log("value: "+optionValue)
+      const optionValue = this.selectedValue.Id
+      console.log("value: "+ optionValue)
       const timelineFiltered = this.$refs["timeline"].children[0].children[optionValue-1]
       console.log(timelineFiltered)
       for(var i = 0; i<this.weeks.length;i++){
@@ -158,6 +130,7 @@ export default {
       
       this.isFinished = true
     },
+
      collapseCard(item,midIndex){
         this.ite = null
         this.midIte = null
@@ -166,18 +139,19 @@ export default {
         this.isFinished = false
      },
 
-     powerpointUrl(index,midIndex,subjectArr){
-        var nameOfPowerP = this.practices[index].items[midIndex].Subject
-        console.log(nameOfPowerP)
-            const url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/שבוע ${index+1}/${nameOfPowerP}.pptx`
+     powerpointUrl(index, fileName){
+        // var nameOfPowerP = this.practices[index].items[midIndex].Subject
+             const url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/שבוע ${index+1}/${fileName}`
              window.open(url, '_blank')
       },
+
         getTirgulimNames(itemId){
           console.log(itemId)
            if(this.$isSharePointUrl){
             return axios.get(this.$sharePointUrl + `getByTitle('practices')/Items?$filter=lessonId eq ${itemId}`)
               .then(res => res.data.value) 
            }
+
           else{
             return axios.get(this.$sharePointUrl + `practices`)
               .then(res => res.data.value)
@@ -191,7 +165,7 @@ export default {
         console.log(tirgulimNames)
 
         const buttonsHtml = tirgulimNames.map(button => `
-            <button id="${button.id}"> ${button.Title}</button>
+            <button id="${button.Id}"> ${button.Title}</button>
         `).join('')
         
       if(tirgulimNames.length>1){
@@ -205,11 +179,11 @@ export default {
               showLoaderOnConfirm:true,
               didOpen: () => {
                 tirgulimNames.forEach(button => {
-                  const buttonElement = document.getElementById(button.id);
+                  const buttonElement = document.getElementById(button.Id);
                   if(buttonElement){
                     buttonElement.addEventListener('click', () => {
                       console.log(button)
-                      this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:button.id, title:button.routeName}})
+                      this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:button.Id, title:button.routeName}})
                       this.$swal.close()
                     })
                   }
@@ -220,23 +194,36 @@ export default {
 
       else if(tirgulimNames.length==1){
         console.log(tirgulimNames[0])
-        this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:tirgulimNames[0].id, title:tirgulimNames[0].routeName}})
+        this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:tirgulimNames[0].Id, title:tirgulimNames[0].routeName}})
       }
     },
 
 
-    async getSome(){
-      const res = await axios.get(this.$sharePointUrl+ "weeks")
-      this.weeks = res.data.value
-      console.log(this.weeks)
-      this.loadLesson()
+    async getWeeks(){
+      var res = null
+      if(this.$isSharePointUrl){
+        res = await axios.get(this.$sharePointUrl + "getByTitle('weeks')/Items")
+      }
+      else{
+        res = await axios.get(this.$sharePointUrl+ "weeks")
+      }
+       this.weeks = res.data.value
+        console.log(this.weeks)
+        this.loadLesson()
+        this.isLoad = true;
     },
 
     async loadLesson(){
-      const res = await axios.get(this.$sharePointUrl + "lessons")
-      this.lessons = res.data.value
-      console.log(this.lessons)
-      this.showCards = true
+      var res = null
+      if(this.$isSharePointUrl){
+        res = await axios.get(this.$sharePointUrl + "getByTitle('lessons')/Items")
+      }
+      else{
+        res = await axios.get(this.$sharePointUrl + "lessons")
+      }
+       this.lessons = res.data.value
+        console.log(this.lessons)
+        this.showCards = true
     },
 
     weekLessons(weekId){
@@ -245,8 +232,7 @@ export default {
         
    },
   async beforeMount(){
-    this.getSome()
-      this.timeOut = setTimeout(this.getPractices,200)
+      this.timeOut = setTimeout(this.getWeeks,200)
 
   },
  

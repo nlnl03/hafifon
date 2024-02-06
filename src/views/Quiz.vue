@@ -168,9 +168,11 @@ export default {
               }
             },
 
-      asyncParse(str){
+      asyncParse(obj, propName){
         return new Promise((resolve)=>{
-          resolve(JSON.parse(str))
+          const passedVal = JSON.parse(obj[propName])
+          obj[propName] = passedVal
+          resolve(obj)
         })
       },
             
@@ -238,24 +240,23 @@ export default {
      async getData(){
        var res = null
        if(this.$isSharePointUrl){
-          res = await axios.get(this.$sharePointUrl+`getByTitle('practicesData')/Items?$filter=Title eq '${this.$route.params.title}'`)
-          this.examData = res.data.value;
+          res = await axios.get(this.$sharePointUrl+`getByTitle('practicesData')/Items?$filter=Title eq '${this.$route.params.title}'`);
+          var examData = res.data.value
+          this.examData = examData[0]
 
-           const promiseData = await Promise.all(this.examData.map((item)=>{
-             return this.asyncParse(item.data).then((inner)=>{
-                  item['data'] = inner
-               return {item}
-              })
-            }))
+            await this.asyncParse(this.examData,'data')
+            this.examData = this.examData.data
+              console.log(this.examData)
+
        }
 
         else{
           res = await axios.get(this.$sharePointUrl+`practicesData`)
           var examData = res.data.value
           this.examData = examData.filter((item)=> item.weekId == JSON.parse(this.$route.params.week) && item.pracId == JSON.parse(this.$route.params.numOfPrac))[0].data
-          console.log(this.examData)
 
         }
+          console.log(this.examData)
 
 
           //     this.examData.forEach(que=>{
@@ -286,7 +287,7 @@ export default {
         this.getData()
           await this.asyncSetTimeout()
           // console.log(this.examData)
-          this.updateVmodelBank()
+          // this.updateVmodelBank()
           this.isLoadForSpinner = true
     },
 

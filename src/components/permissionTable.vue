@@ -112,7 +112,4 @@ export default {
   display: flex;
   justify-content: center;
 }
-.q-input {
-  direction: rtl;
-}
-</style>
+ </style>
