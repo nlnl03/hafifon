@@ -302,7 +302,7 @@ export default {
 button{
     height: 45px;
     width: 120px;
-    border: 1px solid var(--main-background-color);
+    border: 1px solid var(--main-shob-color);
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
@@ -318,7 +318,7 @@ button{
 .next-btn-on{
     border:none;
     color: #fff;
-    background-color: var(--main-background-color);
+    background-color: var(--main-shob-color);
 }
 .next-btn-on-type-null{
      border:none;
@@ -327,7 +327,7 @@ button{
      right: 50%;
      transform: translate(50%,80%);
     color: #fff;
-    background-color: var(--main-background-color);
+    background-color: var(--main-shob-color);
 }
 .submit-btn{
     position: absolute;
@@ -335,14 +335,14 @@ button{
     height: 40px;
     width: 110px;
     bottom: 25px;
-    border: 1px solid var(--main-background-color);
+    border: 1px solid var(--main-shob-color);
     border-radius: 10px;
     font-size: 18px;
     right: 50%;
     transform: translateX(50%);
     cursor: pointer;
     color: #fff;
-    background-color: var(--main-background-color);
+    background-color: var(--main-shob-color);
 }
 .quiz-box{
     position: relative;

@@ -21,8 +21,8 @@
               <q-timeline-entry :subtitle="`שבוע ${week.Id}`" v-for="(week,index) in weeks" :key="index" :value="week.Id">
                 <div class="flex-cards" v-if="showCards">
                   <div v-for="(item,midIndex) in weekLessons(week.Id)" :key="midIndex" >
-                    <div class="card" @mouseenter="expandCard(item,index,midIndex)" >
-                      <div class="card-content" :ref="item+midIndex">
+                    <div class="card" @mouseenter="expandCard(item,index,midIndex,$event)" @mouseleave="collapseCard($event)" >
+                      <div class="card-content">
                         
                           <div class="inner-flex">
                             <img class="image-of-items" :src="require(`@/assets/${item.Img}`)">
@@ -34,8 +34,8 @@
                           </div>
 
                           <div class="expanded-content" v-if="(ite === index && midIte === midIndex) && this.isFinished" :style="{ maxHeight: ite === index && midIte === midIndex ? expandedHeight : '0' }">
-                              <q-btn class="powerPoint-link" @click="powerpointUrl(index,item.file)" label="מצגת" color="secondary"/>
-                              <q-btn class="tirgulim-link" label="תרגולים" @click="openTirgulimModal(item.Id,index)" color="secondary"/>
+                              <q-btn class="powerPoint-link" @click="powerpointUrl(index,item.file)" label="מצגת" style="background-color:#eb693e; color:white"/>
+                              <q-btn class="tirgulim-link" label="תרגולים" @click="openTirgulimModal(item.Id,index)"  style="background-color:var(--main-shob-color); color:white" />
                           </div>
 
                         </div>
@@ -49,6 +49,18 @@
       </div>
    </div>
 </div>
+
+
+<q-dialog v-model="dialogVisible" class="custom-dialog"  >
+    <q-card style="width: 450px; height:200px" >       
+      <q-card-section class="flex-prac-btns">
+        <div class="prac-btns" v-for="prac in tirgulimNames" :key="prac">
+            <q-btn class="practices-btn" @click="goToPrac(prac)" id="${prac.Id}"> {{prac.Title}}</q-btn>
+        </div>
+      </q-card-section>
+
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
@@ -73,8 +85,10 @@ export default {
        practicesFilltered:[],
        weeks:[],
        lesson:[],
-       showCards:false
-    }
+       showCards:false,
+       dialogVisible:false,
+       tirgulimNames:[]
+     }
   },
   methods:{
     
@@ -104,24 +118,23 @@ export default {
       
     },
  
-     expandCard(item,index,midIndex){
+     expandCard(item,index,midIndex,event){
       this.ite = index
       this.midIte = midIndex    
-        // console.log(midIndex , item)
-
+      const div = event.target.children[0].children[0]
+          // console.log(div)
       // console.log(this.$refs[item+midIndex])
-      var expandDiv = this.$refs[item+midIndex].children[0]
-      expandDiv.style.height = '90%'
+       div.style.height = '90%'
       // console.log(expandDiv)
       
       this.isFinished = true
     },
 
-     collapseCard(item,midIndex){
+     collapseCard(event){
         this.ite = null
         this.midIte = null
-        var expandDiv = this.$refs[item+midIndex].children[0]
-        expandDiv.style.height = '100%'
+        const div = event.target.children[0].children[0]
+         div.style.height = '100%'
         this.isFinished = false
      },
 
@@ -147,41 +160,47 @@ export default {
 
      async openTirgulimModal(lessonId,index){
         console.log(index)
-        var tirgulimNames = await this.getTirgulimNames(lessonId)
-        console.log(tirgulimNames)
+        this.tirgulimNames = await this.getTirgulimNames(lessonId)
+        console.log(this.tirgulimNames)
 
-        const buttonsHtml = tirgulimNames.map(button => `
-            <button id="${button.Id}"> ${button.Title}</button>
-        `).join('')
+        // const buttonsHtml = tirgulimNames.map(button => `
+        //     <q-btn class="practices-btn" id="${button.Id}"> ${button.Title}</q-btn>
+        // `).join('')
         
-      if(tirgulimNames.length>1){
-          this.$swal({
-              html:`
-                <div class="tirgulim-btns">
-                  ${buttonsHtml}
-                </div>
-              `,
-              showConfirmButton:false,
-              showLoaderOnConfirm:true,
-              didOpen: () => {
-                tirgulimNames.forEach(button => {
-                  const buttonElement = document.getElementById(button.Id);
-                  if(buttonElement){
-                    buttonElement.addEventListener('click', () => {
-                      console.log(button)
-                      this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:button.Id, title:button.routeName}})
-                      this.$swal.close()
-                    })
-                  }
-                })
-              }
-          })
+      if(this.tirgulimNames.length>1){
+        this.dialogVisible = true
+          // this.$swal({
+          //     html:`
+          //       <div class="tirgulim-btns">
+          //         ${buttonsHtml}
+          //       </div>
+          //     `,
+          //     showConfirmButton:false,
+          //     showLoaderOnConfirm:true,
+          //     didOpen: () => {
+          //       tirgulimNames.forEach(button => {
+          //         const buttonElement = document.getElementById(button.Id);
+          //         if(buttonElement){
+          //           buttonElement.addEventListener('click', () => {
+          //             console.log(button)
+          //             this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:button.Id, title:button.routeName}})
+          //             this.$swal.close()
+          //           })
+          //         }
+          //       })
+          //     }
+          // })
       }
 
-      else if(tirgulimNames.length==1){
-        console.log(tirgulimNames[0])
-        this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:tirgulimNames[0].Id, title:tirgulimNames[0].routeName}})
+      else if(this.tirgulimNames.length==1){
+        console.log(this.tirgulimNames[0])
+        this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:this.tirgulimNames[0].Id, title:this.tirgulimNames[0].routeName}})
       }
+    },
+
+    goToPrac(prac){
+        this.$router.push({name: "beforeStartQuiz", params:{week:this.ite+1,numOfPrac:prac.Id, title:prac.routeName}})
+
     },
 
 
@@ -248,7 +267,7 @@ export default {
 h1{
     font-size: 60px;
     text-align: center;
-    color: var(--main-background-color);
+    color: var(--main-shob-color);
     position: relative;
     margin-bottom: 50px;
     top: 30px;
@@ -258,7 +277,7 @@ h1{
     top: -5px;
     width: 130px;
     height: 2px;
-    background-color: var(--main-background-color);
+    background-color: var(--main-shob-color);
     margin: 0 auto;
 
 }
@@ -289,7 +308,7 @@ h1{
 .flex-cards{
     position: relative;
     flex-wrap: wrap;
-    right:80px;
+    left: 80px;
     display: flex;
     justify-content: flex-start;
  
@@ -351,7 +370,7 @@ h1{
   }
   .without-timeline{
     width: 80%;
-    margin-right: 50px;
+    margin-right: 105px !important;
   }
   .select-timeline{
     margin-top: 30px;
@@ -375,7 +394,7 @@ h1{
     height: 50px;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 0%;
     background-color: #f0f0f0;
     overflow: hidden;
     transition: max-height 0.3s ease;
@@ -389,12 +408,25 @@ h1{
     height: 50%;
     margin: 0 7px;
     border-radius: 10px;
-  }
+   }
   .q-btn{
     height: 60%;
     
   }
   .q-btn span{
     width: 100%;
+  }
+  .practices-btn{
+    background: var(--main-shob-color);
+  }
+  .flex-prac-btns{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-wrap: wrap;
+  }
+  .prac-btns{
+    margin: 0.5em;
   }
  </style>

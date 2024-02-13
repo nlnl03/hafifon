@@ -22,7 +22,7 @@
     animation: 0.5s linear infinite spinner;
     animation-play-state: inherit;
     border: solid 5px #cfd0d1;
-    border-bottom-color: var(--main-background-color);
+    border-bottom-color: var(--main-shob-color);
     border-radius: 50%;
     content: "";
     height: 100px;

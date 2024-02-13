@@ -175,9 +175,9 @@ export default {
  .que-index{
     font-size: 27px;
     position: relative;
-    left: 45%;
+    right: 45%;
     top: 40px;
-    transform: translate(45%,40px);
+    transform: translate(-45%,40px);
 
  }
  .que-title{

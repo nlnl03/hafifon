@@ -1,17 +1,11 @@
 <template>
-   <div class="loading-spinner" v-if="!isLoad">
-      <loadingSpinner />
-   </div>
-
+    
    <div class="container" >
       <div class="main-background">
-         <div class="welcome" v-if="isLoad">
+         <div class="welcome" >
              <h1>ברוכים הבאים לאתר חפיפה</h1> 
             <div class="name"><h2>שלום {{userName}}</h2></div>
-               <!-- <div class="btns">
-                  <router-link to="">המשך תרגול</router-link>
-                  <router-link to="">למבחן הסופי</router-link>
-               </div> -->
+               
          </div>   
       </div>
    </div>
@@ -28,61 +22,18 @@ import loadingSpinner from '@/components/loadingSpinner.vue'
    },
      data(){
       return{
-         currentUserData:[],
-         Id:null,
-         isLoad:false,
-         timeOut:null,
-         token:'',
-         userName:'',
+          userName:'',
        }
      },
      methods:{
      
-       async getToken(){
-               return axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo").then(res=>res.data.FormDigestValue)
-       },
-
-      async checkIfUser(){
-         this.Id = localStorage.getItem("userId")
-         this.userName = localStorage.getItem("userName")
-         console.log(this.Id)
-         console.log(this.$isSharePointUrl)
-         if(this.$isSharePointUrl){
-            const res = await axios.get(this.$sharePointUrl+`getByTitle('students')/items?$filter=num eq '${this.Id}'`)
-            const resData = res.data.value
-            console.log(resData)
-           this.token = await this.getToken()
-           console.log(this.token)
-               if(!resData.length){
-                  try{
-                     const results = await axios.post(this.$sharePointUrl+"getByTitle('students')/items",{
-                        Title:this.userName,
-                        num:this.Id,
-                        exam1:null,
-                        exam2:null,
-                        exam3:null,
-                        exam4:null,
-                        finalTest:null,
-                     },
-                     {
-                        headers:{
-                        'X-RequestDigest':this.token,
-                        }
-                     })
-                  }
-               catch(error){
-                  console.log(error.message)
-               }
-         }
-       }
-            this.isLoad = true
-            console.log(this.isLoad)
-    }
+        
+     
   },
    
 
      beforeMount(){
-        const myTimeOut = setTimeout(this.checkIfUser,500)
+      this.userName = localStorage.getItem("userName")
         
     }
 }

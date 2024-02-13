@@ -3,8 +3,9 @@
       <loadingSpinner />
  </div>
 
-  <div class="box">
-    <div class="box-flex" v-if="isLoad" >
+  <div class="box-flex">
+    <div class="box">
+    <div class="box-flex-content" v-if="isLoad" >
       <div class="count-students-cicrcle">
         <div class="count-students-items">
           <div class="ave-title"> מבחנים לבדיקה </div> 
@@ -64,6 +65,7 @@
   <div class="when-empty" v-if="!examTitlesFiltered.length&&isLoad">
       אין מבחנים לבדיקה
   </div>
+ </div>
 </div>
 
 </template>
@@ -193,7 +195,7 @@ export default {
         return '#2E8B57'
       }
       if(ave>=60&&ave<80){
-        return 'var(--main-background-color)'
+        return 'var(--main-shob-color)'
       }
       else{
        return 'rgb(175 11 11)'
@@ -260,31 +262,34 @@ export default {
   font-size:28px;
   text-align: center;
  }
- .box{
-  margin-top: 100px;
-   position: relative;
+ .box-flex{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
    margin-top:50px;
-   right: 50%;
-   transform: translateX(50%);
-   background-color: rgba(230, 230, 230, 0.034);
-   height: 700px;
-   width:var(--box-check-width);
-   box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.212);
-   border:1px solid rgba(122, 122, 122, 0.274);
-   border-radius: 30px;
+  height: 700px;
+  }
+ .box{
+    width: var(--box-check-width);
+    border-radius: 30px;
+    background-color: rgba(230, 230, 230, 0.034);
+    box-shadow: 0 0 7px 0 rgb(0 0 0 / 21%);
+    border: 1px solid rgba(122, 122, 122, 0.274);
+
  }
 
  .accordion{
      display: flex;
      position: relative;
-     z-index: -10;
+     z-index: 10;
      flex-direction: column;
      max-height: 255px;
      overflow-y: auto;
      width: 60%;
-     right: 50%;
+     left: 50%;
      /* margin-top: 80px; */
-     transform: translateX(50%);
+     transform: translateX(-50%);
  }
    button{
        width: 100%;
@@ -352,7 +357,7 @@ export default {
      .count-students-cicrcle, .average-cicrcle{
       position: relative;
       height: 260px;
-      width: 350px;
+      width: var(--progress-bar-width);
       box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
       border-radius: 20px;
       display: flex;
@@ -363,14 +368,15 @@ export default {
        flex-direction: column;
        align-items: center;
        margin: 10px 0;
-       right: 50%;
-       transform: translateX(50%);
+       right: -50%;
+       transform: translateX(-50%);
+
       }
     
       .progress-circle{
         margin-top:15px;
       }
-    .box-flex{
+    .box-flex-content{
       position: relative;
        display: flex;
        top:10px;

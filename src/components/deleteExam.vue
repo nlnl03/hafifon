@@ -94,7 +94,7 @@ export default {
                 text:"שימ/י לב כי לא תוכל/י לחזור בך...",
                 icon:'warning',
                 showCancelButton:true,
-                confirmButtonColor:"var(--main-background-color)",
+                confirmButtonColor:"var(--main-shob-color)",
                 confirmButtonText:'כן, מחק פריט',
                 cancelButtonText:"ביטול",
                 showLoaderOnConfirm: true,

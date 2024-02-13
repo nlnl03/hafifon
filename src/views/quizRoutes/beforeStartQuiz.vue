@@ -51,7 +51,7 @@ export default {
   width: 100%;
 }
 .start-btn {
-  background-color: var(--main-background-color);
+  background-color: var(--main-shob-color);
   color: white;
   width: 75px;
   border-radius: 5px;

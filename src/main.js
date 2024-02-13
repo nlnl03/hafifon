@@ -9,7 +9,7 @@ import quasarUserOptions from "./quasar-user-options";
 // import { Quasar } from "quasar";
 // import quasarUserOptions from "./quasar-user-options";
 // import iconSet from "quasar/icon-set/fontawesome-v5";
-
+import store from "../store";
 const app = createApp(App).use(Quasar, quasarUserOptions);
 
 app.config.globalProperties.$sharePointUrl =
@@ -18,7 +18,7 @@ app.config.globalProperties.$sharePointUrl =
     : "http://localhost:3000/";
 app.config.globalProperties.$isSharePointUrl =
   process.env.NODE_ENV == "production";
-app.config.globalProperties.$getHebLetters = function(index) {
+app.config.globalProperties.$getHebLetters = function (index) {
   const hebrewLetters = [
     "א",
     "ב",
@@ -41,20 +41,21 @@ app.config.globalProperties.$getHebLetters = function(index) {
     "ק",
     "ר",
     "ש",
-    "ת"
+    "ת",
   ];
   return hebrewLetters[index % hebrewLetters.length];
 };
-(app.config.globalProperties.$asyncParse = function(str) {
+(app.config.globalProperties.$asyncParse = function (str) {
   return new Promise((resolve) => {
     resolve(JSON.parse(str));
   });
 }),
-  (app.config.globalProperties.$asyncGetToken = function() {
+  (app.config.globalProperties.$asyncGetToken = function () {
     return axios
       .post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
       .then((res) => res.data.FormDigestValue);
   }),
   app.use(router);
+app.use(store);
 app.use(VueSweetalert2);
 app.mount("#app");

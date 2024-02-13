@@ -1,11 +1,7 @@
 <template>
   <div class="q-pa-md">
-    <div class="filter-btn">
-      <q-input filled v-model="textToFilter" label="חפש" />
-    </div>
-
     <q-table
-      :loading="true"
+      :loading="!isLoad"
       :sticky-header="true"
       :rows-per-page-options="[0]"
       flat
@@ -14,6 +10,12 @@
       :columns="columns"
       row-key="name"
     >
+    <template v-slot:top>
+      <div class="filter-btn">
+        <q-input filled v-model="textToFilter" label="חפש" />
+     </div>
+    </template>
+
       <template
         v-for="(col, index) in columns"
         :key="col.field"
@@ -25,7 +27,7 @@
             v-model="props.row[col.field]"
             @click="changePerm(col, props.row, index)"
             :ref="col + index"
-            color="var(--main-background-color)"
+            color="var(--main-shob-color)"
           />
           <template v-else>
             {{ props.row[col.field] }}
@@ -33,9 +35,7 @@
         </q-td>
       </template>
 
-      <template v-slot:bottom>
-        
-      </template>
+      
     </q-table>
   </div>
 </template>
@@ -52,6 +52,7 @@ export default {
       updatedNameColumns: [],
       rows: [],
       textToFilter: "",
+      isLoad:false
     };
   },
   async beforeMount() {
@@ -71,6 +72,7 @@ export default {
     console.log(this.columns);
 
     this.getRows();
+    this.isLoad = true
   },
   methods: {
     changePerm(col, row) {
@@ -111,5 +113,6 @@ export default {
 .filter-btn {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
- </style>
+  </style>

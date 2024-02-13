@@ -7,7 +7,7 @@
     <circle-progress 
            :percent="score"
           :show-percent="true"
-           fill-color="var(--main-background-color)"
+           fill-color="var(--main-shob-color)"
            :viewport="true"
            :transition="700"
           />
@@ -210,7 +210,7 @@ tbody{
       text-decoration: none;
       height: 40px;
       width: 110px;
-      background-color: var(--main-background-color);
+      background-color: var(--main-shob-color);
       border-radius: 13px;
       display: flex;
       align-items: center;

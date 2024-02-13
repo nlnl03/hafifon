@@ -18,7 +18,7 @@
               </div>
 
           <div class="inner-left-flex" >
-                <img class="user-image" :src="imgUrl" v-if="showImg" ref="myImage"> 
+                <img class="user-image" :src="imgUrl"  v-if="showImg && isImg" ref="myImage"> 
           </div>
       </div>
     </div>
@@ -31,7 +31,7 @@
                         <circle-progress 
                           :percent="calcTotalProgress(val)"
                           :show-percent="true"
-                          fill-color="var(--main-background-color)"
+                          fill-color="var(--main-shob-color)"
                           :viewport="true"
                           :transition="600"
                         />
@@ -51,7 +51,7 @@
               </div>
 
             <div v-for="(exam,index) in onlyExamData" :key="exam">
-              <div :class="dynamicGridClass(index+1)" >
+              <div :class="dynamicGridClass(index+1)" style="background: white;">
                   <span class="items-title">{{examsNames[index].subject}}</span>
                   <span v-if="exam!=null" class="the-grades">{{exam[exam.length-1]["finalGrade"]}} </span>
                   <span v-if="exam==null" class="the-grades-no-examdata">עוד לא הוזן</span>
@@ -100,20 +100,21 @@ export default {
        onlyExam:null,
        showImg:false,
        imgUrl:'',
+       isImg:false,
        dataParsed:[]
      }
   },
     methods:{
       imgSrc(){
         this.imgUrl = `https://hm.mail.idf/owa/service.svc/s/GetPersonaPhoto?email=s${this.userNum}@army.idf.il&UA=0&size=HR96x96&sc=1701085407934`;
-        if(this.imgUrl.split('').filter(c => c === '?').length > 1){
+         if(this.imgUrl.split('').filter(c => c === '?').length > 1){
           var charToRemove = '?'
           var indexToRemove = this.imgUrl.indexOf(charToRemove)
           var modifiedString = this.imgUrl.slice(0, indexToRemove) + this.imgUrl.slice(indexToRemove + 1)
           this.imgUrl = modifiedString
           console.log(this.imgUrl)
-          
          }
+           console.log(this.$refs.myImage)
          this.showImg = true
          console.log(this.showImg)
          
@@ -277,7 +278,7 @@ export default {
       this.isLoadForSpinner=true
       //  this.timeOut = await setTimeout(,200)
 
-      this.getNewPractice()
+      // this.getNewPractice()
       },
  }
 </script>
@@ -294,8 +295,7 @@ export default {
 }
 .main{
     display: flex;
-    direction: rtl;
-    text-align: center;
+     text-align: center;
     height: 645px;
     margin-top: 25px;
     margin-right: var(--user-main-margin-right);
@@ -305,12 +305,12 @@ export default {
 .name-progress-details{
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+   justify-content: space-evenly;
     
 }
 h1{
   font-size: 60px;
-  color: var(--main-background-color);
+  color: var(--main-shob-color);
   position: relative;
   margin-bottom: 50px;
    top: 35px ;
@@ -321,14 +321,14 @@ h1{
   top: -5px;
   width: 160px;
   height: 2px;
-  background-color:var(--main-background-color) ;
+  background-color:var(--main-shob-color) ;
   margin: 0 auto;
 }
 
 .hafifa-nickname{
   text-align: center;
   font-size: 20px;
-  background:var(--main-background-color);
+  background:var(--main-shob-color);
   color:white;
   border-radius: 20px;
 }
@@ -356,7 +356,9 @@ h5{
     height: 100%; 
     align-items: flex-end;
     display: flex;
-     flex-direction: column;
+    flex-direction: column;
+    background-color: #fff0;
+
  }
 .left-side-flex{
     width: 50%;
@@ -365,6 +367,7 @@ h5{
      height: 100%;
     display: flex;
      flex-direction: column;
+     background: #ffffff00;
   }
   .inner-right-flex{
     display: flex;
@@ -380,7 +383,6 @@ h5{
 
     }
 .personal-info{
-    background-color: #fff  ;
     width: 500px;
     height: 250px;
     border-radius: 20px 20px 20px 20px;
@@ -398,7 +400,7 @@ h5{
     position: relative;
     top: 10px;
     width: 180px;
-    border-right: 2px solid var(--main-background-color);
+    border-right: 2px solid var(--main-shob-color);
   }
 
  .inner-left-flex{
@@ -428,7 +430,7 @@ h5{
       padding-bottom: 7px;
       font-size: 20px;
       text-align: center;
-      /* border-bottom: 1px solid var(--main-background-color)  ; */
+      /* border-bottom: 1px solid var(--main-shob-color)  ; */
   }
   
  .average-title{
@@ -436,15 +438,18 @@ h5{
     padding-bottom: 7px;
     font-size: 20px;
     text-align: center;
-    border-bottom: 1px solid var(--main-background-color);
+    border-bottom: 1px solid var(--main-shob-color);
 
  }
  .grid-container{
     display: grid;   
+        /* max-height: 81%;
+    overflow-y: auto; */
+
     justify-content: end;
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
-    background: #fff;
+    /* background: #fff; */
     gap: 25px 25px;
     border-radius: 24px;
     animation: growOut 250ms ease-in-out forwards;
@@ -463,12 +468,13 @@ h5{
 }
 
  .average{
-    border-top:6px solid var(--main-background-color);
+    border-top:6px solid var(--main-shob-color);
     grid-area: 2/2/3/3;
     width: 150px;
     height: 160px;
     box-shadow: 0px 0px 20px 0px rgba(0,  0,  0,  0.2);
     border-radius: 30px 30px;
+    background: #fff;
  }
  .no-gradeAv-yet{
    font-size: 20px;

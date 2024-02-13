@@ -196,7 +196,7 @@ methods:{
             text:"אם תגיש לא תוכל/י לחזור עליו...",
             icon:'warning',
             showCancelButton:true,
-            confirmButtonColor:"var(--main-background-color)",
+            confirmButtonColor:"var(--main-shob-color)",
             confirmButtonText:'כן, הגש מבחן',
             cancelButtonText:"ביטול",
             customClass:{
@@ -209,7 +209,7 @@ methods:{
                     this.$swal({
                       title:'נשלח בהצלחה',
                       icon:'success',
-                      confirmButtonColor:"var(--main-background-color)",
+                      confirmButtonColor:"var(--main-shob-color)",
                       confirmButtonText:'סיים'
                     })
                       console.log(this.showExitAlert)
@@ -527,7 +527,7 @@ async beforeMount(){
           showCancelButton:true,
           confirmButtonText:"צא/י",
           cancelButtonText:"הישאר/י",
-          confirmButtonColor:"var(--main-background-color)"
+          confirmButtonColor:"var(--main-shob-color)"
         }).then((result)=>{
           if(result.isConfirmed){
             next()
@@ -556,15 +556,15 @@ async beforeMount(){
    width: 90%;
    position:relative;
    align-items:center;
-   right: 50%;
-   transform:translateX(50%);
+   left: 50%;
+   transform:translateX(-50%);
    margin-bottom:20px;
 
 }
 .timer{
   position:relative;
-  right: 80%;
-  transform:translateX(80%);
+  left: 80%;
+  transform:translateX(-80%);
   font-size:25px;
   }
 .title{ 
@@ -572,8 +572,8 @@ async beforeMount(){
   font-size:45px;
   font-weight:700;
   position:relative;
-  right: 50%;
-  transform:translateX(50%);
+  left: 50%;
+  transform:translateX(-50%);
   text-align:center;
    /* width: 200px; */
 }
@@ -629,9 +629,9 @@ form{
    .que-index{
     font-size: 27px;
     position: relative;
-    left: 45%;
+    right: 45%;
     top: 30px;
-    transform: translate(45%,30px);
+    transform: translate(-45%,30px);
     font-weight: 700;
  }
  .title-que{
@@ -722,7 +722,7 @@ textarea{
  }
  .sub-que-letter{
    font-size: 28px;
-   margin-left: 15px;
+   margin-right: 15px;
   }
 .open-que{
     position: relative;
@@ -750,11 +750,11 @@ textarea{
    text-decoration: none;
    color: #fff;
    width: 120px;
-   border: 1px solid var(--main-background-color);
+   border: 1px solid var(--main-shob-color);
    border-radius: 15px;
    font-size: 18px;
    cursor: pointer;
-   background-color: var(--main-background-color);
+   background-color: var(--main-shob-color);
 
 }
   .alreadySubmitted{

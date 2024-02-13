@@ -1,13 +1,7 @@
 <template>
   <div class="loading" v-if="!isLoad"><loadingSpinner/></div>
-
-<div class="main" v-if="isLoad">
-  <q-layout >
-    <q-page-container>
-      <q-page class="q-pa-md" >
-        <q-card class="q-ma-auto" style="max-width: 400px;">
-          <q-card-section dir="rtl">
-            <q-form @submit.prevent="submitForm">
+  <div class="main">
+             <q-form @submit.prevent="submitForm"  class="q-ma-auto">
               <q-select
                 v-model="selectedWeek"
                 :options="weekOptions"
@@ -52,27 +46,26 @@
 
               </q-file>
 
-              <q-btn 
+            <div class="submit-btn" >
+               <q-btn 
                  type="submit"
                  label="העלאה" 
                  color="primary" 
-                 class="q-mt-md" 
+                 :disable="file == null"
                   
               />
+            </div>
+             
               
             </q-form>
-          </q-card-section>
-        </q-card>
-      </q-page>
-    </q-page-container>
-  </q-layout>
-</div>
-</template>
+            </div>
+ </template>
 
 <script>
   import axios from 'axios'
   import loadingSpinner from '@/components/loadingSpinner.vue'
   export default {
+    name:'uploadForm',
     components:{
       loadingSpinner
     },
@@ -81,7 +74,7 @@
         weeksWithDetails:[],
         selectedWeek: null,
         selectedLesson:null,
-        file:"",
+        file:null,
         isLoad:false
       }
     },
@@ -102,6 +95,9 @@
 
 
       async getData(){
+        if(!this.$isSharePointUrl){
+          this.isLoad = true
+        }
         try{
           const weeksRes = await axios.get(this.$sharePointUrl + "getByTitle('weeks')/items")
           console.log(weeksRes)
@@ -248,4 +244,13 @@
     position: relative;
     top: 100px;
   }
+  .q-ma-auto{
+    width: 60%;
+   }
+   .submit-btn{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+   }
 </style>

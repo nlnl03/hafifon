@@ -67,7 +67,7 @@ import axios from 'axios'
             ite:null,
             subIte:null,
             isPartText:false,
-            color:`var(--main-background-color)`
+            color:`var(--main-shob-color)`
           }
     },
     methods:{
@@ -178,9 +178,9 @@ import axios from 'axios'
 .que-index{
    font-size: 29px;
    position: relative;
-   left: 50%;
+   right: 50%;
    top: 32px;
-   transform: translate(50%,32px);
+   transform: translate(-50%,32px);
    font-weight: 700;
  }
 .regular-que{
@@ -258,13 +258,13 @@ import axios from 'axios'
   .sub-que-letter{
       font-size:27px;
       position: relative;
-      left: 20px;
+      right: 20px;
   }
   .add-que-btn{
     position: relative;
-    left: 60%;
+    right: 60%;
     top: 50%;
-    transform: translate(60%,50%);
+    transform: translate(-60%,50%);
     background: none;
     border: none;
     cursor: pointer;     

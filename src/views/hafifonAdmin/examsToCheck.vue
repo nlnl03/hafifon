@@ -163,7 +163,7 @@ import loadingSpinner from "@/components/loadingSpinner.vue"
                 title:"האם את\ה בטוח שברצונך להגיש בדיקה זו ?",
                 type:'warning',
                 showCancelButton:true,
-                confirmButtonColor:"var(--main-background-color)",
+                confirmButtonColor:"var(--main-shob-color)",
                 confirmButtonText:'כן, שלח בדיקה',
                 showLoaderOnConfirm:true,
               }).then((result)=>{
@@ -514,7 +514,7 @@ textarea{
   padding: 0.6em;
   outline-color: rgba(128, 128, 128, 0.39);
   border-radius: 5px;
-  /* outline-color:var(--main-background-color); */
+  /* outline-color:var(--main-shob-color); */
   border: 1px solid rgba(169, 169, 169, 0.774);
 }
 .send{
@@ -532,11 +532,11 @@ textarea{
     text-decoration: none;
     color: #fff;
     width: 120px;
-    border: 1px solid var(--main-background-color);
+    border: 1px solid var(--main-shob-color);
     border-radius: 15px;
     font-size: 18px;
     cursor: pointer;
-    background-color: var(--main-background-color);
+    background-color: var(--main-shob-color);
 }
 
 p{

@@ -13,12 +13,12 @@
         <ul>
           <li>
             <div>
-              <button
+              <router-link
+                to="/exams/finalTest/beforeStarting"
                 class="final-test-btn"
-                @click="checkIfhasPermToExams({Title:'finalTest'})"
-              >
+               >
                 המבחן הסופי
-              </button>
+              </router-link>
             </div>
           </li>
 
@@ -64,12 +64,12 @@
             <span>בחנים</span>
             <ul class="drop-down-menu" v-if="isExamsDropOpen">
               <li v-for="name in examsName" :key="name" class="drop-down-list">
-                <button
+                <router-link
+                :to="`/exams/${name.Title}/beforeStarting`"
                   class="drop-down-items"
-                  @click="checkIfhasPermToExams(name)"
-                >
+                 >
                   {{ name.subject }}
-                </button>
+                </router-link>
               </li>
             </ul>
           </li>
@@ -131,41 +131,7 @@
         }
       },
 
-      async checkIfhasPermToExams(name) {
-        var localSUserNum = localStorage.getItem("userNum");
-        var res = null;
-        var title = null;
-        if (this.$isSharePointUrl) {
-          res = await axios.get(
-            this.$sharePointUrl +
-              `getByTitle('isPermissionActive')/Items?$filter=userNum eq '${localSUserNum}'`
-          );
-          this.examsPerm = res.data.value;
-        } else {
-          res = await axios.get(this.$sharePointUrl + "isPermissionActive");
-          this.examsPerm = res.data.value;
-        }
-            console.log(name);
-            console.log(this.examsPerm);
-        if (name !== undefined) {
-          title = name.Title;
-        }
-         console.log(this.isAdmin);
  
-        if (this.examsPerm[title] == true || this.isAdmin) {
-          console.log("admin " + this.isAdmin);
-          console.log("premission " + this.examsPerm.isAllow);
-          console.log(this.examsPerm[title])
-          this.$router.push({
-            name: "beforeStartingExam",
-            params: { Title: title }
-          });
-        } else {
-          console.log("no permission");
-          this.$router.push({ name: "noPermission", params: { Title: title } });
-        }
-       },
-
       async checkIfAdmin() {
         var url = null;
         if (this.$isSharePointUrl) {
@@ -210,9 +176,8 @@
   .main-nav {
     height: 125px;
     width: 100%;
-    background-color: var(--main-background-color);
-    direction: rtl;
-  }
+    background-color: var(--main-shob-color);
+   }
   /* .main-cover{
     width: 100%;
     height: 125px;
@@ -267,6 +232,9 @@
     text-decoration: none;
     height: 125px;
   }
+  /* a:hover, .exams-drop-down:hover,.final-test-btn:hover{
+    font-weight: 600;
+  } */
 
   .home-title {
     font-weight: bold;
@@ -274,7 +242,7 @@
     font-size: 40px;
     top: 32px;
     height: 60px;
-    right: var(--home-btn-position);
+    left: var(--home-btn-position);
   }
 
   .user-title {
@@ -284,7 +252,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    left: var(--user-link-pos);
+    right: var(--user-link-pos);
     top: 40px;
     z-index: 1;
     text-decoration: none;
@@ -306,7 +274,7 @@
     top: 65px;
     height: 270px;
     width: 120px;
-    left: -37px;
+    right: -37px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     flex-direction: column;
     background-color: rgb(255, 255, 255);

@@ -20,15 +20,10 @@ export default {
     },
     data(){
       return{
-        token:null,
-        currentUser: process.env.NODE_ENV =='development'? "http://localhost:3000/currentUser" : "https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
-        urlForToken: process.env.NODE_ENV =='development'? `http://localhost:3000/`:"https://portal.army.idf/sites/hafifon383/_api/contextinfo",
-        Id:null,
-        userName:null,
-        userNum:null,
+        // urlForToken: process.env.NODE_ENV =='development'? `http://localhost:3000/`:"https://portal.army.idf/sites/hafifon383/_api/contextinfo",
         isAdmin:null,
         scroll:null,
-        currentUserData:[],
+        
        }
     },
       methods:{
@@ -39,49 +34,14 @@ export default {
             behavior:'smooth'
           })
         },
-        async getToken(){
-          const res = await axios.post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
-          this.token = res.data.FormDigestValue
-          // console.log(this.token)
-      },
-      async getCurrentUser(){
-         const res = await axios.get(this.currentUser)
-          this.currentUserData = res.data;
-          console.log(this.currentUserData)
-          var userNum = this.currentUserData.LoginName.split('s')
-          this.userNum = userNum[1]
-          // console.log(this.userNum)
-          this.Id=this.currentUserData.Id
-          // console.log(this.Id)
-          var Title = this.currentUserData.Title
-            
-           if(Title.includes(' -')){
-            Title = Title.split(' -')
-            this.userName = Title[0]
-            console.log(Title)
-          }
-          else{
-            Title = Title.split('/')
-            this.userName = Title[Title.length-1]
-          }
-          
-            localStorage.setItem("userName",this.userName)
-            localStorage.setItem("userId",this.Id)
-            localStorage.setItem("userNum",this.userNum)
-          // console.log(this.Id)
-          // console.log(this.currentUserData)
-        },
+       
         showScrollBtn(){
           this.scroll = window.scrollY
         },
         
  },
 
-      beforeMount(){
-          this.getCurrentUser()
-          
-      },
-
+ 
        created(){
          window.addEventListener('scroll', this.showScrollBtn)
        },
@@ -94,7 +54,7 @@ export default {
           },
 
           isHomePage(){
-            return this.$route.path === '/'
+            return this.$route.name === 'defaultHome'
           }
         },
         
@@ -149,7 +109,10 @@ export default {
       background: rgb(117, 116, 116);
     }
  .q-timeline--dense--right .q-timeline__dot {
-    right: -170px;
+    /* right: -170px;
+    left: 0; */
+        left: -120px !important;
+
     top: -5px !important;
  }
  .q-timeline__dot::after{
@@ -165,10 +128,10 @@ export default {
  }
 
 
-  .q-field__label {
+  /* .q-field__label {
     left: 12px !important;
     transform-origin: 150px !important;
-  }
+  } */
   .select-timeline .q-field__native{
     margin-right: 10px !important;
     margin-top: 3px;
@@ -185,20 +148,22 @@ export default {
      direction: rtl !important;
    }
 :root{
-  --main-background-color: #4EADAF;
+  --main-shob-color: #4EADAF;
   --user-link-pos: 100px;
   --table-width: 950px;
   --table-header-width: calc(var(--table-width)/3);
   --exams-form-width:1400px;
-  --box-check-width: 1200px ;
-  --user-main-margin-right: 18%;
-  --user-main-margin-left: 15%;
+  --box-check-width: 60% ;
+  --user-main-margin-right: 15%;
+  --user-main-margin-left: 18%;
   --home-btn-position:150px;
   --scroll-top-btn-position:110px;
   --scroll-top-btn-size:60px;
   --permission-box-width: 55%;
   --exam-edit-box-width:50%;
-  --exam-edit-flexbox-width:80%
+  --exam-edit-flexbox-width:80%;
+  --progress-bar-width: 30%;
+  --before-start-width: 750px
 }
  
 
@@ -206,14 +171,18 @@ export default {
     :root{
       --user-link-pos:70px ;
       --home-btn-position:100px;
-      --box-check-width:1050px;
-      --user-main-margin-right: -1%;
-      --user-main-margin-left: -3%;
+      --box-check-width:80%;
+      --user-main-margin-right: 0%;
+      --user-main-margin-left: 0%;
       --scroll-top-btn-position: 40px;
       --scroll-top-btn-size:50px;
       --permission-box-width:70%;
       --exam-edit-box-width:68%;
-      --exam-edit-flexbox-width:85%
+      --exam-edit-flexbox-width:85%;
+      --progress-bar-width:300px;
+      --before-start-width: 50%;
+      --user-main-margin-right:0;
+      --user-main-margin-left:0
     }
     form[class="exam"]{
       --exams-form-width:1150px;
@@ -221,7 +190,16 @@ export default {
     .perm-table .q-pa-md{
       width: 70% !important;
     }
-     
+    .name-progress-details{
+      width: 75% !important;
+    }
+    .personal-info{
+      width: 100% !important;
+    }
+    .progress-info{
+      width: 85% !important;
+    }
+      
 }
 @font-face {
   src: url(./assets/Assistant-Regular.ttf);
@@ -232,8 +210,7 @@ export default {
       margin: 0;
       padding: 0;
       font-family: Assistant-Regular !important;
-      direction: rtl;
-  }
+   }
   .fa, .fas, .q-icon {
     font-family: 'Font Awesome 5 Free' !important;
     font-weight: 900;
@@ -242,7 +219,7 @@ export default {
       font-family: "Material Icons" !important;
 }
   .q-field__control, .q-item.q-router-link--active, .q-item--active{
-    color: var(--main-background-color) !important;
+    color: var(--main-shob-color) !important;
   }
 
   body{
@@ -280,11 +257,11 @@ export default {
     position: fixed;
     z-index: 100000;
     bottom:70px;
-    right: var(--scroll-top-btn-position);
+    left: var(--scroll-top-btn-position);
     height: var(--scroll-top-btn-size);
     width: var(--scroll-top-btn-size);
     border-radius: 50%;
-    background: var(--main-background-color);
+    background: var(--main-shob-color);
     border:none;
     box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
     font-size: 20px;
@@ -336,5 +313,9 @@ h4{
   left: 30px;
 
 }
+.q-timeline--dense--right .q-timeline__entry{
+      padding-right: 40px !important;
+      padding-left: 0 !important;
 
+}
   </style>

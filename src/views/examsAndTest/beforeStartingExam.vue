@@ -85,7 +85,7 @@ methods:{
         this.name = title.Title
         console.log(this.name)
         this.getInstructions()
-        this.isAdmin = sessionStorage.getItem("isAdmin")
+        this.isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"))
         const myTimeOut = setTimeout(this.spinner,250)
  
     }
@@ -105,18 +105,17 @@ methods:{
     height: 86.5vh;
     width: 100%;
     background-repeat: no-repeat;
-
+    display: flex;
+    justify-content: center;
 }
 .box{
     height: 530px;
-    width: 800px;
+    width: var(--before-start-width);
     background: #fff;
     box-shadow: 0 0 15px 0 rgb(0 0 0 / 20%);
     position: relative;
-    right: 50%;
-    top:8%;
-    transform: translate(50%,8%);
-    border-radius: 20px;
+     top:12%;
+     border-radius: 20px;
 }
 .name-of-exam{
     top: 45px;
@@ -130,7 +129,7 @@ methods:{
 .instructions-title{
     position: relative;
     margin-top: 90px;
-    margin-right: 30px;
+    margin-left: 30px;
     font-size: 25px;
 }
 .instructions{
@@ -156,7 +155,7 @@ methods:{
     width: 105px;
     height: 45px;
     border-radius: 15px;
-    background: var(--main-background-color);
+    background: var(--main-shob-color);
     border: none;
     cursor: pointer;
  }
@@ -176,7 +175,7 @@ methods:{
 .edit-remove-btns{
     width: 200px;
     position: absolute;
-    right: 75%;
+    left: 75%;
     top: 45px;
     display: flex;
  }
