@@ -8,9 +8,11 @@
    <div class="text-under-line"></div>
 
     <div class="select-timeline" >
-         <q-select outlined v-model="selectedValue" :options="weeks"  :option-value="option => option.Id" :option-label="option => `שבוע ${option.Id}`" label="מיין לפי שבוע" 
-            @update:model-value="filterPractices"  dir="rtl"/>
-          
+         <q-select outlined v-model="selectedValue" :options="weeks"  :option-value="option => option.Id" :option-label="option => `שבוע ${option.weekNum}`" label="מיין לפי שבוע" 
+            @update:model-value="filterPractices">
+            
+         </q-select>
+            
     </div>
 
   
@@ -20,7 +22,7 @@
              <q-timeline color="secondary" > 
               <q-timeline-entry :subtitle="`שבוע ${week.Id}`" v-for="(week,index) in weeks" :key="index" :value="week.Id">
                 <div class="flex-cards" v-if="showCards">
-                  <div v-for="(item,midIndex) in weekLessons(week.Id)" :key="midIndex" >
+                  <div v-for="(item,midIndex) in weekLessons(week.weekNum)" :key="midIndex" >
                     <div class="card" @mouseenter="expandCard(item,index,midIndex,$event)" @mouseleave="collapseCard($event)" >
                       <div class="card-content">
                         
@@ -35,7 +37,7 @@
 
                           <div class="expanded-content" v-if="(ite === index && midIte === midIndex) && this.isFinished" :style="{ maxHeight: ite === index && midIte === midIndex ? expandedHeight : '0' }">
                               <q-btn class="powerPoint-link" @click="powerpointUrl(index,item.file)" label="מצגת" style="background-color:#eb693e; color:white"/>
-                              <q-btn class="tirgulim-link" label="תרגולים" @click="openTirgulimModal(item.Id,index)"  style="background-color:var(--main-shob-color); color:white" />
+                              <q-btn class="tirgulim-link" label="תרגולים" @click="openTirgulimModal(item.Id,index)"  style="background-color:var(--main-background-color); color:white" />
                           </div>
 
                         </div>
@@ -115,7 +117,7 @@ export default {
              timeLinePoint.style.display = 'none'
           }
        }
-      
+      console.log(this.weeks)
     },
  
      expandCard(item,index,midIndex,event){
@@ -162,35 +164,10 @@ export default {
         console.log(index)
         this.tirgulimNames = await this.getTirgulimNames(lessonId)
         console.log(this.tirgulimNames)
-
-        // const buttonsHtml = tirgulimNames.map(button => `
-        //     <q-btn class="practices-btn" id="${button.Id}"> ${button.Title}</q-btn>
-        // `).join('')
-        
-      if(this.tirgulimNames.length>1){
-        this.dialogVisible = true
-          // this.$swal({
-          //     html:`
-          //       <div class="tirgulim-btns">
-          //         ${buttonsHtml}
-          //       </div>
-          //     `,
-          //     showConfirmButton:false,
-          //     showLoaderOnConfirm:true,
-          //     didOpen: () => {
-          //       tirgulimNames.forEach(button => {
-          //         const buttonElement = document.getElementById(button.Id);
-          //         if(buttonElement){
-          //           buttonElement.addEventListener('click', () => {
-          //             console.log(button)
-          //             this.$router.push({name: "beforeStartQuiz", params:{week:index+1,numOfPrac:button.Id, title:button.routeName}})
-          //             this.$swal.close()
-          //           })
-          //         }
-          //       })
-          //     }
-          // })
-      }
+  
+        if(this.tirgulimNames.length>1){
+          this.dialogVisible = true
+        }
 
       else if(this.tirgulimNames.length==1){
         console.log(this.tirgulimNames[0])
@@ -238,7 +215,15 @@ export default {
    },
   async beforeMount(){
       this.timeOut = setTimeout(this.getWeeks,200)
-
+  },
+  computed: {
+    rowsFiltered() {
+      return this.rows.filter(
+        (row) =>
+          row.Title.includes(this.textToFilter) ||
+          row.userNum.includes(this.textToFilter)
+      );
+    },
   },
  
 }
@@ -267,7 +252,7 @@ export default {
 h1{
     font-size: 60px;
     text-align: center;
-    color: var(--main-shob-color);
+    color: var(--main-background-color);
     position: relative;
     margin-bottom: 50px;
     top: 30px;
@@ -277,7 +262,7 @@ h1{
     top: -5px;
     width: 130px;
     height: 2px;
-    background-color: var(--main-shob-color);
+    background-color: var(--main-background-color);
     margin: 0 auto;
 
 }
@@ -417,7 +402,7 @@ h1{
     width: 100%;
   }
   .practices-btn{
-    background: var(--main-shob-color);
+    background: var(--main-background-color);
   }
   .flex-prac-btns{
     display: flex;

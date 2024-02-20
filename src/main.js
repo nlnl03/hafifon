@@ -18,6 +18,8 @@ app.config.globalProperties.$sharePointUrl =
     : "http://localhost:3000/";
 app.config.globalProperties.$isSharePointUrl =
   process.env.NODE_ENV == "production";
+
+ 
 app.config.globalProperties.$getHebLetters = function (index) {
   const hebrewLetters = [
     "א",

@@ -50,7 +50,7 @@ export default {
                 title:'בחר את הבחינה שברצונך לערוך:',
                 html: this.selectHtml,
                 confirmButtonText:'המשך',
-                confirmButtonColor:"var(--main-shob-color)",
+                confirmButtonColor:"var(--main-background-color)",
                 customClass:{
                     popup:'choose-to-edit'
                 },
@@ -93,7 +93,7 @@ export default {
                 customClass:{
                     popup: 'choose-to-remove-swal'
                 },
-                confirmButtonColor:"var(--main-shob-color)",
+                confirmButtonColor:"var(--main-background-color)",
                     didOpen: ()=>{
                         const selectedOption = document.getElementById("mySelect")
                         selectedOption.addEventListener('change',this.selectBtn)
@@ -112,7 +112,7 @@ export default {
                         this.$swal({
                             title:`האם אתה בטוח שברצונך למחוק את ${name} ?`,
                             confirmButtonText:'כן, מחק',
-                            confirmButtonColor:"var(--main-shob-color)",
+                            confirmButtonColor:"var(--main-background-color)",
                             icon:'warning',
                             showCancelButton:true,
                             cancelButtonText:"ביטול",

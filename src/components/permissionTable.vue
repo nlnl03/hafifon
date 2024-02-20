@@ -27,7 +27,7 @@
             v-model="props.row[col.field]"
             @click="changePerm(col, props.row, index)"
             :ref="col + index"
-            color="var(--main-shob-color)"
+            color="var(--main-background-color)"
           />
           <template v-else>
             {{ props.row[col.field] }}

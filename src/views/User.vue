@@ -18,7 +18,7 @@
               </div>
 
           <div class="inner-left-flex" >
-                <img class="user-image" :src="imgUrl"  v-if="showImg && isImg" ref="myImage"> 
+                <img class="user-image" :src="imgUrl"  v-if="showImg" ref="myImage"> 
           </div>
       </div>
     </div>
@@ -31,7 +31,7 @@
                         <circle-progress 
                           :percent="calcTotalProgress(val)"
                           :show-percent="true"
-                          fill-color="var(--main-shob-color)"
+                          fill-color="var(--main-background-color)"
                           :viewport="true"
                           :transition="600"
                         />
@@ -310,7 +310,7 @@ export default {
 }
 h1{
   font-size: 60px;
-  color: var(--main-shob-color);
+  color: var(--main-background-color);
   position: relative;
   margin-bottom: 50px;
    top: 35px ;
@@ -321,14 +321,14 @@ h1{
   top: -5px;
   width: 160px;
   height: 2px;
-  background-color:var(--main-shob-color) ;
+  background-color:var(--main-background-color) ;
   margin: 0 auto;
 }
 
 .hafifa-nickname{
   text-align: center;
   font-size: 20px;
-  background:var(--main-shob-color);
+  background:var(--main-background-color);
   color:white;
   border-radius: 20px;
 }
@@ -400,7 +400,7 @@ h5{
     position: relative;
     top: 10px;
     width: 180px;
-    border-right: 2px solid var(--main-shob-color);
+    border-right: 2px solid var(--main-background-color);
   }
 
  .inner-left-flex{
@@ -430,7 +430,7 @@ h5{
       padding-bottom: 7px;
       font-size: 20px;
       text-align: center;
-      /* border-bottom: 1px solid var(--main-shob-color)  ; */
+      /* border-bottom: 1px solid var(--main-background-color)  ; */
   }
   
  .average-title{
@@ -438,7 +438,7 @@ h5{
     padding-bottom: 7px;
     font-size: 20px;
     text-align: center;
-    border-bottom: 1px solid var(--main-shob-color);
+    border-bottom: 1px solid var(--main-background-color);
 
  }
  .grid-container{
@@ -468,7 +468,7 @@ h5{
 }
 
  .average{
-    border-top:6px solid var(--main-shob-color);
+    border-top:6px solid var(--main-background-color);
     grid-area: 2/2/3/3;
     width: 150px;
     height: 160px;

@@ -1,7 +1,8 @@
 <template>
   <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
-    <div class="quiz-box" v-if="isFinished&&isLoadForSpinner" >  
-        <form v-for="(question,index) in examData" :key="index"  >
+  <div class="form-flex">
+    <form class="quiz-box" v-if="isFinished&&isLoadForSpinner" >  
+        <div v-for="(question,index) in examData" :key="index"  >
           <div v-if="index==ite">
               <div class="question" v-if="question.type!= null"> 
                   <span class="questions-text">{{question.label}}</span> 
@@ -43,11 +44,12 @@
               </div>
                 <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]&&isDisabled" v-if="ite!=examData.length-1&&question.type != null" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
           </div>
-        </form>  
+        </div>  
               <button @click="submit" class="next-button" v-if="examData.length==ite+1&&examData[ite].type != null" :disabled="!isEndBtnAllow" ref="endBtn" :style="`--next-btn-cusror:${nextBtnCursor}`"> 
                   <span class="finish-btn-text"> סיים </span>
               </button>
-     </div>
+     </form>
+  </div>
 </template>
 
 <script>
@@ -302,7 +304,7 @@ export default {
 button{
     height: 45px;
     width: 120px;
-    border: 1px solid var(--main-shob-color);
+    border: 1px solid var(--main-background-color);
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
@@ -318,7 +320,7 @@ button{
 .next-btn-on{
     border:none;
     color: #fff;
-    background-color: var(--main-shob-color);
+    background-color: var(--main-background-color);
 }
 .next-btn-on-type-null{
      border:none;
@@ -327,7 +329,7 @@ button{
      right: 50%;
      transform: translate(50%,80%);
     color: #fff;
-    background-color: var(--main-shob-color);
+    background-color: var(--main-background-color);
 }
 .submit-btn{
     position: absolute;
@@ -335,21 +337,25 @@ button{
     height: 40px;
     width: 110px;
     bottom: 25px;
-    border: 1px solid var(--main-shob-color);
+    border: 1px solid var(--main-background-color);
     border-radius: 10px;
     font-size: 18px;
     right: 50%;
     transform: translateX(50%);
     cursor: pointer;
     color: #fff;
-    background-color: var(--main-shob-color);
+    background-color: var(--main-background-color);
+}
+.form-flex{
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 .quiz-box{
     position: relative;
-    left: 50%;
-    right: 50%;
-    transform: translate(50%,11%);
-    background-color: #fff;
+    display: flex;
+    justify-content: center;
+     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
     height: 670px;

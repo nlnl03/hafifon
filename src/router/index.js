@@ -32,54 +32,56 @@ import defaultHome from "../views/defaultHome.vue";
 
 //checkPermissions
 import { checkExamPermissions } from '@/permissions/checkPermissions.js'
- 
+import store from "../../store";
+
 const routes = [
   {
     path: "/",
     name: "defaultHome",
-    component: defaultHome
+    component: defaultHome,
+    meta:{ requireMahlaka: false}
   },
   {
-    path: "/homePage",
+    path: "/:selectedItem?/homePage",
     name: "HomePage",
     component: HomePage
   },
   {
-    path: "/lessons&practices",
+    path: "/:selectedItem?/lessons&practices",
     name: "PracticesList",
     component: PracticesList
   },
 
   {
-    path: "/user",
+    path: "/:selectedItem?/user",
     name: "User",
     component: User
   },
   {
-    path: "/user/:title/results",
+    path: "/:selectedItem?/user/:title/results",
     name: "CheckedExams",
     component: displayCheckedExams
   },
   {
-    path: "/admin/MainCheckPage",
+    path: "/:selectedItem?/admin/MainCheckPage",
     name: "MainCheckPage",
     component: MainCheckPage
   },
 
   {
-    path: "/admin/examsToCheck/:num/:examType",
+    path: "/:selectedItem?/admin/examsToCheck/:num/:examType",
     name: "examsToCheck",
     component: examsToCheck,
     props: true
   },
   {
-    path: "/admin/openPermForExams",
+    path: "/:selectedItem?/admin/openPermForExams",
     name: "openPerm",
     component: openPermForExams,
     props: true
   },
   {
-    path: "/admin/uploadButtons",
+    path: "/:selectedItem?/admin/uploadButtons",
     name: "uploadButtons",
     component: uploadButtons,
     props: true
@@ -91,23 +93,23 @@ const routes = [
   //   props: true
   // },
   {
-    path: "/admin/:title/edit",
+    path: "/:selectedItem?/admin/:title/edit",
     name: "editExams",
     component: editExams
   },
   {
-    path: "/examsToCheck/:num/:examType/submitted",
+    path: "/:selectedItem?/examsToCheck/:num/:examType/submitted",
     name: "submitted",
     component: submitted,
     props: true
   },
   {
-    path: "/exams/:Title",
+    path: "/:selectedItem?/exams/:Title",
     name: "exams",
     component: exams,
   },
   {
-    path: "/exams/:Title/beforeStarting",
+    path: "/:selectedItem?/exams/:Title/beforeStarting",
     name: "beforeStartingExam",
     component: beforeStartingExam,
     meta:{ requirePermissionCheck: true}
@@ -117,19 +119,19 @@ const routes = [
   //  }
   },
   {
-    path: "/exams/:Title/deletedMessage",
+    path: "/:selectedItem?/exams/:Title/deletedMessage",
     name: "examDeletedMessage",
     component: examDeletedMessage,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/exams/:Title/submitted",
+    path: "/:selectedItem?/exams/:Title/submitted",
     name: "submitted",
     component: submitted,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/exams/:Title/noPermissionMessage",
+    path: "/:selectedItem?/exams/:Title/noPermissionMessage",
     name: "noPermission",
     component: noPermissionMessage,
     props: (route) => ({ ...route.params })
@@ -142,19 +144,19 @@ const routes = [
   // },
 
   {
-    path: "/week:week/:title/practice:numOfPrac/beforeStartQuiz",
+    path: "/:selectedItem?/week:week/:title/practice:numOfPrac/beforeStartQuiz",
     name: "beforeStartQuiz",
     component: beforeStartQuiz,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/week:week/:title/practice:numOfPrac",
+    path: "/:selectedItem?/week:week/:title/practice:numOfPrac",
     name: "quiz",
     component: Quiz,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/week:week/:title/practice:numOfPrac/results",
+    path: "/:selectedItem?/week:week/:title/practice:numOfPrac/results",
     name: "result",
     component: practiceResult,
     props: (route) => ({ ...route.params })
@@ -176,6 +178,21 @@ const router = createRouter({
 var permissionCheckedPerformed = false;
 
 router.beforeEach(async (to, from, next) => {
+  if(to.meta.requireMahlaka != false){
+    const selectedItem = store.getters.selectedItem || localStorage.getItem("mahlaka");
+    console.log(selectedItem);
+    if(selectedItem){
+      if(to.params.selectedItem !== selectedItem){
+         next({path: `/${selectedItem}${to.fullPath}`})
+      } 
+       
+    }else{
+      next()
+  
+    }
+  
+  }
+
   try{
     if(to.meta.requirePermissionCheck){
       const examType = to.params.Title;

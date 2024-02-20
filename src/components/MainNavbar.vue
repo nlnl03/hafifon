@@ -1,6 +1,6 @@
 <template>
   <div class="main-nav">
-    <router-link class="home-title" :to="{ name: 'HomePage'}">
+    <router-link class="home-title" :to="{ name: 'defaultHome'}">
       חפיפה
     </router-link>
 
@@ -176,7 +176,7 @@
   .main-nav {
     height: 125px;
     width: 100%;
-    background-color: var(--main-shob-color);
+    background-color: var(--main-background-color);
    }
   /* .main-cover{
     width: 100%;

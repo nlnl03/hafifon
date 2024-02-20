@@ -81,7 +81,7 @@ export default {
                 icon:"warning",
                 showCancelButton:true,
                 confirmButtonText:"כן",
-                confirmButtonColor:"var(--main-shob-color)",
+                confirmButtonColor:"var(--main-background-color)",
                 cancelButtonText:"ביטול",
               }).then(res=>{
                 if(res.isConfirmed){
@@ -280,10 +280,10 @@ export default {
     transition: .4s;
 }
 input:checked + .slider{
-    background-color: var(--main-shob-color);
+    background-color: var(--main-background-color);
 }
 input:focus + .slider{
-    box-shadow: 0 0 1px var(--main-shob-color);
+    box-shadow: 0 0 1px var(--main-background-color);
 }
 input:checked + .slider::before{
     /* -webkit-transform:translateX(26px);

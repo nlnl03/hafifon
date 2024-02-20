@@ -67,7 +67,7 @@ import axios from 'axios'
             ite:null,
             subIte:null,
             isPartText:false,
-            color:`var(--main-shob-color)`
+            color:`var(--main-background-color)`
           }
     },
     methods:{

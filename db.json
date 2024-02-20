@@ -1521,23 +1521,28 @@
     "value": [
       {
         "Title": "שבוע 1",
-        "Id": 1
+        "Id": 1,
+        "weekNum":1
       },
       {
         "Title": "שבוע 2",
-        "Id": 2
+        "Id": 2,
+        "weekNum":2
       },
       {
         "Title": "שבוע 3",
-        "Id": 3
+        "Id": 3,
+        "weekNum":3
       },
       {
         "Title": "שבוע 4",
-        "Id": 4
+        "Id": 4,
+        "weekNum":4
       },
       {
         "Title": "שבוע 5",
-        "Id": 5
+        "Id": 5,
+        "weekNum":5
       }
     ]
   },

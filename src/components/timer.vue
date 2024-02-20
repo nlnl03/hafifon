@@ -77,7 +77,7 @@
                 text:
                   "שים לב שנגמר לך הזמן. המבחן יוגש עם כל מה שפתרת עד עכשיו !",
                 icon: "warning",
-                confirmButtonColor: "var(--main-shob-color)",
+                confirmButtonColor: "var(--main-background-color)",
                 confirmButtonText: "OK"
               }).then((res) => {
                 this.$router.push({
@@ -91,7 +91,7 @@
                 text:
                   "נגמר לך הזמן, אך קרתה שגיאה בשליחת המבחן. אנא פנה לאחראי",
                 icon: "error",
-                confirmButtonColor: "var(--main-shob-color)",
+                confirmButtonColor: "var(--main-background-color)",
                 confirmButtonText: "OK"
               });
             }
@@ -103,7 +103,7 @@
               text:
                 "שים לב שנגמר לך הזמן, אך משום שאין רשת המבחן לא הוגש. אנא פנה לאחראי...",
               icon: "error",
-              confirmButtonColor: "var(--main-shob-color)",
+              confirmButtonColor: "var(--main-background-color)",
               confirmButtonText: "OK"
             });
           });

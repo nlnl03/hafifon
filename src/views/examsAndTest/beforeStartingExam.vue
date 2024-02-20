@@ -155,7 +155,7 @@ methods:{
     width: 105px;
     height: 45px;
     border-radius: 15px;
-    background: var(--main-shob-color);
+    background: var(--main-background-color);
     border: none;
     cursor: pointer;
  }

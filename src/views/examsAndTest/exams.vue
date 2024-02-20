@@ -196,7 +196,7 @@ methods:{
             text:"אם תגיש לא תוכל/י לחזור עליו...",
             icon:'warning',
             showCancelButton:true,
-            confirmButtonColor:"var(--main-shob-color)",
+            confirmButtonColor:"var(--main-background-color)",
             confirmButtonText:'כן, הגש מבחן',
             cancelButtonText:"ביטול",
             customClass:{
@@ -209,7 +209,7 @@ methods:{
                     this.$swal({
                       title:'נשלח בהצלחה',
                       icon:'success',
-                      confirmButtonColor:"var(--main-shob-color)",
+                      confirmButtonColor:"var(--main-background-color)",
                       confirmButtonText:'סיים'
                     })
                       console.log(this.showExitAlert)
@@ -527,7 +527,7 @@ async beforeMount(){
           showCancelButton:true,
           confirmButtonText:"צא/י",
           cancelButtonText:"הישאר/י",
-          confirmButtonColor:"var(--main-shob-color)"
+          confirmButtonColor:"var(--main-background-color)"
         }).then((result)=>{
           if(result.isConfirmed){
             next()
@@ -750,11 +750,11 @@ textarea{
    text-decoration: none;
    color: #fff;
    width: 120px;
-   border: 1px solid var(--main-shob-color);
+   border: 1px solid var(--main-background-color);
    border-radius: 15px;
    font-size: 18px;
    cursor: pointer;
-   background-color: var(--main-shob-color);
+   background-color: var(--main-background-color);
 
 }
   .alreadySubmitted{
