@@ -217,10 +217,10 @@ export default {
       var res = null;
       if (this.$isSharePointUrl) {
         res = await axios.get(
-          this.$sharePointUrl + "getByTitle('pending tests')/Items"
+          this.$sharePointUrl + "getByTitle('submittedExams')/Items"
         );
       } else {
-        res = await axios.get(this.$sharePointUrl + "pendingTests");
+        res = await axios.get(this.$sharePointUrl + "submittedExams");
       }
       this.userData = res.data.value;
       console.log(this.userData);

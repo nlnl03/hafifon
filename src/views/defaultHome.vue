@@ -17,11 +17,22 @@
           @mouseleave="showDropdown = null"
           class="item-container"
         >
-          <span class="item">
+          <button
+            class="item-btn"
+            @click="btnClick(pluga.label, pluga.color)"
+            v-if="pluga.type === 'button'"
+          >
+            {{ pluga.label }}
+          </button>
+
+          <span class="item" v-else>
             {{ pluga.label }}
           </span>
 
-          <div class="dropdown-menu" v-if="showDropdown === index">
+          <div
+            class="dropdown-menu"
+            v-if="showDropdown === index && !pluga.type"
+          >
             <ul>
               <li
                 class="mahlaka-item"
@@ -58,30 +69,32 @@ export default {
       showDropdown: null,
       plugaBtns: [
         {
-          label: "אגם",
-          color: "rgb(253 207 71)",
-          mahlakot: [],
+          label: 'הפת"ק',
+          color: "rgb(115 169 51)",
+          mahlakot: ["roip", "חוזי", "תשתיות"],
         },
         {
-          label: "הפתק",
-          color: "rgb(145 198 83)",
-          mahlakot: [""],
+          label: 'ת. מטכ"ל',
+          color: "rgb(66 112 171)",
+          mahlakot: ["טכנאים", 'מבח"ר', 'טכנ"י', "אדום"],
         },
         {
-          label: "ת. מטכל",
-          color: "rgba(231, 77, 77, 0.979)",
-          mahlakot: [""],
+          label: 'אג"ם',
+          color: "#cc2727",
+          type: "button",
         },
+
         {
-          label: "שוב",
+          label: 'שו"ב',
           color: "#4EADAF",
-          mahlakot: ["pc", "vc", "system", "vip"],
+          mahlakot: ["pc", "vc", 'תקנ"ם'],
         },
       ],
+      mahlakot: [],
     };
   },
   methods: {
-    btnClick(mahlaka, bgColor) {
+    async btnClick(mahlaka, bgColor) {
       localStorage.setItem("bgColor", bgColor);
 
       document.documentElement.style.setProperty(
@@ -89,8 +102,33 @@ export default {
         bgColor
       );
       this.$store.dispatch("selectItem", mahlaka);
+      const url = this.$isSharePointUrl
+        ? `getByTitle('mahlakot')/items?$filter=Title eq '${mahlaka}'`
+        : `mahlakot?Title=${mahlaka}`;
+      console.log(url);
+
+      const res = await axios.get(this.$sharePointUrl + url);
+      const mahlakaId = this.$isSharePointUrl
+        ? res.data.value[0].Id
+        : res.data[0].Id;
+      console.log(mahlakaId);
+      localStorage.setItem("mahlakaId", mahlakaId);
+
       this.$router.push({ name: "User" });
     },
+    // async getMahlakot() {
+    //   var res = null;
+    //   if (this.$isSharePointUrl) {
+    //     res = await axios.get(
+    //       this.$sharePointUrl + "getByTitle('mahlakot')/items"
+    //     );
+    //     this.mahlakot = res.data.value;
+    //   }
+    //    else {
+    //     res = await axios.get(this.$sharePointUrl + "mahlakot");
+    //     this.mahlakot = res.data;
+    //   }
+    // },
 
     async getCurrentUser() {
       if (this.$isSharePointUrl) {
@@ -224,6 +262,7 @@ body {
   margin-top: 0;
 }
 .item-container {
+  z-index: 0;
   position: relative;
   width: 160px;
   height: 90px;
@@ -235,9 +274,17 @@ body {
   justify-content: center;
   align-items: center;
 }
-
+.item-btn {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+}
 .dropdown-menu {
   position: absolute;
+  z-index: 1000;
   border-radius: 10px;
   top: 100%;
   right: 50;

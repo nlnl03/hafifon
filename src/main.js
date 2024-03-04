@@ -57,6 +57,7 @@ app.config.globalProperties.$getHebLetters = function (index) {
       .post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
       .then((res) => res.data.FormDigestValue);
   }),
+ 
   app.use(router);
 app.use(store);
 app.use(VueSweetalert2);

@@ -176,15 +176,16 @@ const router = createRouter({
 });
 
 var permissionCheckedPerformed = false;
-
-router.beforeEach(async (to, from, next) => {
+ router.beforeEach(async (to, from, next) => {
   if(to.meta.requireMahlaka != false){
     const selectedItem = store.getters.selectedItem || localStorage.getItem("mahlaka");
     console.log(selectedItem);
     if(selectedItem){
-      if(to.params.selectedItem !== selectedItem){
+      if(to.params.selectedItem !== selectedItem ){
          next({path: `/${selectedItem}${to.fullPath}`})
-      } 
+      }else{
+        next()
+      }
        
     }else{
       next()

@@ -147,7 +147,6 @@
       }
     ]
   },
-
   "practices": {
     "value": [
       {
@@ -156,7 +155,6 @@
         "lessonId": 2,
         "routeName": "line"
       },
-
       {
         "Title": "תרגול שיעור 3 חלק א",
         "Id": 1,
@@ -195,7 +193,6 @@
       }
     ]
   },
-
   "exam2": {
     "value": [
       {
@@ -427,7 +424,12 @@
       },
       {
         "Title": "איזה ממשק של מייקרוסופט אחראי לניהול אובייקטים בדומיין ?",
-        "options": ["SCCM", "IDM", "DSAM", "(AD) ADUC "],
+        "options": [
+          "SCCM",
+          "IDM",
+          "DSAM",
+          "(AD) ADUC "
+        ],
         "type": "american"
       },
       {
@@ -485,7 +487,6 @@
       }
     ]
   },
-
   "finalTest2": {
     "value": [
       {
@@ -704,221 +705,23 @@
       }
     ]
   },
-
   "pendingTests": {
     "value": [
       {
-        "Title": "sdsdsd",
-        "exam": [
-          {
-            "part": "חלק א' – בסיס (27 נקודות)",
-            "type": "subQue",
-            "questions": [
-              {
-                "type": "open",
-                "que": "הסבר מהו  IMAGEומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו (4 נק')",
-                "inputAns": "jkhjhjh",
-                "id": 0,
-                "points": 4,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? (2  נק')",
-                "inputAns": "hjh",
-                "id": 1,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "subQue",
-            "questions": [
-              {
-                "type": "open",
-                "que": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג'? (3 נק')",
-                "inputAns": "jjj",
-                "id": 2,
-                "points": 3,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט את שלבי התקנת המשואה לאחר התקנת האימג' (2 נק')",
-                "inputAns": "hh",
-                "id": 3,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ? (2 נק')",
-                "inputAns": "h",
-                "id": 4,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים. (2 נק')",
-                "inputAns": "h",
-                "id": 5,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "subQue",
-            "questions": [
-              {
-                "type": "open",
-                "que": "איזה 2 מערכות קיימות ברשת הMOIP? ומה הקונבנציה של כל מערכת? (2 נק')",
-                "inputAns": "h",
-                "id": 6,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?(2 נק')",
-                "inputAns": "h",
-                "id": 7,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "ציין בקצרה מה השלבים לאחר ההפצת אימג'? (2 נק')",
-                "inputAns": "h",
-                "id": 8,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "מה הדומיין של MOIP? (1 נק')",
-                "inputAns": "h",
-                "id": 9,
-                "points": 1,
-                "pointsReceived": "",
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "regularQue",
-            "questions": [
-              {
-                "que": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10. (3 נק')",
-                "type": "open"
-              }
-            ],
-            "inputAns": "jkhb",
-            "id": 10,
-            "points": 3,
-            "pointsReceived": "",
-            "comments": ""
-          },
-          {
-            "type": "regularQue",
-            "questions": [
-              {
-                "que": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב (2 נק')",
-                "type": "open"
-              }
-            ],
-            "inputAns": "klhj",
-            "id": 11,
-            "points": 2,
-            "pointsReceived": "",
-            "comments": ""
-          },
-          {
-            "type": "subQue",
-            "titleQue": "לקוח מתלונן כי לא מצליח לפתוח את ה-PST שלו:",
-            "questions": [
-              {
-                "type": "open",
-                "que": "הסבר כיצד נבצע תיקון לPST. (2 נק')",
-                "inputAns": "klj",
-                "id": 12,
-                "points": 2,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט כיצד תפעל במקרה התיקון לא עבד. (נק' 1)",
-                "inputAns": "klj",
-                "id": 13,
-                "points": 1,
-                "pointsReceived": "",
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "subQue",
-            "titleQue": "כאשר לקוח מתחבר למחשב מופיעה לו הודעת שגיאה, ציין את פתרונן של השגיאות הבאות:",
-            "questions": [
-              {
-                "type": "open",
-                "que": "\"התחום שצוין אינו זמין\" (נק' 1)",
-                "inputAns": "kj",
-                "id": 14,
-                "points": 1,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "\"החשבון שצוין אינו זמין\" (נק' 1)",
-                "inputAns": "j",
-                "id": 15,
-                "points": 1,
-                "pointsReceived": "",
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "\"הכרטיס החכם חסום\" (נק' 1)",
-                "inputAns": "lkj",
-                "id": 16,
-                "points": 1,
-                "pointsReceived": "",
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "regularQue",
-            "questions": [
-              {
-                "que": "מה עושים כאשר בכוונתנו להיכנס עם הכרטיס למחשב אך אין אופציה של \"הכנס כרטיס חכם\" והאופציה היחידה שמופיעה היא \"ADMINISTRATOR\" ? פרטי את כל דרך הפעולה (2 נק')",
-                "type": "open"
-              }
-            ],
-            "inputAns": "lkj",
-            "id": 17,
-            "points": 2,
-            "pointsReceived": "",
-            "comments": ""
-          }
-        ],
-        "num": "12345",
-        "type": "exam2",
-        "name": "בוחן 2"
+        "Title": "המבחן הסופי",
+        "test": "{\"Title\":\"המבחן הסופי\",\"type\":\"finalTest\",\"parts\":[{\"Title\":\"חלק 1\",\"id\":1,\"questions\":[{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"jh\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"gkj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hkj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hjk\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hjk\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hjk\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hjk\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hjk\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hkj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hjk\"}]},{\"Title\":\"חלק 2\",\"id\":2,\"questions\":[{\"label\":\"qqqqqqqqqqqqqqqqqqqqqqqqqq\",\"points\":4,\"value\":\"hjk\"},{\"label\":\"rrrrrrrrrrrrrrrrr\",\"points\":4,\"value\":\"h\"},{\"label\":\"ttttttttttttttttttt\",\"points\":4,\"value\":\"kjh\"},{\"label\":\"pppppppppppppppppp\",\"points\":4,\"value\":\"jhj\"},{\"label\":\"hhhhhhhhhhhhhhhhhhhhh\",\"points\":4,\"value\":\"hjk\"},{\"label\":\"uuuuuuuuuuuuuuuuuuu\",\"points\":4,\"value\":\"hj\"},{\"label\":\"oooooooooooooooooooooo\",\"points\":4,\"value\":\"h\"},{\"label\":\"jjjjjjjjjjjjjj\",\"points\":4,\"value\":\"jh\"},{\"label\":\"ccccccccccccccccccccccccc\",\"points\":4,\"value\":\"h\"},{\"label\":\"vvvvvvvvvvvvvvvvvvvvv\",\"points\":4,\"value\":\"jh\"}]}],\"time\":2700,\"instructions\":[\"*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.\",\"*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים.\"],\"mahlaka\":1}",
+        "userId": 12345,
+        "status": "pending"
+      }
+    ]
+  },
+  "submittedExams": {
+    "value": [
+      {
+        "Title": "המבחן הסופי",
+        "test": "{\"Title\":\"המבחן הסופי\",\"type\":\"finalTest\",\"parts\":[{\"Title\":\"חלק 1\",\"id\":1,\"questions\":[{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"dfdfjk\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ?\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"}]},{\"Title\":\"חלק 2\",\"id\":2,\"questions\":[{\"label\":\"wwwwwwwwwwwwwwwww\",\"points\":4,\"value\":\"h\"},{\"label\":\"qqqqqqqqqqqqqqqqqqqqqqqqqq\",\"points\":4,\"value\":\"jh\"},{\"label\":\"ccccccccccccccccccccccccc\",\"points\":4,\"value\":\"jj\"},{\"label\":\"oooooooooooooooooooooo\",\"points\":4,\"value\":\"hj\"},{\"label\":\"uuuuuuuuuuuuuuuuuuu\",\"points\":4,\"value\":\"h\"},{\"label\":\"mmmmmmmmmmmmmmmmmmmm\",\"points\":4,\"value\":\"j\"},{\"label\":\"llllllllllllll\",\"points\":4,\"value\":\"hjh\"},{\"label\":\"eeeeeeeeeeeeeeeeeeeeeeee\",\"points\":4,\"value\":\"j\"},{\"label\":\"rrrrrrrrrrrrrrrrr\",\"points\":4,\"value\":\"hjh\"},{\"label\":\"jjjjjjjjjjjjjj\",\"points\":4,\"value\":\"f\"}]}],\"time\":2700,\"instructions\":[\"*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.\",\"*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים.\"],\"mahlaka\":1}",
+        "userId": 12345,
+        "status": "pending"
       }
     ]
   },
@@ -1132,7 +935,6 @@
       }
     ]
   },
-
   "dffddf": {
     "value": [
       {
@@ -1155,7 +957,11 @@
           "הm.2- הוא אמצעי האחסון הזול ביותר והמידע בו נשמר באמצעות צריבה על דיסקים.",
           "ה-HD שומר מידע באופן דיגיטלי והוא זול יותר מה-M.2."
         ],
-        "answers": ["fgfgf", "abbbb", "nnfff"],
+        "answers": [
+          "fgfgf",
+          "abbbb",
+          "nnfff"
+        ],
         "value": [
           {
             "opt": "",
@@ -1171,15 +977,18 @@
           }
         ]
       },
-
       {
         "id": 1,
         "type": "complete",
         "label": "השלם את המשפט:",
         "qustion": "ה-HD מחובר..... ללוח האם/ל-BIOS דרך כבל..... SATA/DATA המעביר..... חשמל / מידע.",
-        "bankOptions": ["ללוח האם", "ל-BIOS", "SATA", "DATA"]
+        "bankOptions": [
+          "ללוח האם",
+          "ל-BIOS",
+          "SATA",
+          "DATA"
+        ]
       },
-
       {
         "id": 1,
         "type": "bank",
@@ -1187,15 +996,27 @@
         "questions": [
           {
             "qustion": "אני לא מתחבר ללוח האם דרך כבל SATA וגם לא דרך כבל לספק כוח:",
-            "bankOptions": ["SSD", "HD", "M.2"]
+            "bankOptions": [
+              "SSD",
+              "HD",
+              "M.2"
+            ]
           },
           {
             "qustion": "המידע נשמר בי באופן מגנטי על ידי צריבה על דיסקים:",
-            "bankOptions": ["SSD", "HD", "M.2"]
+            "bankOptions": [
+              "SSD",
+              "HD",
+              "M.2"
+            ]
           },
           {
             "qustion": "אני מתחבר ישירות על חריצים ללוח האם:",
-            "bankOptions": ["SSD", "HD", "M.2"]
+            "bankOptions": [
+              "SSD",
+              "HD",
+              "M.2"
+            ]
           }
         ]
       },
@@ -1211,12 +1032,17 @@
         ],
         "value": ""
       },
-
       {
         "id": 1,
         "type": "lineBetween",
         "label": "מתח קו בין רכיב החומרה  לתפקידו:",
-        "options": ["כרטיס הרחבה", "לוח האם", "כרטיס RAM", "מעבד", "ספק כוח"],
+        "options": [
+          "כרטיס הרחבה",
+          "לוח האם",
+          "כרטיס RAM",
+          "מעבד",
+          "ספק כוח"
+        ],
         "answers": [
           "כרטיס שנועד להוסיף חיבורים (פורטים) למחשב או להחליף חיבורים תקולים",
           "יחידת העיבוד המרכזית של המחשב, תפקידו לבצע את כל פעולות המחשב",
@@ -1239,7 +1065,6 @@
           }
         ]
       },
-
       {
         "id": 1,
         "type": "radio",
@@ -1268,7 +1093,12 @@
         "id": 1,
         "type": "dragDrop",
         "label": "באילו סוגי דגמים של מחשבים אנו משתמשים בצ\"הל",
-        "dropColumns": ["בלמ\"ס", "סודי", "סודי ביותר", "סודי שותף"],
+        "dropColumns": [
+          "בלמ\"ס",
+          "סודי",
+          "סודי ביותר",
+          "סודי שותף"
+        ],
         "dragOptions": [
           "כפ\"ג",
           "כפר לוקאלי",
@@ -1326,7 +1156,6 @@
       }
     ]
   },
-
   "practicesData": {
     "value": [
       {
@@ -1355,11 +1184,24 @@
               "הm.2- הוא אמצעי האחסון הזול ביותר והמידע בו נשמר באמצעות צריבה על דיסקים.",
               "ה-HD שומר מידע באופן דיגיטלי והוא זול יותר מה-M.2."
             ],
-            "answers": ["fgfgf", "abbbb", "nnfff"],
+            "answers": [
+              "fgfgf",
+              "abbbb",
+              "nnfff"
+            ],
             "value": [
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" }
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              }
             ]
           },
           {
@@ -1367,7 +1209,12 @@
             "type": "complete",
             "label": "השלם את המשפט:",
             "qustion": "ה-HD מחובר..... ללוח האם/ל-BIOS דרך כבל..... SATA/DATA המעביר..... חשמל / מידע.",
-            "bankOptions": ["ללוח האם", "ל-BIOS", "SATA", "DATA"]
+            "bankOptions": [
+              "ללוח האם",
+              "ל-BIOS",
+              "SATA",
+              "DATA"
+            ]
           },
           {
             "id": 1,
@@ -1376,15 +1223,27 @@
             "questions": [
               {
                 "qustion": "אני לא מתחבר ללוח האם דרך כבל SATA וגם לא דרך כבל לספק כוח:",
-                "bankOptions": ["SSD", "HD", "M.2"]
+                "bankOptions": [
+                  "SSD",
+                  "HD",
+                  "M.2"
+                ]
               },
               {
                 "qustion": "המידע נשמר בי באופן מגנטי על ידי צריבה על דיסקים:",
-                "bankOptions": ["SSD", "HD", "M.2"]
+                "bankOptions": [
+                  "SSD",
+                  "HD",
+                  "M.2"
+                ]
               },
               {
                 "qustion": "אני מתחבר ישירות על חריצים ללוח האם:",
-                "bankOptions": ["SSD", "HD", "M.2"]
+                "bankOptions": [
+                  "SSD",
+                  "HD",
+                  "M.2"
+                ]
               }
             ]
           },
@@ -1419,9 +1278,18 @@
               "לוח אלקטרוני עליו יושבים כל הרכיבים במחשב, אותם הוא מקשר חשמלית."
             ],
             "value": [
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" }
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              }
             ]
           },
           {
@@ -1452,7 +1320,12 @@
             "id": 1,
             "type": "dragDrop",
             "label": "באילו סוגי דגמים של מחשבים אנו משתמשים בצ\"הל",
-            "dropColumns": ["בלמ\"ס", "סודי", "סודי ביותר", "סודי שותף"],
+            "dropColumns": [
+              "בלמ\"ס",
+              "סודי",
+              "סודי ביותר",
+              "סודי שותף"
+            ],
             "dragOptions": [
               "כפ\"ג",
               "כפר לוקאלי",
@@ -1466,16 +1339,46 @@
               "סיגל"
             ],
             "value": [
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" }
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              }
             ]
           }
         ]
@@ -1506,47 +1409,139 @@
               "הm.2- הוא אמצעי האחסון הזול ביותר והמידע בו נשמר באמצעות צריבה על דיסקים.",
               "ה-HD שומר מידע באופן דיגיטלי והוא זול יותר מה-M.2."
             ],
-            "answers": ["fgfgf", "abbbb", "nnfff"],
+            "answers": [
+              "fgfgf",
+              "abbbb",
+              "nnfff"
+            ],
             "value": [
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" },
-              { "opt": "", "ans": "" }
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              },
+              {
+                "opt": "",
+                "ans": ""
+              }
             ]
           }
         ]
       }
     ]
   },
+  "mahlakot": [
+    {
+      "Title": "pc",
+      "Id": 1
+    },
+    {
+      "Title": "vc",
+      "Id": 2
+    },
+    {
+      "Title": "system",
+      "Id": 3
+    },
+    {
+      "Title": "vip",
+      "Id": 4
+    }
+    ,
+    {
+      "Title": "תקנ\"ם",
+      "Id": 5
+    }
+    ,
+    {
+      "Title": "אג\"ם",
+      "Id": 6
+    }
+    ,
+    {
+      "Title": "טכנאים",
+      "Id": 7
+    }
+    ,
+    {
+      "Title": "מבח\"ר",
+      "Id": 8
+    }
+    ,
+    {
+      "Title": "טכנ\"י",
+      "Id": 9
+    }
+    ,
+    {
+      "Title": "אדום",
+      "Id": 10
+    }
+    ,
+    {
+      "Title": "roip",
+      "Id": 11
+    }
+    ,
+    {
+      "Title": "חוזי",
+      "Id": 12
+    }
+    ,
+    {
+      "Title": "תשתיות",
+      "Id": 13
+    }
+  ],
   "weeks": {
     "value": [
       {
         "Title": "שבוע 1",
         "Id": 1,
-        "weekNum":1
+        "weekNum": 1,
+        "mahlakaId": 1
       },
       {
         "Title": "שבוע 2",
         "Id": 2,
-        "weekNum":2
+        "weekNum": 2,
+        "mahlakaId": 1
       },
       {
         "Title": "שבוע 3",
         "Id": 3,
-        "weekNum":3
+        "weekNum": 3,
+        "mahlakaId": 1
       },
       {
         "Title": "שבוע 4",
         "Id": 4,
-        "weekNum":4
+        "weekNum": 4,
+        "mahlakaId": 1
       },
       {
         "Title": "שבוע 5",
         "Id": 5,
-        "weekNum":5
+        "weekNum": 5,
+        "mahlakaId": 1
+      },
+      {
+        "Title": "שבוע 1",
+        "Id": 6,
+        "weekNum": 1,
+        "mahlakaId": 2
+      },
+      {
+        "Title": "שבוע 2",
+        "Id": 7,
+        "weekNum": 2,
+        "mahlakaId": 2
       }
     ]
   },
-
   "lessons": {
     "value": [
       {
@@ -1556,7 +1551,8 @@
         "Id": 1,
         "weekId": 1,
         "Img": "printer.jpg",
-        "file": ""
+        "file": "",
+        "mahlakaId": 1
       },
       {
         "routeName": "CMD",
@@ -1565,7 +1561,8 @@
         "Id": 2,
         "weekId": 1,
         "Img": "CMD.png",
-        "file": ""
+        "file": "",
+        "mahlakaId": 1
       },
       {
         "routeName": "pcOperation",
@@ -1575,7 +1572,8 @@
         "weekId": 1,
         "Img": "pc.jpg",
         "numOfQue": "10",
-        "file": ""
+        "file": "",
+        "mahlakaId": 1
       },
       {
         "routeName": "hardware&bios",
@@ -1585,7 +1583,8 @@
         "weekId": 2,
         "Img": "pc.jpg",
         "numOfQue": "10",
-        "file": ""
+        "file": "",
+        "mahlakaId": 1
       },
       {
         "routeName": "discs",
@@ -1595,10 +1594,494 @@
         "weekId": 2,
         "Img": "disc.png",
         "numOfQue": "10",
-        "file": ""
+        "file": "",
+        "mahlakaId": 1
+      },
+      {
+        "routeName": "aaaa",
+        "Title": "שיעור חפיפה 1",
+        "description": "ddddaddad",
+        "Id": 6,
+        "weekId": 6,
+        "Img": "pc.jpg",
+        "numOfQue": "10",
+        "file": "",
+        "mahlakaId": 2
+      },
+      {
+        "routeName": "bbbb",
+        "Title": "שיעור חפיפה 2",
+        "description": "sdffdfdf",
+        "Id": 7,
+        "weekId": 7,
+        "Img": "disc.png",
+        "numOfQue": "10",
+        "file": "",
+        "mahlakaId": 2
       }
     ]
   },
-
-  "data": [{}]
+  "testsAndExams": [
+    {
+      "Title": "בוחן 1",
+      "type": "exam1",
+      "data": [],
+      "time": 2700,
+      "instructions": [],
+      "mahlaka": 1
+    },
+    {
+      "Title": "בוחן 2",
+      "type": "exam2",
+      "data": [],
+      "time": 2700,
+      "instructions": [],
+      "mahlaka": 1
+    },
+    {
+      "Title": "בוחן 3",
+      "type": "exam3",
+      "data": [],
+      "time": 2700,
+      "instructions": [],
+      "mahlaka": 1
+    },
+    {
+      "Title": "בוחן 4",
+      "type": "exam4",
+      "data": [],
+      "time": 2700,
+      "instructions": [],
+      "mahlaka": 1
+    },
+    {
+      "Title": "המבחן הסופי",
+      "type": "finalTest",
+      "parts": [
+        {
+          "Title": "חלק 1",
+          "id": 1,
+          "questions": [
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? ",
+              "points": 2,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג?",
+              "points": 3,
+              "value": ""
+            },
+            {
+              "label": "פרט את שלבי התקנת המשואה לאחר התקנת האימג'",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ?",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "ציין בקצרה מה השלבים לאחר ההפצת אימג'?",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "מה הדומיין של MOIP?",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10.",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+              "points": 4,
+              "value": ""
+            }
+          ]
+        },
+        {
+          "Title": "חלק 2",
+          "id": 2,
+          "questions": [
+            {
+              "label": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "bbbbbbbbbbbbbbbbbbbbbb",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "ccccccccccccccccccccccccc",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "fdddddddddddddddddd",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "eeeeeeeeeeeeeeeeeeeeeeee",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "ffffffffffffffff",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "ggggggggggggg",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "hhhhhhhhhhhhhhhhhhhhh",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "iiiiiiiiiiiiii",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "jjjjjjjjjjjjjj",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "kkkkkkkkkkkk",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "llllllllllllll",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "mmmmmmmmmmmmmmmmmmmm",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "nnnnnnnnnnnnnnnnnnn",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "oooooooooooooooooooooo",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "pppppppppppppppppp",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "qqqqqqqqqqqqqqqqqqqqqqqqqq",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "rrrrrrrrrrrrrrrrr",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "sssssssssssss",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "ttttttttttttttttttt",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "uuuuuuuuuuuuuuuuuuu",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "vvvvvvvvvvvvvvvvvvvvv",
+              "points": 4,
+              "value": ""
+            },
+            {
+              "label": "wwwwwwwwwwwwwwwww",
+              "points": 4,
+              "value": ""
+            }
+          ]
+        }
+      ],
+      "time": 2700,
+      "instructions": [
+        "*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.",
+        "*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים."
+      ],
+      "mahlaka": 1
+    },
+    {
+      "Title": "בוחן 1",
+      "type": "exam1",
+      "data": [],
+      "time": 2700,
+      "instructions": [],
+      "mahlaka": 2
+    },
+    {
+      "Title": "בוחן 2",
+      "type": "exam2",
+      "data": [
+        {
+          "type": "regularQue",
+          "questions": [
+            {
+              "que": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב (2 נק')",
+              "type": "open"
+            }
+          ],
+          "inputAns": "",
+          "id": 11,
+          "points": 2,
+          "pointsReceived": "",
+          "comments": ""
+        },
+        {
+          "type": "subQue",
+          "titleQue": "לקוח מתלונן כי לא מצליח לפתוח את ה-PST שלו:",
+          "questions": [
+            {
+              "type": "open",
+              "que": "הסבר כיצד נבצע תיקון לPST. (2 נק')",
+              "inputAns": "",
+              "id": 12,
+              "points": 2,
+              "pointsReceived": "",
+              "comments": ""
+            },
+            {
+              "type": "open",
+              "que": "פרט כיצד תפעל במקרה התיקון לא עבד. (נק' 1)",
+              "inputAns": "",
+              "id": 13,
+              "points": 1,
+              "pointsReceived": "",
+              "comments": ""
+            }
+          ]
+        },
+        {
+          "type": "subQue",
+          "titleQue": "כאשר לקוח מתחבר למחשב מופיעה לו הודעת שגיאה, ציין את פתרונן של השגיאות הבאות:",
+          "questions": [
+            {
+              "type": "open",
+              "que": "\"התחום שצוין אינו זמין\" (נק' 1)",
+              "inputAns": "",
+              "id": 14,
+              "points": 1,
+              "pointsReceived": "",
+              "comments": ""
+            },
+            {
+              "type": "open",
+              "que": "\"החשבון שצוין אינו זמין\" (נק' 1)",
+              "inputAns": "",
+              "id": 15,
+              "points": 1,
+              "pointsReceived": "",
+              "comments": ""
+            },
+            {
+              "type": "open",
+              "que": "\"הכרטיס החכם חסום\" (נק' 1)",
+              "inputAns": "",
+              "id": 16,
+              "points": 1,
+              "pointsReceived": "",
+              "comments": ""
+            }
+          ]
+        },
+        {
+          "type": "regularQue",
+          "questions": [
+            {
+              "que": "מה עושים כאשר בכוונתנו להיכנס עם הכרטיס למחשב אך אין אופציה של \"הכנס כרטיס חכם\" והאופציה היחידה שמופיעה היא \"ADMINISTRATOR\" ? פרטי את כל דרך הפעולה (2 נק')",
+              "type": "open"
+            }
+          ],
+          "inputAns": "",
+          "id": 17,
+          "points": 2,
+          "pointsReceived": "",
+          "comments": ""
+        }
+      ],
+      "time": 1200,
+      "instructions": [
+        "*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.",
+        "*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים."
+      ],
+      "mahlaka": 2
+    }
+  ]
 }

@@ -258,7 +258,7 @@
     text-decoration: none;
     font-size: 20px;
     padding: 0.2em 1em;
-    color: gray;
+    color: #6c6b6b;
     border-radius: 25px;
     border: none;
     font-weight: bold;

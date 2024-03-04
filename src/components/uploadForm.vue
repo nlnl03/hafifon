@@ -1,6 +1,5 @@
 <template>
-  <div class="loading" v-if="!isLoad"><loadingSpinner /></div>
-  <div class="main">
+  <div class="main" v-if="formType === 'filesUpload'">
     <q-form @submit.prevent="submitForm" class="q-ma-auto">
       <q-select
         v-model="selectedWeek"
@@ -54,8 +53,17 @@
           label="העלאה"
           color="primary"
           :disable="file == null"
+          :loading="loading"
         />
       </div>
+    </q-form>
+  </div>
+
+  <div class="upload-exams" v-if="formType === 'examsUpload'">
+    <q-form>
+      <q-input filled label="בחר שם"> </q-input>
+      <q-input filled label="בחר סוג (יופיע ב-url)"></q-input>
+      <q-input filled label="בחר סוג (יופיע ב-url)"></q-input>
     </q-form>
   </div>
 </template>
@@ -68,13 +76,23 @@ export default {
   components: {
     loadingSpinner,
   },
+  props: {
+    formType: String,
+  },
   data() {
     return {
       weeksWithDetails: [],
       selectedWeek: null,
       selectedLesson: null,
       file: null,
-      isLoad: false,
+      loading: false,
+      examStruct: [
+        {
+          Title: "",
+          type: "",
+          parts: [],
+        },
+      ],
     };
   },
 
@@ -93,9 +111,7 @@ export default {
     },
 
     async getData() {
-      if (!this.$isSharePointUrl) {
-        this.isLoad = true;
-      }
+      console.log(this.examStruct);
       try {
         const weeksRes = await axios.get(
           this.$sharePointUrl + "getByTitle('weeks')/items"
@@ -153,7 +169,6 @@ export default {
         });
         this.weeksWithDetails = await Promise.all(promises);
         console.log(this.weeksWithDetails);
-        this.isLoad = true;
       } catch (error) {
         console.error("error fetching:", error);
       }
@@ -161,6 +176,7 @@ export default {
 
     async submitForm() {
       try {
+        this.loading = true;
         console.log(this.file.name);
         const fileName = this.file.name;
         console.log(fileName);
@@ -201,6 +217,7 @@ export default {
           uploadRes,
           lessonUpdateRes
         );
+        this.loading = false;
       } catch (error) {
         console.error("error uploading file and updating lessons list:", error);
       }
@@ -247,6 +264,7 @@ export default {
 <style scoped>
 .main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
