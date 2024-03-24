@@ -1,5 +1,5 @@
 <template>
-  <div class="main" v-if="formType === 'filesUpload'">
+  <div class="main">
     <q-form @submit.prevent="submitForm" class="q-ma-auto">
       <q-select
         v-model="selectedWeek"
@@ -58,14 +58,6 @@
       </div>
     </q-form>
   </div>
-
-  <div class="upload-exams" v-if="formType === 'examsUpload'">
-    <q-form>
-      <q-input filled label="בחר שם"> </q-input>
-      <q-input filled label="בחר סוג (יופיע ב-url)"></q-input>
-      <q-input filled label="בחר סוג (יופיע ב-url)"></q-input>
-    </q-form>
-  </div>
 </template>
 
 <script>
@@ -76,9 +68,6 @@ export default {
   components: {
     loadingSpinner,
   },
-  props: {
-    formType: String,
-  },
   data() {
     return {
       weeksWithDetails: [],
@@ -86,13 +75,6 @@ export default {
       selectedLesson: null,
       file: null,
       loading: false,
-      examStruct: [
-        {
-          Title: "",
-          type: "",
-          parts: [],
-        },
-      ],
     };
   },
 
@@ -112,9 +94,11 @@ export default {
 
     async getData() {
       console.log(this.examStruct);
+      const mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
       try {
         const weeksRes = await axios.get(
-          this.$sharePointUrl + "getByTitle('weeks')/items"
+          this.$sharePointUrl +
+            `getByTitle('weeks')/items?$filter=mahlaka eq ${mahlakaId}`
         );
         console.log(weeksRes);
         const weeksData = weeksRes.data.value;
@@ -176,13 +160,15 @@ export default {
 
     async submitForm() {
       try {
+        const mahlaka = localStorage.getItem("mahlaka");
+        console.log(mahlaka);
         this.loading = true;
         console.log(this.file.name);
         const fileName = this.file.name;
         console.log(fileName);
 
         const weekFolderName = `שבוע ${this.selectedWeek}`;
-        const uploadUrl = `https://portal.army.idf/sites/hafifon383/_api/web/getfolderbyserverrelativeurl('/sites/hafifon383/SiteAssets/${weekFolderName}')/Files/add(url='${fileName}',overwrite=true)`;
+        const uploadUrl = `https://portal.army.idf/sites/hafifon383/_api/web/getfolderbyserverrelativeurl('/sites/hafifon383/SiteAssets/${mahlaka}/${weekFolderName}')/Files/add(url='${fileName}',overwrite=true)`;
 
         const uploadRes = await axios.post(uploadUrl, this.file, {
           headers: {

@@ -57,23 +57,26 @@
             <span class="gradeAv" ref="gradeAv">{{ average }}</span>
           </div>
 
-          <div v-for="(exam, index) in onlyExamData" :key="exam">
+          <div v-for="(exam, index) in checkedExamData" :key="index">
             <div :class="dynamicGridClass(index + 1)" style="background: white">
-              <span class="items-title">{{ examsNames[index].subject }}</span>
-              <span v-if="exam != null" class="the-grades"
-                >{{ exam[exam.length - 1]["finalGrade"] }}
-              </span>
-              <span v-if="exam == null" class="the-grades-no-examdata"
+              <span class="items-title">{{ exam.Title }}</span>
+
+              <span
+                v-if="exam.status == 'pending'"
+                class="the-grades-no-examdata"
                 >עוד לא הוזן</span
               >
 
-              <div class="show-exam">
+              <div class="show-exam" v-if="exam.status == 'checked'">
+                <span class="the-grades">{{ exam.grade }} </span>
+
                 <router-link
-                  v-if="exam != null"
                   class="exam-Checked-router"
                   :to="{
                     name: 'CheckedExams',
-                    params: { title: examsNames[index].Title },
+                    params: {
+                      title: exam.examId,
+                    },
                   }"
                   >לצפייה במבחן</router-link
                 >
@@ -138,64 +141,38 @@ export default {
       console.log(this.showImg);
     },
 
-    async parseData() {
-      this.examsNames = localStorage.getItem("examsName");
-      this.examsNames = JSON.parse(this.examsNames);
-      console.log(this.examsNames);
-      if (this.$isSharePointUrl) {
-        this.examsNames.forEach((name) => {
-          const promiseAnswers = Promise.all(
-            this.checkedExamData.map((item) => {
-              return this.$asyncParse(item[name.Title]).then((inner) => {
-                item[name.Title] = inner;
-                return { item };
-              });
-            })
-          );
-        });
-      } else {
-        return this.examsNames;
-      }
-    },
+    // async parseData() {
+    //   if (this.$isSharePointUrl) {
+    //     const promiseAnswers = Promise.all(
+    //       this.checkedExamData.map((item) => {
+    //         return this.$asyncParse(item.test).then((inner) => {
+    //           item.test = inner;
+    //           return { item };
+    //         });
+    //       })
+    //     );
+    //   } else {
+    //     return this.checkedExamData;
+    //   }
+    // },
 
     async getCheckedExam() {
       var userId = JSON.parse(localStorage.getItem("userId"));
       console.log(this.userId);
+      const fields = "Title,userId,examId,status";
       var res = null;
       if (this.$isSharePointUrl) {
         return axios
           .get(
             this.$sharePointUrl +
-              `getByTitle('submittedExams')/Items?$filter=userId eq ${userId}`
+              `getByTitle('submittedExams')/Items?$select=${fields}&$filter=userId eq ${userId}`
           )
           .then((res) => res.data.value);
       } else {
         return axios
-          .get(this.$sharePointUrl + `submittedExams?userId=${userId}`)
-          .then((res) => {
-            console.log(res.data);
-            return res.data.value;
-          });
+          .get(this.$sharePointUrl + `submittedExams`)
+          .then((res) => res.data.value);
       }
-    },
-    async filterToExamsOnly() {
-      await this.parseData();
-      return new Promise((resolve) => {
-        console.log("yesss");
-        if (this.$isSharePointUrl) {
-          this.examsNames.forEach((name) => {
-            this.onlyExamData.push(this.checkedExamData[0][name.Title]);
-          });
-        } else {
-          this.examsNames.forEach((name) => {
-            this.onlyExamData.push(this.checkedExamData[0][name.Title]);
-          });
-        }
-
-        console.log(this.onlyExamData);
-        // this.onlyExam = this.onlyExamData
-        resolve(this.onlyExamData);
-      });
     },
 
     dynamicGridClass(index) {
@@ -204,8 +181,8 @@ export default {
 
     calcTotalProgress(val) {
       var counter = 0;
-      this.onlyExamData.forEach((exam) => {
-        if (exam != null) {
+      this.checkedExamData.forEach((item) => {
+        if (item.status == "checked") {
           counter++;
         }
       });
@@ -213,7 +190,7 @@ export default {
       if (counter == 0) {
         return (val = 0);
       } else {
-        return (val = (counter / this.onlyExamData.length) * 100);
+        return (val = (counter / this.checkedExamData.length) * 100);
       }
     },
 
@@ -229,20 +206,19 @@ export default {
       // console.log(this.userName)
     },
     calcGradesAve() {
-      console.log(this.onlyExamData);
+      console.log(this.checkedExamData);
       var ave = 0;
       var counter = 0;
       var ifEmptyText = "אין מידע";
-      var length = this.onlyExamData.length;
+      var length = this.checkedExamData.length;
       console.log(length);
-      console.log(this.onlyExamData);
-      this.onlyExamData.forEach((data) => {
-        if (data != null) {
-          console.log("usdfjdh");
-          ave += data[data.length - 1]["finalGrade"];
+      console.log(this.checkedExamData);
+      this.checkedExamData.forEach((data) => {
+        if (data.status == "checked") {
+          ave += data.grade;
         } else {
           counter++;
-          length = this.onlyExamData.length - counter;
+          length = this.checkedExamData.length - counter;
         }
       });
 
@@ -261,12 +237,14 @@ export default {
 
   async beforeMount() {
     this.userNum = localStorage.getItem("userNum");
+    this.examsNames = JSON.parse(localStorage.getItem("testsNames"));
+    console.log(this.examsNames);
     this.imgSrc();
     await this.asyncSetTimeout();
     this.getUserName();
     this.isFinished = true;
     this.checkedExamData = await this.getCheckedExam();
-    await this.filterToExamsOnly();
+    console.log(this.checkedExamData);
     this.calcGradesAve();
     this.isLoadForSpinner = true;
     //  this.timeOut = await setTimeout(,200)
@@ -526,6 +504,8 @@ h5 {
   padding: 0.6em 0.8em;
   font-size: 15px;
   border-radius: 13px;
+  position: relative;
+  top: 10px;
 }
 .exam-Checked-router:hover {
   background-color: #ccc;

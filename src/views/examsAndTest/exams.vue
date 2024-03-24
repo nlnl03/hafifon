@@ -6,11 +6,7 @@
       {{ examData.Title }}
     </div>
     <div class="timer">
-      <timer
-        :totalTime="examData.time"
-        :routeName="examType"
-        :examId="examData.Id"
-      />
+      <timer :totalTime="examData.time" :routeName="examType" />
     </div>
   </div>
 
@@ -21,6 +17,7 @@
     :totalQue="totalQuestions"
     @updatedExitAlertShow="updateExitAlertShow"
     v-if="isLoadForSpinner"
+    :examId="examData.Id"
   />
 </template>
 
@@ -191,7 +188,7 @@ export default {
         this.examData = res.data[0];
       }
       console.log(this.examData);
-      
+
       const totalParts = this.examData.parts.length;
       const questionsPerPart = Math.floor(this.totalQuestions / totalParts);
       var remainingQuestions = this.totalQuestions % totalParts;
@@ -216,6 +213,11 @@ export default {
       }
       return array;
     },
+    async showSubmitted() {
+      const res = await axios.get(
+        this.$sharePointUrl + "getByTitle('submittedExams')/items"
+      );
+    },
   },
 
   async beforeMount() {
@@ -226,6 +228,7 @@ export default {
     console.log(this.examData);
 
     this.pushToArrToCheckIfEmpty();
+    // this.showSubmitted();
   },
 
   mounted() {

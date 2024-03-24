@@ -1,9 +1,5 @@
 <template>
   <div class="main">
-    <div class="type-user-num">
-      <q-input label="הקלד/י מס' אישי" dir="rtl" />
-    </div>
-
     <div class="perm-table">
       <permTable @childEvent="handleChildEvent" />
     </div>
@@ -19,41 +15,16 @@ export default {
   },
   data() {
     return {
-      urlForId: "https://portal.army.idf/sites/hafifon383/_api/web/siteusers",
-      userId: null,
       targetRoleDefId: null,
       token: null,
       currentPermission: [],
       Id: null,
       isload: false,
-      maklakaId: null,
+      mahlakaId: null,
+      userId: null,
     };
   },
   methods: {
-    async getToken() {
-      return axios
-        .post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
-        .then((res) => res.data.FormDigestValue);
-    },
-
-    async getIdOfUser(userNum) {
-      try {
-        const res = await axios.get(
-          this.urlForId + `?$filter=Email eq 's${userNum}@army.idf.il'`
-        );
-        const userData = res.data.value;
-
-        if (userData.length > 0) {
-          this.userId = userData[0].Id;
-          console.log(this.userId);
-        } else {
-          throw new Error("user not found");
-        }
-      } catch (error) {
-        throw new Error("error fetching user id" + error.message);
-      }
-    },
-
     async getTargetRoleDefenitionId() {
       const res = await axios.get(
         "https://portal.army.idf/sites/hafifon383/_api/web/roledefinitions/getbyname('שליטה מלאה')/id"
@@ -62,12 +33,12 @@ export default {
       console.log(this.targetRoleDefId);
     },
 
-    async setNewPermForGroup(name) {
-      var itemId = await this.getItemId(name);
+    async setNewPermForGroup(itemId, studentId) {
+      console.log("yessss");
 
-      return axios.post(
+      const res = axios.post(
         this.$sharePointUrl +
-          `getByTitle('testsAndExams')/items(${itemId})/roleassignments/addroleassignment(principalid=${this.userId} ,roledefid='${this.targetRoleDefId}')`,
+          `getByTitle('testsAndExams')/items(${itemId})/roleassignments/addroleassignment(principalid=${studentId} ,roledefid='${this.targetRoleDefId}')`,
         {},
 
         {
@@ -77,18 +48,21 @@ export default {
         }
       );
     },
-    async getItemId(name) {
-      this.maklakaId = JSON.parse(localStorage.getItem("maklakaId"));
-      console.log(maklakaId);
+    async getItemId(examTitle) {
+      this.mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
+      console.log(this.mahlakaId);
       return axios
         .get(
           this.$sharePointUrl +
-            `getByTitle('testsAndExams')/item?$filter=(mahlaka eq ${this.maklakaId}) and (type eq ${name})`
+            `getByTitle('testsAndExams')/items?$filter=(mahlaka eq ${this.mahlakaId}) and (type eq '${examTitle}')`
         )
         .then((result) => result.data.value[0].Id);
     },
 
-    handleChildEvent(col, row, index) {
+    handleChildEvent(row, examTitle, studentId) {
+      const newVal = row.permissions;
+      console.log(newVal);
+
       this.$swal({
         title: "האם את\ה בטוח\ה שברצונך לעדכן הרשאות אלו ? ",
         icon: "warning",
@@ -98,51 +72,51 @@ export default {
         cancelButtonText: "ביטול",
       }).then((res) => {
         if (res.isConfirmed) {
-          this.openPerm(col, row, index);
+          this.openPerm(row, examTitle, studentId);
         } else {
-          row[col.name] = !row[col.name];
+          console.log(row);
+          console.log(examTitle);
+          console.log("no");
+
+          row.permissions[examTitle] = !newVal[examTitle];
+          console.log(row.permissions[examTitle]);
         }
       });
     },
-
-    async openPerm(col, row, index) {
-      console.log(row);
-      if (this.$isSharePointUrl) {
-        await this.getIdOfUser(row.userNum);
-        await this.getTargetRoleDefenitionId();
-        this.token = await this.getToken();
-        await this.getPermListId(row.userNum);
-      }
-
-      if (row[col.name]) {
-        console.log("open per");
-        this.setNewPermForGroup(col.name);
-        this.updatePerm(col.name, row[col.name]);
-      } else {
-        console.log("delete per");
-        this.updatePerm(col.name, row[col.name]);
-        this.deletePer(col.name);
-      }
-    },
-
-    async checkTheCurrentPerm() {
-      var res = null;
-      if (this.$isSharePointUrl) {
-        res = await axios.get(
-          this.$sharePointUrl + "getByTitle('isPermissionActive')/items"
-        );
-      } else {
-        res = await axios.get(this.$sharePointUrl + "isPermissionActive");
-      }
-      this.currentPermission = res.data.value;
-    },
-    async updatePerm(name, per) {
-      const res = await axios.post(
+    async getUserId(studentId) {
+      const idRes = await axios.get(
         this.$sharePointUrl +
-          `getByTitle('isPermissionActive')/Items('${this.Id}')`,
+          `getByTitle('students')/Items?$filter=num eq ${studentId}`
+      );
+      this.userId = idRes.data.value[0].Id;
+      console.log(this.userId);
+    },
+
+    async openPerm(row, examTitle, studentId) {
+      console.log("ty");
+      var itemId = await this.getItemId(examTitle);
+      console.log(row.permissions[examTitle]);
+      await this.getUserId(studentId);
+
+      if (row.permissions[examTitle]) {
+        await this.setNewPermForGroup(itemId, studentId);
+        console.log("added permission");
+      } else {
+        await this.deletePer(examTitle, studentId);
+        console.log("delete the permission");
+      }
+      this.updatePerm(row);
+    },
+
+    async updatePerm(row) {
+      console.log(row.permissions);
+
+      const dataStringified = JSON.stringify(row.permissions);
+      const res = await axios.post(
+        this.$sharePointUrl + `getByTitle('students')/Items(${this.userId})`,
         {
-          __metadata: { type: "SP.Data.IsPermissionActiveListItem" },
-          [name]: per,
+          __metadata: { type: "SP.Data.StudentsListItem" },
+          permissions: dataStringified,
         },
         {
           headers: {
@@ -156,11 +130,11 @@ export default {
       );
     },
 
-    async deletePer(per) {
-      var itemId = await this.getItemId(per);
+    async deletePer(examTitle, studentId) {
+      var itemId = await this.getItemId(examTitle);
       const res = await axios.post(
         this.$sharePointUrl +
-          `getByTitle('testsAndExams')/items(${itemId})roleassignments/getbyprincipalid('${this.userId}')`,
+          `getByTitle('testsAndExams')/items(${itemId})/roleassignments/getbyprincipalid(${studentId})`,
         {
           __metadata: { type: "SP.Data.testsAndExamsListItem" },
         },
@@ -175,25 +149,14 @@ export default {
         }
       );
     },
-
-    async getPermListId(userNum) {
-      const res = await axios.get(
-        this.$sharePointUrl +
-          `getByTitle('isPermissionActive')/items?$filter=userNum eq '${userNum}'`
-      );
-      this.Id = res.data.value[0].ID;
-      console.log(this.Id);
-    },
   },
 
   async beforeMount() {
-    // if(this.$isSharePointUrl){
-    //     await this.getIdOfUser()
-    //     this.getTargetRoleDefenitionId()
-    //     this.token = await this.getToken()
-    // }
-    // this.checkTheCurrentPerm()
-    // this.isload = true
+    if (this.$isSharePointUrl) {
+      this.token = await this.$asyncGetToken();
+      this.getTargetRoleDefenitionId();
+    }
+    this.isload = true;
   },
 };
 </script>

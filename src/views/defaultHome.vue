@@ -59,38 +59,39 @@ export default {
       currentUser:
         process.env.NODE_ENV == "development"
           ? "http://localhost:3000/currentUser"
-          : "https://portal.army.idf/sites/gdud0383/Team/_api/web/currentUser",
+          : "https://portal.army.idf/sites/hafifon383/_api/web/currentUser",
       Id: null,
       userName: null,
-      userNum: null,
+      userId: null,
       token: null,
       token2: null,
       isLoad: false,
       showDropdown: null,
       plugaBtns: [
         {
-          label: 'הפת"ק',
+          label: 'הפתק',
           color: "rgb(115 169 51)",
           mahlakot: ["roip", "חוזי", "תשתיות"],
         },
         {
-          label: 'ת. מטכ"ל',
+          label: 'ת. מטכל',
           color: "rgb(66 112 171)",
-          mahlakot: ["טכנאים", 'מבח"ר', 'טכנ"י', "אדום"],
+          mahlakot: ["טכנאים", 'מבחר', 'טכני', "אדום"],
         },
         {
-          label: 'אג"ם',
+          label: 'אגם',
           color: "#cc2727",
           type: "button",
         },
 
         {
-          label: 'שו"ב',
+          label: 'שוב',
           color: "#4EADAF",
-          mahlakot: ["pc", "vc", 'תקנ"ם'],
+          mahlakot: ["pc", "vc", 'תקנם'],
         },
       ],
       mahlakot: [],
+      testsNames: [],
     };
   },
   methods: {
@@ -112,8 +113,13 @@ export default {
         ? res.data.value[0].Id
         : res.data[0].Id;
       console.log(mahlakaId);
+      this.testsNames = this.$isSharePointUrl
+        ? res.data.value[0].testsNames
+        : JSON.stringify(res.data[0].testsNames);
+      console.log(this.testsNames);
       localStorage.setItem("mahlakaId", mahlakaId);
-
+      localStorage.setItem("testsNames", this.testsNames);
+      console.log("storeddddd");
       this.$router.push({ name: "User" });
     },
     // async getMahlakot() {
@@ -138,11 +144,11 @@ export default {
       const res = await axios.get(this.currentUser);
       this.currentUserData = res.data;
       console.log(this.currentUserData);
-      var userNum = this.currentUserData.LoginName.split("s");
-      this.userNum = userNum[1];
-      // console.log(this.userNum)
+      var userId = this.currentUserData.LoginName.split("s");
+      this.userId = userId[1];
+      console.log(this.userId);
       this.Id = this.currentUserData.Id;
-      // console.log(this.Id)
+      console.log(this.Id);
       var Title = this.currentUserData.Title;
 
       if (Title.includes(" -")) {
@@ -156,7 +162,7 @@ export default {
 
       localStorage.setItem("userName", this.userName);
       localStorage.setItem("userId", this.Id);
-      localStorage.setItem("userNum", this.userNum);
+      localStorage.setItem("userNum", this.userId);
       // console.log(this.Id)
       // console.log(this.currentUserData)
 

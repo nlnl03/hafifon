@@ -1,7 +1,7 @@
 <template>
   <div class="main-flex">
     <div class="box">
-      <span class="title">{{ this.$route.params.title }}</span>
+      <span class="title">{{ this.$route.params }}</span>
 
       <div class="guide">
         התרגול מורכב מכמה סוגי של שאלות למשל: אמריקאיות, בנק מילים, השלמה ועוד.
@@ -13,11 +13,11 @@
 
 <script>
 export default {
-    methods:{
-        goToPrac(){
-            this.$router.push({name: "quiz", params:this.$route.params})
-        }
-    }
+  methods: {
+    goToPrac() {
+      this.$router.push({ name: "quiz", params: this.$route.params });
+    },
+  },
 };
 </script>
 

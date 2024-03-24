@@ -1,539 +1,649 @@
 <template>
   <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
-  <div class="form-flex">
-    <form class="quiz-box" v-if="isFinished&&isLoadForSpinner" >  
-        <div v-for="(question,index) in examData" :key="index"  >
-          <div v-if="index==ite">
-              <div class="question" v-if="question.type!= null"> 
-                  <span class="questions-text">{{question.label}}</span> 
-                  <div class="current-que">{{ite+1}}/{{examData.length}}</div> 
-              </div> 
-
-              <div class="answer-options" v-if="question.type == 'radio' " >
-                <label v-for="(opt, optIndex) in question.options" :key="optIndex" >
-                  <input type="radio" v-model="question.value" :value="opt" />
-                  <span>{{opt}}</span>
-                </label>
-                 <!-- <q-radio v-for="(opt, optIndex) in question.options" :key="optIndex" :label="opt" v-model="question.value" :val="opt" :color="getRadioColor(question, opt)"  :ripple="false" /> -->
-              </div>
-               
-              <div class="bank-quiz" v-if=" question.type == 'bankQue' ">
-                <div class="bank-quiz-que"  v-for="(option,midIndex) in Object.keys(question.bankOptions)" :key="option+midIndex" >
-                        <div class="option-title" >{{option}}</div>
-                        <div class="VX" :ref="option"></div>
-                    <div class="bank-options" :ref="option+midIndex">
-                        <div class="bank-words-items"  v-for="(item,indexInner) in question.bankCorrect" :key="item+indexInner">
-                           <input type="radio" v-model="bankUserData[question.Title][option]" :id="item+midIndex" :value="item" @click="clickBankHandler($event,option,bankUserData[question.Title],index,midIndex)" :disabled="bankUserData[question.Title][option]!=''" />
-                           <label class="bank-options-text" :for="item+midIndex" >{{item}}</label>  
-                        </div>
-                    </div>
-                </div>
-              </div>
-
-              <div v-if=" question.type == null">
-                <div class="que-title">שאלה {{ite+1}} נסו בעצמכם</div>
-                <div class="questions-without-ans">
-                    <span>{{question.Title}}</span>
-                 </div>
-                  <button class="next-btn-on-type-null" @click="nextQue" v-if="examData.length!=ite+1" >הבא</button>
-                  <button class="next-btn-on-type-null" @click="submit" v-if="examData.length==ite+1" >סיים</button>
-              </div>
-
-              <div class="drag-drop" v-if=" question.type == 'dragDrop' ">
-                  <dragAndDrop :question="question"/>
-              </div>
-                <button class="next-button" @click="nextQue" ref="nextBtn" :disabled="!userData[question.Title]&&isDisabled" v-if="ite!=examData.length-1&&question.type != null" :style="`--next-btn-cusror:${nextBtnCursor}`">הבא</button>
+  <div class="container" v-if="isLoadForSpinner">
+    <div class="question-box">
+      <div class="question">
+        <h2>
+          <span class="que-num">{{ currentQuestionIndex + 1 }}.</span>
+          {{ currentQuestion.Title }}
+        </h2>
+        <template v-if="currentQuestion.type === 'radio'">
+          <div class="q-gutter-sm">
+            <div
+              class="q-gutter-sm"
+              v-for="(option, index) in currentQuestion.options"
+              :key="index"
+            >
+              <q-radio
+                dense
+                v-model="currentQuestion.selectedOption"
+                :val="option"
+                :label="option"
+              />
+            </div>
           </div>
-        </div>  
-              <button @click="submit" class="next-button" v-if="examData.length==ite+1&&examData[ite].type != null" :disabled="!isEndBtnAllow" ref="endBtn" :style="`--next-btn-cusror:${nextBtnCursor}`"> 
-                  <span class="finish-btn-text"> סיים </span>
-              </button>
-     </form>
+        </template>
+
+        <template v-if="currentQuestion.type === 'checkbox'">
+          <div style="display: flex; flex-direction: column">
+            <q-checkbox
+              v-for="(option, optIndex) in currentQuestion.options"
+              :key="optIndex"
+              v-model="currentQuestion.selectedOption[optIndex]"
+              :val="option"
+              :label="option"
+            />
+          </div>
+        </template>
+
+        <template v-if="currentQuestion.type === 'dragDropComplete'">
+          <!-- <h2>{{ currentQuestion.title }}</h2> -->
+          <div class="sentence-container">
+            <span
+              v-for="(word, index) in currentQuestion.sentences"
+              :key="index"
+              @drop="drop(currentQuestion.sentences, index, $event)"
+              @dragover.prevent
+            >
+              {{ word || "___" }}
+            </span>
+          </div>
+          <h5>בנק מילים:</h5>
+          <div class="word-bank">
+            <span
+              v-for="(word, index) in currentQuestion.bankWords"
+              :key="index"
+              draggable="true"
+              @dragstart="dragStart(word, $event)"
+            >
+              {{ word }}
+            </span>
+          </div>
+          <button class="reset-btn" @click="resetQuestion(currentQuestion)">
+            <span style="margin-left: 5px">אתחל</span>
+            <q-icon name="fas fa-undo"></q-icon>
+          </button>
+        </template>
+
+        <template v-if="currentQuestion.type === 'dragDropTable'">
+          <!-- <h2>{{ currentQuestion.title }}</h2> -->
+          <div class="drag-drop-table">
+            <table>
+              <thead>
+                <tr>
+                  <th
+                    v-for="(subject, subIndex) in currentQuestion.subjects"
+                    :key="subIndex"
+                  >
+                    {{ subject }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    v-for="(subject, subIndex) in currentQuestion.subjects"
+                    :key="subIndex"
+                  >
+                    <div
+                      class="placeholder"
+                      @dragover.prevent
+                      @drop="dropTable(currentQuestion, subIndex, $event)"
+                    >
+                      <div
+                        class="placeholder-item"
+                        v-if="
+                          currentQuestion.table[subIndex] &&
+                          currentQuestion.table[subIndex].length > 0
+                        "
+                      >
+                        <div
+                          class="word"
+                          v-for="(word, wordIndex) in currentQuestion.table[
+                            subIndex
+                          ]"
+                          :key="wordIndex"
+                        >
+                          {{ word }}
+                        </div>
+                      </div>
+                      <div v-else class="drop-here">גרור לכאן</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h5>בנק מילים</h5>
+          <div class="word-bank">
+            <div class="bank-items">
+              <div
+                class="word"
+                v-for="(word, wordIndex) in currentQuestion.bankWords"
+                :key="wordIndex"
+                :draggable="true"
+                @dragstart="dragStart(wordIndex, $event)"
+              >
+                {{ word }}
+              </div>
+            </div>
+          </div>
+          <button class="reset-btn" @click="resetQuestion(currentQuestion)">
+            <span style="margin-left: 5px">אתחל</span>
+            <q-icon name="fas fa-undo" size="20"></q-icon>
+          </button>
+        </template>
+      </div>
+
+      <div class="buttons">
+        <button
+          v-if="currentQuestionIndex > 0"
+          @click="prevQuestion"
+          class="back-next-btn"
+          style="background-color: #acacac"
+        >
+          <q-icon
+            name="fas fa-long-arrow-alt-right"
+            size="17px"
+            style="margin-left: 7px"
+          ></q-icon>
+          הקודם
+        </button>
+
+        <button
+          v-if="
+            canProceedToNextQuestion &&
+            currentQuestionIndex !== quizData.length - 1
+          "
+          @click="nextQuestion"
+          class="back-next-btn"
+          style="background-color: var(--main-background-color)"
+        >
+          הבא
+          <q-icon
+            name="fas fa-long-arrow-alt-left"
+            size="17px"
+            style="margin-right: 7px"
+          ></q-icon>
+        </button>
+
+        <button
+          v-if="
+            canProceedToNextQuestion &&
+            currentQuestionIndex === quizData.length - 1
+          "
+          @click="submitAnswer"
+          style="background-color: var(--main-background-color)"
+        >
+          סיים
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import practiceResult from '../quizRoutes/practiceResult.vue'
-import loadingSpinner from '@/components/loadingSpinner.vue'
-import dragAndDrop from '@/components/dragAndDropQuiz.vue'
-import axios from 'axios'
+import practiceResult from "../quizRoutes/practiceResult.vue";
+import loadingSpinner from "@/components/loadingSpinner.vue";
+import axios from "axios";
 export default {
-  components:{
+  components: {
     practiceResult,
     loadingSpinner,
-    dragAndDrop
   },
-  data(){
-    return{
-       examData:[],
-       userData:{},
-       bankUserData:{},
-       grades: 0,
-       isFinished:false,
-       isFinishedButton: false,
-       ite: 0,
-       inputsCursor:'pointer',
-       nextBtnCursor: 'not-allowed',
-       wrongAns:'',
-       wrongQue:'',
-       theCorrectAns:'',
-       results:[],
-       bankResults:[],
-       bankWrongAns:[],
-       parseAns:[],
-       isDisabled:true,
-       bankQuePoints:0,
-       isLoadForSpinner:false,
-       isEndBtnAllow:false,
-       countRightsAns:0,
-       queWithoutAns:0
+  data() {
+    return {
+      quizData: [],
+      currentQuestionIndex: 0,
+      grade: null,
+      isLoadForSpinner: false,
+    };
+  },
+  methods: {
+    nextQuestion() {
+      if (this.currentQuestionIndex < this.quizData.length - 1) {
+        this.currentQuestionIndex++;
+        console.log("next");
       }
-  },
-  methods:{
-    clickHandler(event,index,titleOfQuestion){
-          this.inputsCursor = 'not-allowed' 
-          this.nextBtnCursor = 'pointer'
-           const pressedAnswer = event.target;
-           const pressedAnswerValue = pressedAnswer.value
-          const indexOfCorrectAnswer = this.examData[index]["correctAnswer"]
-          const rightAnswer = this.$refs[titleOfQuestion].children[indexOfCorrectAnswer].querySelector("input")
-           const rightAnswerValue = rightAnswer.value
-               var nextBtn = this.$refs["nextBtn"]
-                var endBtn = this.$refs["endBtn"]
-          if(pressedAnswerValue != rightAnswerValue){ 
-                pressedAnswer.classList.add("input-answer-wrong")
-            }
-            else{
-                this.countRightsAns++
-                console.log(this.countRightsAns)
-            }
-                   rightAnswer.classList.add("input-answer-right")
-             
-              if(this.ite!=this.examData.length-1){
-                console.log("yess")
-                   nextBtn.classList.add("next-btn-on")
-               }
-               if(index == this.examData.length-1){
-                   this.isEndBtnAllow = true
-                   endBtn.classList.add("next-btn-on")
-               }
-       },
-      clickBankHandler(event,option,modelData,index,midIndex){
-            var inputsCursor = this.$refs[option+midIndex]
-              inputsCursor.classList.add("bank-input-cursor")
-              this.checkIfcorrectBank(event,option,modelData,index)
-              this.disableNextBtn(modelData)
-               if(index == this.examData.length-1){
-                   this.isEndBtnAllow = true
-                   endBtn.classList.add("next-btn-on")
-               }
-         },
-        checkIfcorrectBank(event,option,modelData,index){
-          const pressedBankAnswer = event.target;
-          const val = pressedBankAnswer.value 
-          const addVX = this.$refs[option]
-            var bankOptionLen = 0
-               Object.keys(this.examData[index].bankOptions).forEach(key =>{
-                    bankOptionLen++
-               })
+    },
 
-           if(val==this.examData[index].bankOptions[option]){
-                console.log("correct")
-                addVX.classList.add("input-bank-right")
-                this.bankQuePoints += (100/(this.examData.length-this.queWithoutAns))/bankOptionLen
-                // console.log(this.bankQuePoints)
-                this.countRightsAns++
-                console.log(this.countRightsAns)
-              }
-            else{
-              console.log("not correct")
-              addVX.classList.add("input-bank-wrong")
-              this.bankResults.push({wrongBankQue:this.examData[index].Title,wrongBankAns:val+": "+option,theCorrectBankAns:this.examData[index].bankOptions[option]+": "+option,type:"bankQue"})
-              }
-          },
+    prevQuestion() {
+      if (this.currentQuestionIndex > 0) {
+        this.currentQuestionIndex--;
+      }
+    },
 
-           disableNextBtn(modelData){
-             var wrongCounter = 0;
-              Object.values(modelData).forEach(val => {
-                console.log(val)
-                if(val == ''){
-                     wrongCounter++ ;
+    submitAnswer() {
+      this.currentQuestionIndex = null;
+      console.log(this.quizData);
+      this.$router.push({ name: "result" });
+    },
+
+    gradeQuiz() {
+      var totalQuestions = this.quizData.length;
+      var correctAnswers = 0;
+
+      this.quizData.forEach((question) => {
+        switch (question.type) {
+          case "radio":
+            if (question.selectedOption === question.correctAnswer) {
+              correctAnswers++;
+              console.log("radio is correct");
+            }
+            break;
+          case "checkbox":
+            var correctOptionsCount = 0;
+
+            question.options.forEach((option, index) => {
+              if (
+                question.correctAnswer.includes(option) &&
+                question.selectedOption[index]
+              ) {
+                correctOptionsCount++;
+              }
+            });
+
+            var totalPossibleCorrectOptions = question.correctAnswer.length;
+            var fracCorrect = correctOptionsCount / totalPossibleCorrectOptions;
+
+            correctAnswers += fracCorrect;
+            break;
+
+          case "dragDropComplete":
+            var isCorrect =
+              question.sentences.join("") === question.correctAnswer.join("");
+
+            if (isCorrect) {
+              correctAnswers++;
+            }
+            break;
+
+          case "dragDropTable":
+            var correctConceptsCount = 0;
+
+            question.correctMatches.forEach((correctMatch) => {
+              const { subject, concepts } = correctMatch;
+              const subjectIndex = question.indexOf(subject);
+              if (subjectIndex !== -1) {
+                if (
+                  question.table[subjectIndex] &&
+                  question.table[subjectIndex].every((concept) =>
+                    concepts.includes(concept)
+                  )
+                ) {
+                  correctConceptsCount += concepts.length;
                 }
-              });
-              if (wrongCounter >1){
-                   this.isDisabled = true;
-              }else{
-                this.isDisabled = false;
-                  const nextBtnActive = this.$refs["nextBtn"]
-                   nextBtnActive.classList.add("next-btn-on")
-                   this.nextBtnCursor = 'pointer'
               }
-            },
+            });
 
-      asyncParse(obj, propName){
-        return new Promise((resolve)=>{
-          const passedVal = JSON.parse(obj[propName])
-          obj[propName] = passedVal
-          resolve(obj)
-        })
-      },
-            
-    nextQue(){
-      this.isDisabled = true
-        this.inputsCursor='pointer',
-        this.nextBtnCursor= 'not-allowed'
-        this.ite++
-        this.isFinishedButton=false         
-    },
-    backQue(){
-         this.ite--
-    },
-    updateVmodelAmerican(){
-            this.examData.forEach((question)=>{ 
-             if(question.type=="american"){
-                console.log("american")
-                  this.userData[question.Title] = ""  
-             }         
-       })
-        // console.log(this.userData)
-        this.isFinished = true;
-    },
-
-    updateVmodelBank(){           
-            this.examData.forEach((question)=>{ 
-             if(question.type=="bankQue"){
-              this.bankUserData[question.Title] = {}
-             Object.keys(question.bankOptions).forEach((que)=>{
-               this.bankUserData[question.Title][que] = ""
-            })
-          } 
-        })
-           console.log(this.bankUserData)
-               this.isFinished = true;
-          
-    },
-     submit(){
-       this.$router.push({name:'result'})
-          this.examData.forEach(que => {
-           if(que.type=='american'){
-                if(this.userData[que.Title]== que.answers[que.correctAnswer])
-                  {
-                   this.grades++
-                  }
-                  
-              else{
-                this.wrongQue = que.Title
-                this.wrongAns = this.userData[que.Title]
-                this.theCorrectAns = que.answers[que.correctAnswer]
-                this.results.push({wrongQue:this.wrongQue,wrongAns:this.wrongAns,theCorrectAns:this.theCorrectAns,type:"AmerQue"})     
-              }
-           }       
-      })
-          var pointsInPerc =  Math.round((this.grades/(this.examData.length-this.queWithoutAns))*100+this.bankQuePoints)
-          localStorage.setItem("pointsInPerc",JSON.stringify(pointsInPerc))
-          localStorage.setItem("results", JSON.stringify(this.results))
-          console.log(this.results)
-          localStorage.setItem("bankResults",JSON.stringify(this.bankResults))
-          console.log(this.bankResults)
-          var countRightsAns = this.countRightsAns + "/" + (this.examData.length-this.queWithoutAns)
-          localStorage.setItem("countRightsAns",countRightsAns)
-    },
-    
-     async getData(){
-       var res = null
-       if(this.$isSharePointUrl){
-          res = await axios.get(this.$sharePointUrl+`getByTitle('practicesData')/Items?$filter=Title eq '${this.$route.params.title}'`);
-          var examData = res.data.value
-          this.examData = examData[0]
-
-            await this.asyncParse(this.examData,'data')
-            this.examData = this.examData.data
-              console.log(this.examData)
-
-       }
-
-        else{
-          res = await axios.get(this.$sharePointUrl+`practicesData`)
-          var examData = res.data.value
-          this.examData = examData.filter((item)=> item.weekId == JSON.parse(this.$route.params.week) && item.pracId == JSON.parse(this.$route.params.numOfPrac))[0].data
-
+            var totalPossibleConcepts = question.correctMatches.reduce(
+              (total, match) => total + match.concepts.length,
+              0
+            );
+            var fractionCorrect = correctConceptsCount / totalPossibleConcepts;
+            correctAnswers += fractionCorrect;
+            break;
         }
-          console.log(this.examData)
+      });
 
-
-          //     this.examData.forEach(que=>{
-          //       if(que.type==null){
-          //         this.queWithoutAns++
-          //       }
-          //     })
-          // console.log(this.examData.length)
-          // console.log(this.queWithoutAns)
-       },
-    asyncSetTimeout(){
-      return new Promise((res)=>{
-        setTimeout(res,500)
-      })
+      return (correctAnswers / totalQuestions) * 100;
     },
 
+    dragStart(word, event) {
+      event.dataTransfer.setData("text/plain", word);
+      console.log(event.dataTransfer);
+    },
 
+    drop(sentence, index, event) {
+      event.preventDefault();
+      const draggedWord = event.dataTransfer.getData("text/plain");
+      if (!sentence[index]) {
+        sentence.splice(index, 1, draggedWord);
+      }
+    },
 
+    dropTable(question, columnIndex, event) {
+      event.preventDefault();
+      const wordIndex = parseInt(event.dataTransfer.getData("text/plain"));
+      const word = question.bankWords[wordIndex];
 
-    getRadioColor(question, opt){
-      return question.value === opt ? "positive" : "dark"
-    }
+      if (!question.table[columnIndex]) {
+        question.table[columnIndex] = [word];
+      } else {
+        question.table[columnIndex].push(word);
+      }
+    },
+
+    resetQuestion(question) {
+      switch (question.type) {
+        case "dragDropComplete":
+          question.bankWords = [...question.initialBankWords];
+          question.sentences = JSON.parse(
+            JSON.stringify(question.initialSentences)
+          );
+          break;
+        case "dragDropTable":
+          question.table = [];
+          break;
+      }
+    },
+
+    async getQuiz() {
+      try {
+        var res = null;
+        if (this.$isSharePointUrl) {
+          res = await axios.get(
+            this.$sharePointUrl +
+              `getByTitle('practices')/Items(${this.$route.params.numOfPrac})`
+          );
+          var quizData = res.data.value;
+
+          const promiseParse = await Promise.all(
+            this.quizData.map((item) => {
+              return this.$asyncParse(item.data).then((inner) => {
+                item.data = inner;
+                return { item };
+              });
+            })
+          );
+          this.quizData = quizData[0];
+
+          this.quizData = this.quizData.data;
+          console.log(this.quizData);
+        } else {
+          res = await axios.get(this.$sharePointUrl + `practicesData`);
+          var quizData = res.data.value;
+          this.quizData = quizData.filter(
+            (item) => item.pracId == JSON.parse(this.$route.params.numOfPrac)
+          );
+        }
+        console.log(this.quizData);
+        this.initialize();
+        this.isLoadForSpinner = true;
+      } catch (error) {
+        console.log("error fetching data", error);
+      }
+    },
+
+    initialize() {
+      this.quizData.forEach((question) => {
+        if (question.type === "dragDropComplete") {
+          question.initialBankWords = [...question.bankWords];
+          question.initialSentences = JSON.parse(
+            JSON.stringify(question.sentences)
+          );
+        } else if (question.type === "checkbox") {
+          question.selectedOption = Array.from(
+            { length: question.options.length },
+            () => false
+          );
+        }
+      });
+      console.log(this.quizData);
+    },
+
+    getRadioColor(question, opt) {
+      return question.value === opt ? "positive" : "dark";
+    },
   },
 
-   
-      async beforeMount(){
-        console.log(this.$route.params)
-        this.getData()
-          await this.asyncSetTimeout()
-          // console.log(this.examData)
-          // this.updateVmodelBank()
-          this.isLoadForSpinner = true
-    },
+  async beforeMount() {
+    console.log(this.$route.params);
+    this.getQuiz();
+  },
 
-      mounted(){
-          this.updateVmodelAmerican()
-      },
-         
-}
+  computed: {
+    currentQuestion() {
+      return this.quizData[this.currentQuestionIndex] || null;
+    },
+    canProceedToNextQuestion() {
+      if (this.currentQuestion.type === "radio") {
+        return this.currentQuestion.selectedOption !== null;
+      } else if (this.currentQuestion.type === "checkbox") {
+        return this.currentQuestion.selectedOption.length > 0;
+      } else if (this.currentQuestion.type === "dragDropComplete") {
+        var boolCheck = true;
+        this.currentQuestion.sentences.forEach((word) => {
+          if (word == "") {
+            boolCheck = false;
+          }
+        });
+        return boolCheck;
+      } else {
+        return this.currentQuestion.table.length > 0;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
-button{
-    height: 45px;
-    width: 120px;
-    border: 1px solid var(--main-background-color);
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
+/* button {
+  height: 45px;
+  width: 120px;
+  border: 1px solid var(--main-background-color);
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
 }
-.next-button{
-  border-radius:15px ;
+.next-button {
+  border-radius: 15px;
   position: absolute;
   bottom: 25px;
   cursor: var(--next-btn-cusror);
   right: 50%;
   transform: translateX(50%);
 }
-.next-btn-on{
-    border:none;
-    color: #fff;
-    background-color: var(--main-background-color);
+.next-btn-on {
+  border: none;
+  color: #fff;
+  background-color: var(--main-background-color);
 }
-.next-btn-on-type-null{
-     border:none;
-     position: absolute;
-     top:80%;
-     right: 50%;
-     transform: translate(50%,80%);
-    color: #fff;
-    background-color: var(--main-background-color);
+.next-btn-on-type-null {
+  border: none;
+  position: absolute;
+  top: 80%;
+  right: 50%;
+  transform: translate(50%, 80%);
+  color: #fff;
+  background-color: var(--main-background-color);
 }
-.submit-btn{
-    position: absolute;
-    text-decoration: none;
-    height: 40px;
-    width: 110px;
-    bottom: 25px;
-    border: 1px solid var(--main-background-color);
-    border-radius: 10px;
-    font-size: 18px;
-    right: 50%;
-    transform: translateX(50%);
-    cursor: pointer;
-    color: #fff;
-    background-color: var(--main-background-color);
-}
-.form-flex{
-  display: flex;
-  width: 100%;
-  justify-content: center;
-}
-.quiz-box{
-    position: relative;
-    display: flex;
-    justify-content: center;
-     background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 0 15px 0 rgba(0,0,0,.2);
-    height: 670px;
-    width: 1040px;
-}
-.question{
-    min-height: 80px;
-    padding: 0.5em 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(0,0,0,.1);    
-    font-size: 24px;
-    font-weight: 600;
-}
-.answer-options{
-    padding: 25px 30px 20px 30px;
-    margin-top: 30px;
-    max-height: 397px;
-    overflow-y: auto;
-    direction: ltr;
-}
-.answer-items{
-    height: 40px;
-    position: relative;
-    background-color: #eff5fbc2;
-    border: 1px solid #b3c5d594;
-    border-radius: 30px;
-    padding: 0.85em;
-    margin-bottom: 30px;
-    cursor: var(--cursor);
- }
-
-.bank-quiz{
-    padding: 25px 30px 20px 30px;
-    margin-top:20px;
-    max-height: 385px;
-    overflow-y: auto;
-    direction: ltr;
-}
-.bank-quiz-que{
-    display: flex;
-    align-items: center;
-    min-height: 35px;
-    justify-content: space-between;
-    position: relative;
-    background-color: rgba(239,245,251,.7607843137254902);
-    border: 1px solid rgba(179,197,213,.5803921568627451);
-    border-radius: 30px;
-    padding: .85em;
-    margin-bottom: 30px;
-    cursor: var(--cursor);
- }
- .bank-options{
-    cursor: pointer;
-    position: relative;
-    display: flex;
-    width: 50%;
-    min-height: 35px;
-    text-align: center;
- }
- .bank-words-items{
-    border-left: 1px solid rgba(0,0,0,.1);
-    position: relative;
-    padding: 0 15px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-   .bank-options-text{
-      display: flex;
-      justify-content: center;
-      align-items: center; 
-   }
-   .bank-input-cursor{
-    cursor: not-allowed;
-   }
-   .items-text{
-     height: 100%;
-   }
-   .bank-words-items:first-child{
-     border-right: 1px solid rgba(0,0,0,.1);
-   }
-   .option-title{
-     padding: 0.5em 2.3em;
-     margin-left: 2em;
-   }
-   
- .input-answer-right::before{
-    margin-right: 8px;
-    content: '✔';
-    bottom: 2px;
-    color: green;
-    position: relative;
-    right: -2px;
-  }
- 
- .input-answer-wrong::before{
-    position: relative;
-    right: 5px;
-    top:5px;
-    content:"❌";  
-    font-size: 20px;
-  }
-  .input-bank-right::before{
-      content: '✔';
-      height: 100%;
-      display: flex;
-      align-items: center;
-      /* margin-left:30px; */
-      right:20px;
-      font-size:24px;
-      color: green;
-      position: absolute;    
-      top:-3px;
-    }
-    
-  .input-bank-wrong::before{
-     content:"❌";
-      display: flex;
-      align-items: center;
-      height: 100%;
-      right:18px;
-      font-size:18px;
-      color: green;
-      position: absolute;    
-      top:0;
-    }
- input{
-  appearance: none;
-   cursor: var(--cursor);
-}
-label{
-  cursor: var(--cursor);
- }
-.drag-drop{
-    display: flex;
-    justify-content: center;
-}
-.answers-text{
-    padding-right: 2.7em;
-    padding-left: 2em;
-    font-size: 20px;
-    display: flex;
-    height: 100%;
-    align-items: center;
-    cursor: var(--cursor);
-}
-
-.questions-text{
-  width: 80%;
-}
-.questions-without-ans{
-    font-size: 30px;
-    margin: 0 10%;
-    margin-top: 135px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-}
-.finish-btn-text{
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-}
-.que-title{
-  font-size: 45px;
-  font-weight: 700;
+.submit-btn {
+  position: absolute;
+  text-decoration: none;
+  height: 40px;
+  width: 110px;
+  bottom: 25px;
+  border: 1px solid var(--main-background-color);
+  border-radius: 10px;
+  font-size: 18px;
+  right: 50%;
+  transform: translateX(50%);
+  cursor: pointer;
+  color: #fff;
+  background-color: var(--main-background-color);
+} */
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  margin-top: 80px;
   position: relative;
-  top: 50px;
+}
+.question-box {
+  border: 1px solid #ccc;
+  padding: 25px;
+  min-height: 350px;
+  margin-bottom: 20px;
+}
+.quiz-box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
+  height: 670px;
+  width: 1040px;
+}
+.spinner {
+  position: relative;
+  top: 100px;
+}
+
+.word,
+.placeholder {
+  /* cursor: grab; */
+  margin: 5px;
+  padding: 5px;
+  background-color: #f9f9f9;
+  display: inline-block;
+}
+.sentence {
+  margin-bottom: 10px;
+}
+button {
+  cursor: pointer;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+button:hover {
+  opacity: 0.8;
+}
+.sentence-container {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #ccc;
+  padding: 0.5em;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+.sentence-container span {
+  padding: 5px;
+}
+.sentence-container .empty {
+  border: 1px dashed #ccc;
+}
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  font-size: 17px;
+}
+.word-bank span {
+  background-color: #f2f2f2;
+  padding: 0.5em;
+  margin: 5px;
+  cursor: pointer;
+}
+.word-bank span:hover {
+  background-color: #ddd;
+}
+.drag-drop-table {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.drag-drop-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.drag-drop-table th,
+.drag-drop-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
   text-align: center;
 }
-.spinner{
+thead {
+  font-size: 22px;
+}
+.que-num {
+  font-size: 27px;
+  margin-right: 15px;
+}
+.placeholder {
+  height: 100px;
+  width: 150px;
+
+  overflow: auto;
+  border: 2px dashed #aaa;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 20px;
+}
+.placeholder-item {
+  display: flex;
+  flex-direction: column;
+}
+.bank-items {
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+}
+.word {
+  cursor: grab;
+  margin: 5px;
+  padding: 0.5em;
+
+  background-color: #f9f9f9;
+}
+.q-pa-md {
+  padding: 0 16px 16px 0;
+}
+.drop-here {
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+.word-bank h3 {
+  text-align: center;
+}
+.q-gutter-sm {
+  font-size: 20px;
+}
+input {
+  appearance: none;
+  font-size: 27px;
+  display: flex;
+  height: 90%;
   position: relative;
-  top:100px
+  cursor: pointer;
+}
+label {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+.question {
+  margin-bottom: 70px;
+}
+h2 {
+  margin-bottom: 35px;
+  margin-top: 10px;
+}
+.buttons {
+  position: absolute;
+  display: flex;
+  bottom: 70px;
+}
+.reset-btn {
+  margin-bottom: 70px;
+  background: rgba(30, 30, 30, 0.69);
+  display: flex;
+  align-items: center;
+}
+.back-next-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
 }
 </style>

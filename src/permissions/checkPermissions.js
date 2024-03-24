@@ -2,8 +2,8 @@ import axios from "axios";
 import store from "../../store";
 
 export async function checkExamPermissions(examType, next) {
-  var userNum = JSON.parse(localStorage.getItem("userNum"));
-  console.log(userNum);
+  var userId = JSON.parse(localStorage.getItem("userId"));
+  console.log(userId);
   var isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
   var res = null;
 
@@ -15,33 +15,27 @@ export async function checkExamPermissions(examType, next) {
       console.log("He is admin");
       next();
     } else {
+      console.log("not admin")
       var userData = null;
 
       if (ifSharePoint) {
         res = await axios.get(
           url +
-            `getByTitle('isPermissionActive')/Items?$filter=userNum eq ${userNum}`
+            `getByTitle('testsAndExams')/Items?$filter=type eq '${examType}'`
         );
         userData = res.data.value;
+        console.log(userData)
       } else {
-        res = await axios.get(url + `isPermissionActive`);
-        userData = res.data.value.filter((item) => item.userNum == userNum);
+        res = await axios.get(url + `students`);
+        userData = res.data.value.filter((item) => item.userNum == userId);
       }
       console.log(userData);
 
-      if (userData.length < 1) {
+      if (userData.length<1) {
+        console.log("yessss")
         next(`/exams/${examType}/noPermissionMessage`);
       } else {
-        const hasPermission = userData[0][examType];
-        console.log(hasPermission);
-
-        if (hasPermission === true) {
-          console.log("yess");
-          next();
-        } else {
-          console.log("fdfdfd");
-          next(`/exams/${examType}/noPermissionMessage`);
-        }
+         console.log("has permission");
       }
     }
   } catch (error) {

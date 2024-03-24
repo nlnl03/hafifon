@@ -113,9 +113,9 @@ export default {
   },
   async beforeMount() {
     this.examType = this.$route.params.Title;
-    var examNames = localStorage.getItem("examsName");
-    examNames = JSON.parse(examNames);
-    var title = examNames.filter(
+    var testsNames = localStorage.getItem("testsNames");
+    testsNames = JSON.parse(testsNames);
+    var title = testsNames.filter(
       (item) => item.Title == this.$route.params.Title
     )[0];
     this.title = title.subject;

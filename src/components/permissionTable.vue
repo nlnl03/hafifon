@@ -1,42 +1,72 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md" v-if="isLoad">
+    <q-btn @click="openDialog" icon="add" label="הוסף נחפף" />
     <q-table
-      :loading="!isLoad"
       :sticky-header="true"
-      :rows-per-page-options="[0]"
+      :rows="students"
       flat
       bordered
-      :rows="rowsFiltered"
-      :columns="columns"
-      row-key="name"
+      :columns="tableColumns"
+      row-key="num"
     >
-    <template v-slot:top>
-      <div class="filter-btn">
-        <q-input filled v-model="textToFilter" label="חפש" />
-     </div>
-    </template>
+      <template v-slot:top-left>
+        <q-input
+          borderless
+          dense
+          debounce="300"
+          v-model="dfdf"
+          placeholder="חפש"
+        >
+          <template v-slot:append>
+            <q-icon name="fas fa-search" />
+          </template>
+        </q-input>
+      </template>
+
+      <template v-slot:body-cell-name="props">
+        {{ props.row.name }}
+      </template>
 
       <template
-        v-for="(col, index) in columns"
-        :key="col.field"
-        v-slot:[`body-cell-${col.field}`]="props"
+        v-for="(exam, index) in exams"
+        :key="index"
+        v-slot:[`body-cell-${exam.Title}`]="props"
       >
         <q-td :props="props">
           <q-toggle
-            v-if="col.label.includes('מבחן') || col.label.includes('בוחן')"
-            v-model="props.row[col.field]"
-            @click="changePerm(col, props.row, index)"
-            :ref="col + index"
+            v-model="props.row.permissions[exam.Title]"
+            @click="changePerm(props.row, exam.Title)"
             color="var(--main-background-color)"
+            ref="isChecked"
           />
-          <template v-else>
-            {{ props.row[col.field] }}
-          </template>
         </q-td>
       </template>
-
-      
     </q-table>
+
+    <q-dialog v-model="addStudentDialog" @hide="resetNewStudent">
+      <q-card>
+        <q-card-section>
+          <q-input v-model="newStudent.Title" label="שם" />
+          <q-input
+            v-model="newStudent.userNum"
+            :min="1"
+            :max="9999999"
+            required
+            type="Number"
+            label="מס' אישי"
+          />
+        </q-card-section>
+
+        <q-card-section>
+          <q-btn label="ביטול" @click="closeDialog" />
+          <q-btn
+            label="הוסף"
+            @click="addNewStudent"
+            :disable="!newStudent.Title || !newStudent.userNum"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -48,59 +78,158 @@ export default {
   name: "permTable",
   data() {
     return {
+      urlForId: "https://portal.army.idf/sites/hafifon383/_api/web/siteusers/",
       columns: [],
       updatedNameColumns: [],
-      rows: [],
+      students: [],
       textToFilter: "",
-      isLoad:false
+      isLoad: false,
+      exams: [],
+      addStudentDialog: false,
+      newStudent: null,
+      token: null,
+      userId: null,
+      permStruc: null,
     };
   },
   async beforeMount() {
-    const examNames = JSON.parse(LocalStorage.getItem("examsName"));
-    console.log(examNames);
-    const columns = [
-      { name: "Title", label: "שם", field: "Title" },
-      { name: "userNum", label: "מס' אישי", field: "userNum" },
-    ];
+    this.exams = await this.$parseTestsNames("testsNames");
+    console.log(this.exams);
 
-    this.updatedNameColumns = await examNames.map((obj) => {
-      const { Title, subject } = obj;
-      return { name: Title, label: subject, field: Title };
-    });
-    this.columns = columns.concat(this.updatedNameColumns);
-    console.log(this.updatedNameColumns);
-    console.log(this.columns);
-
-    this.getRows();
-    this.isLoad = true
+    this.isLoad = true;
+    this.newStudent = {
+      Title: "",
+      userNum: "",
+      num: null,
+      mahlaka: localStorage.getItem("mahlaka"),
+      permissions: Object.fromEntries(
+        this.exams.map((exam) => [exam.Title, false])
+      ),
+    };
+    this.getStudents();
+    this.token = await this.$asyncGetToken();
   },
   methods: {
-    changePerm(col, row) {
-      this.$emit("childEvent", col, row);
-      console.log(col);
-      console.log(row);
-    },
-
-    async getRows() {
+    async getStudents() {
       var res = null;
+      var mahlaka = localStorage.getItem("mahlaka");
       if (this.$isSharePointUrl) {
         res = await axios.get(
-          this.$sharePointUrl + "getByTitle('isPermissionActive')/Items"
+          this.$sharePointUrl +
+            `getByTitle('students')/Items?$filter=mahlaka eq '${mahlaka}'`
+        );
+        this.students = res.data.value;
+
+        const parsedPerm = await Promise.all(
+          this.students.map((item) => {
+            return this.$asyncParse(item.permissions).then((inner) => {
+              item.permissions = inner;
+              return { item };
+            });
+          })
         );
       } else {
-        res = await axios.get(this.$sharePointUrl + "isPermissionActive");
+        res = await axios.get(this.$sharePointUrl + "students");
+        this.students = res.data.value.filter(
+          (item) => item.mahlaka == mahlaka
+        );
       }
-      this.rows = res.data.value;
-      console.log(this.rows);
+      console.log(this.students);
+    },
+
+    openDialog() {
+      this.addStudentDialog = true;
+    },
+    closeDialog() {
+      this.addStudentDialog = false;
+    },
+    resetNewStudent() {
+      this.newStudent = {
+        Title: "",
+        userNum: "",
+        mahlaka: "",
+        num: null,
+      };
+    },
+    changePerm(row, examTitle) {
+      console.log(row);
+      const studentId = row.num;
+      console.log(studentId);
+      this.$emit("childEvent", row, examTitle, studentId);
+      console.log(row);
+      console.log(examTitle);
+    },
+
+    async addNewStudent() {
+      console.log(this.newStudent.userNum);
+      try {
+        if (this.$isSharePointUrl) {
+          const userRes = await axios.get(
+            this.urlForId +
+              `getByEmail('s${this.newStudent.userNum}@army.idf.il')`
+          );
+          const data = userRes.data;
+          this.userId = data.Id;
+          console.log(this.userId);
+          this.newStudent.num = this.userId;
+          this.newStudent.permissions = JSON.stringify(
+            this.newStudent.permissions
+          );
+          console.log(this.newStudent);
+
+          const res = await axios.post(
+            this.$sharePointUrl + "getByTitle('students')/Items",
+            this.newStudent,
+            {
+              headers: {
+                "X-RequestDigest": this.token,
+              },
+            }
+          );
+          if (res.status === 201) {
+            this.students.push(res.data);
+          }
+        } else {
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
     },
   },
   computed: {
     rowsFiltered() {
-      return this.rows.filter(
+      return this.students.filter(
         (row) =>
           row.Title.includes(this.textToFilter) ||
           row.userNum.includes(this.textToFilter)
       );
+    },
+
+    tableColumns() {
+      return [
+        {
+          name: "Title",
+          required: true,
+          label: "שם",
+          align: "center",
+          field: "Title",
+        },
+        {
+          name: "userNum",
+          required: true,
+          label: "מס' אישי",
+          align: "center",
+          field: "userNum",
+        },
+        ...this.exams.map((exam) => ({
+          name: exam.Title,
+          required: true,
+          label: exam.subject,
+          align: "center",
+          sortable: false,
+          format: (val) => (val[exam.Title] ? "yes" : "no"),
+        })),
+      ];
     },
   },
 };
@@ -115,4 +244,7 @@ export default {
   justify-content: center;
   width: 100%;
 }
-  </style>
+tr {
+  text-align: center;
+}
+</style>

@@ -1,28 +1,30 @@
 <template>
   <form class="exam-box">
-    <div class="exam" v-for="(item, index) in exam.parts" :key="index">
-      <div>{{ item.Title }}</div>
-      <div
-        class="question"
-        v-for="(que, queIndex) in item.questions"
-        :key="queIndex"
-        :ref="`inputRef_${currentIndexCheck(index, queIndex)}`"
-      >
-        <div class="que-text">
-          <div class="part-text">{{ currentIndexCheck(index, queIndex) }}</div>
+    <div class="part" v-for="(item, index) in exam.parts" :key="index">
+      <div class="part-title">{{ item.Title }}</div>
+      <div class="questions-flex">
+        <div
+          class="question"
+          v-for="(que, queIndex) in item.questions"
+          :key="queIndex"
+          :ref="`inputRef_${currentIndexCheck(index, queIndex)}`"
+        >
+          <div class="que-text">
+            <div class="que-num">{{ currentIndexCheck(index, queIndex) }}</div>
 
-          {{ que.label }}
-        </div>
-        <div class="open-que">
-          <textarea
-            id=""
-            cols="30"
-            rows="10"
-            placeholder="הכנס תשובה"
-            @input="clickHandler($event, index, queIndex)"
-            v-model="que.value"
-          >
-          </textarea>
+            {{ que.label }}
+          </div>
+          <div class="open-que">
+            <textarea
+              id=""
+              cols="30"
+              rows="10"
+              placeholder="הכנס תשובה"
+              @input="clickHandler($event, index, queIndex)"
+              v-model="que.value"
+            >
+            </textarea>
+          </div>
         </div>
       </div>
     </div>
@@ -133,24 +135,7 @@ export default {
         },
       }).then((result) => {
         if (result.value) {
-          if (this.postExams()) {
-            this.showExitAlertFunc();
-            this.$swal({
-              title: "נשלח בהצלחה",
-              icon: "success",
-              confirmButtonColor: "var(--main-background-color)",
-              confirmButtonText: "סיים",
-            });
-            console.log(this.showExitAlert);
-            this.$router.push({
-              name: "submitted",
-              params: { Title: this.$route.params.Title },
-            });
-            // this.deletePer();
-          } else {
-            this.$swal("Not Send", "אירעה שגיעה", "not succeeded");
-          }
-          console.log(this.$route);
+          this.postExams();
         }
       });
     },
@@ -163,43 +148,64 @@ export default {
       console.log(this.$route.params.Title);
       var res = null;
       var userId = JSON.parse(localStorage.getItem("userId"));
+      console.log(this.examId);
+      console.log(this.userId);
+      const examData = { parts: this.exam.parts };
+      console.log(examData);
 
-      if (this.$isSharePointUrl) {
-        this.token = await this.$asyncGetToken();
-        res = await axios.post(
-          this.$sharePointUrl + "getByTitle('submittedExams')/Items",
-          {
-            Title: this.exam.Title,
-            test: JSON.stringify(this.exam),
-            userId: userId,
-            examId: this.examId,
-            status: "pending",
-          },
+      const data = {
+        Title: this.exam.Title,
+        test: JSON.stringify(examData),
+        userId: userId,
+        examId: this.examId,
+        status: "pending",
+      };
+      try {
+        if (this.$isSharePointUrl) {
+          this.token = await this.$asyncGetToken();
+          res = await axios.post(
+            this.$sharePointUrl + "getByTitle('submittedExams')/Items",
+            data,
 
-          {
-            headers: {
-              "X-RequestDigest": this.token,
-            },
-          }
-        );
-      } else {
-        console.log(this.$route.params);
-        res = await axios.post(this.$sharePointUrl + "submittedExams", {
-          value: [
             {
-              Title: this.exam.Title,
-              test: JSON.stringify(this.exam),
-              userId: userId,
-              examId: this.examId,
-              status: "pending",
-            },
-          ],
+              headers: {
+                "X-RequestDigest": this.token,
+              },
+            }
+          );
+        } else {
+          console.log(this.$route.params);
+          res = await axios.post(this.$sharePointUrl + "submittedExams", {
+            value: [
+              {
+                Title: this.exam.Title,
+                test: examData,
+                userId: 1,
+                examId: 1,
+                status: "pending",
+              },
+            ],
+          });
+        }
+        this.$swal({
+          title: "המבדק הוגש בהצלחה",
+          icon: "success",
+          confirmButtonText: "סיים",
         });
-      }
-      if (res.status >= 200 && res.status < 300) {
-        return true;
-      } else {
-        return false;
+        this.showExitAlertFunc();
+        console.log(this.showExitAlert);
+        this.$router.push({
+          name: "submitted",
+          params: { Title: this.$route.params.Title },
+        });
+        // this.deletePer();
+        console.log(this.$route);
+      } catch (error) {
+        console.log("error", error);
+        this.$swal({
+          icon: "error",
+          text: "שגיאה בהגשת המבדק",
+        });
       }
     },
   },
@@ -207,6 +213,27 @@ export default {
 </script>
 
 <style scoped>
+.exam-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.questions-flex {
+  width: 80%;
+}
+.question {
+  position: relative;
+  margin: 1em 0;
+  min-height: 350px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  font-size: 24px;
+  font-weight: 700;
+}
+
 .title-timer {
   top: 50px;
   display: flex;
@@ -233,7 +260,7 @@ export default {
   transform: translateX(-80%);
   font-size: 25px;
 }
-.exam {
+.part {
   flex-direction: column;
   align-items: center;
   display: flex;
@@ -242,16 +269,24 @@ export default {
   margin-top: 80px;
   border-top: 1.5px solid rgba(0, 0, 0, 0.1);
 }
-.exam:first-child {
+.part:first-child {
   border-top: none;
   margin-top: 85px;
 }
-.part-text {
+.que-num {
   font-size: 32px;
   position: relative;
   font-weight: 700;
   top: 30px;
   right: 50px;
+}
+.under-line {
+  border-top: 1.5px solid rgba(0, 0, 0, 0.1);
+}
+.part-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 40px;
 }
 .regular-que {
   /* display: flex;

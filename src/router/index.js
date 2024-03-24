@@ -60,7 +60,8 @@ const routes = [
   {
     path: "/:selectedItem?/user/:title/results",
     name: "CheckedExams",
-    component: displayCheckedExams
+    component: displayCheckedExams,
+    props:true
   },
   {
     path: "/:selectedItem?/admin/MainCheckPage",
@@ -144,19 +145,19 @@ const routes = [
   // },
 
   {
-    path: "/:selectedItem?/week:week/:title/practice:numOfPrac/beforeStartQuiz",
+    path: "/:selectedItem?/week:week/:lesson/:numOfPrac/beforeStartQuiz",
     name: "beforeStartQuiz",
     component: beforeStartQuiz,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/:selectedItem?/week:week/:title/practice:numOfPrac",
+    path: "/:selectedItem?/week:week/:lesson/:numOfPrac",
     name: "quiz",
     component: Quiz,
     props: (route) => ({ ...route.params })
   },
   {
-    path: "/:selectedItem?/week:week/:title/practice:numOfPrac/results",
+    path: "/:selectedItem?/week:week/:lesson/:numOfPrac/results",
     name: "result",
     component: practiceResult,
     props: (route) => ({ ...route.params })
@@ -199,9 +200,12 @@ var permissionCheckedPerformed = false;
       const examType = to.params.Title;
       if(!permissionCheckedPerformed){
         permissionCheckedPerformed = true
+        console.log("aaaaa")
+
         await checkExamPermissions(examType, next);
       }
       else{
+        console.log("sdjkjd")
         await checkExamPermissions(examType, next);
       }
     }else{

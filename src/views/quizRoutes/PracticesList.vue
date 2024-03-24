@@ -181,8 +181,9 @@ export default {
     },
 
     powerpointUrl(index, fileName) {
+      const mahlaka = localStorage.getItem("mahlaka");
       // var nameOfPowerP = this.practices[index].items[midIndex].Subject
-      const url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/שבוע ${
+      const url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/${mahlaka}/שבוע ${
         index + 1
       }/${fileName}`;
       window.open(url, "_blank");
@@ -219,7 +220,7 @@ export default {
           params: {
             week: index + 1,
             numOfPrac: this.tirgulimNames[0].Id,
-            title: this.tirgulimNames[0].routeName,
+            lesson: lessonId,
           },
         });
       }
@@ -231,7 +232,7 @@ export default {
         params: {
           week: this.ite + 1,
           numOfPrac: prac.Id,
-          title: prac.routeName,
+          lesson: prac.lessonId,
         },
       });
     },

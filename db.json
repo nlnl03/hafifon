@@ -157,37 +157,37 @@
       },
       {
         "Title": "תרגול שיעור 3 חלק א",
-        "Id": 1,
+        "Id": 2,
         "lessonId": 3,
         "routeName": "bbb"
       },
       {
         "Title": "תרגול שיעור 3 חלק ב",
-        "Id": 2,
+        "Id": 3,
         "lessonId": 3,
         "routeName": "ccc"
       },
       {
         "Title": "תרגול שיעור 4 חלק א",
-        "Id": 1,
+        "Id": 4,
         "lessonId": 4,
         "routeName": "ddd"
       },
       {
         "Title": "תרגול שיעור 4 חלק ב",
-        "Id": 2,
+        "Id": 5,
         "lessonId": 4,
         "routeName": "eee"
       },
       {
         "Title": "תרגול שיעור 5 חלק א",
-        "Id": 1,
+        "Id": 6,
         "lessonId": 5,
         "routeName": "fff"
       },
       {
         "Title": "תרגול שיעור 5 חלק ב",
-        "Id": 2,
+        "Id": 7,
         "lessonId": 5,
         "routeName": "ggg"
       }
@@ -719,154 +719,312 @@
     "value": [
       {
         "Title": "המבחן הסופי",
-        "test": "{\"Title\":\"המבחן הסופי\",\"type\":\"finalTest\",\"parts\":[{\"Title\":\"חלק 1\",\"id\":1,\"questions\":[{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"dfdfjk\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ?\",\"points\":4,\"value\":\"hj\"},{\"label\":\"הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו\",\"points\":4,\"value\":\"hj\"}]},{\"Title\":\"חלק 2\",\"id\":2,\"questions\":[{\"label\":\"wwwwwwwwwwwwwwwww\",\"points\":4,\"value\":\"h\"},{\"label\":\"qqqqqqqqqqqqqqqqqqqqqqqqqq\",\"points\":4,\"value\":\"jh\"},{\"label\":\"ccccccccccccccccccccccccc\",\"points\":4,\"value\":\"jj\"},{\"label\":\"oooooooooooooooooooooo\",\"points\":4,\"value\":\"hj\"},{\"label\":\"uuuuuuuuuuuuuuuuuuu\",\"points\":4,\"value\":\"h\"},{\"label\":\"mmmmmmmmmmmmmmmmmmmm\",\"points\":4,\"value\":\"j\"},{\"label\":\"llllllllllllll\",\"points\":4,\"value\":\"hjh\"},{\"label\":\"eeeeeeeeeeeeeeeeeeeeeeee\",\"points\":4,\"value\":\"j\"},{\"label\":\"rrrrrrrrrrrrrrrrr\",\"points\":4,\"value\":\"hjh\"},{\"label\":\"jjjjjjjjjjjjjj\",\"points\":4,\"value\":\"f\"}]}],\"time\":2700,\"instructions\":[\"*מבחן זה רשום בלשון זכר אך פונה אל כל המגדרים כלשון אחד.\",\"*בכל שאלה בה אופן הטיפול כולל סיוע של צוות נוסף, יש לציין את דרך הפנייה אל הצוות ואת הפרטים הנחוצים.\"],\"mahlaka\":1}",
-        "userId": 12345,
+        "test": {
+          "parts": [
+            {
+              "Title": "חלק 1",
+              "id": 1,
+              "questions": [
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "kj"
+                },
+                {
+                  "label": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? ",
+                  "points": 2,
+                  "value": "klj"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "kl"
+                },
+                {
+                  "label": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים",
+                  "points": 4,
+                  "value": "jk"
+                },
+                {
+                  "label": "מה הדומיין של MOIP?",
+                  "points": 4,
+                  "value": "jkl"
+                },
+                {
+                  "label": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?",
+                  "points": 4,
+                  "value": "jk"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "jlk"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "jkl"
+                },
+                {
+                  "label": "פרט את שלבי התקנת המשואה לאחר התקנת האימג'",
+                  "points": 4,
+                  "value": "jlk"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "j"
+                }
+              ]
+            },
+            {
+              "Title": "חלק 2",
+              "id": 2,
+              "questions": [
+                {
+                  "label": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "rrrrrrrrrrrrrrrrr",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "qqqqqqqqqqqqqqqqqqqqqqqqqq",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "fdddddddddddddddddd",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "vvvvvvvvvvvvvvvvvvvvv",
+                  "points": 4,
+                  "value": "lj"
+                },
+                {
+                  "label": "hhhhhhhhhhhhhhhhhhhhh",
+                  "points": 4,
+                  "value": "kl"
+                },
+                {
+                  "label": "llllllllllllll",
+                  "points": 4,
+                  "value": "jkl"
+                },
+                {
+                  "label": "wwwwwwwwwwwwwwwww",
+                  "points": 4,
+                  "value": "jkj"
+                },
+                {
+                  "label": "ttttttttttttttttttt",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "ccccccccccccccccccccccccc",
+                  "points": 4,
+                  "value": "lk"
+                }
+              ]
+            }
+          ]
+        },
+        "userId": 1,
+        "examId": 1,
         "status": "pending"
+      },
+      {
+        "Title": "המבחן הסופי",
+        "test": {
+          "parts": [
+            {
+              "Title": "חלק 1",
+              "id": 1,
+              "questions": [
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "kj"
+                },
+                {
+                  "label": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? ",
+                  "points": 2,
+                  "value": "klj"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "kl"
+                },
+                {
+                  "label": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים",
+                  "points": 4,
+                  "value": "jk"
+                },
+                {
+                  "label": "מה הדומיין של MOIP?",
+                  "points": 4,
+                  "value": "jkl"
+                },
+                {
+                  "label": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?",
+                  "points": 4,
+                  "value": "jk"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "jlk"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "jkl"
+                },
+                {
+                  "label": "פרט את שלבי התקנת המשואה לאחר התקנת האימג'",
+                  "points": 4,
+                  "value": "jlk"
+                },
+                {
+                  "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
+                  "points": 4,
+                  "value": "j"
+                }
+              ]
+            },
+            {
+              "Title": "חלק 2",
+              "id": 2,
+              "questions": [
+                {
+                  "label": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "rrrrrrrrrrrrrrrrr",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "qqqqqqqqqqqqqqqqqqqqqqqqqq",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "fdddddddddddddddddd",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "vvvvvvvvvvvvvvvvvvvvv",
+                  "points": 4,
+                  "value": "lj"
+                },
+                {
+                  "label": "hhhhhhhhhhhhhhhhhhhhh",
+                  "points": 4,
+                  "value": "kl"
+                },
+                {
+                  "label": "llllllllllllll",
+                  "points": 4,
+                  "value": "jkl"
+                },
+                {
+                  "label": "wwwwwwwwwwwwwwwww",
+                  "points": 4,
+                  "value": "jkj"
+                },
+                {
+                  "label": "ttttttttttttttttttt",
+                  "points": 4,
+                  "value": "klj"
+                },
+                {
+                  "label": "ccccccccccccccccccccccccc",
+                  "points": 4,
+                  "value": "lk"
+                }
+              ]
+            }
+          ]
+        },
+        "userId": 1,
+        "examId": 2,
+        "status": "checked",
+        "grade":50
+      },
+      {
+        "userId": 1,
+        "examId": 3,
+        "status": "checked",
+        "grade":70
       }
+       
     ]
   },
   "students": {
     "value": [
       {
         "Title": "נעם",
-        "exam2": [
-          {
-            "type": "subQue",
-            "questions": [
-              {
-                "type": "open",
-                "que": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו (4 נק')",
-                "inputAns": "gfg",
-                "id": 0,
-                "points": 4,
-                "pointsReceived": 1,
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? (2 נק')",
-                "inputAns": "jhjh",
-                "id": 1,
-                "points": 2,
-                "pointsReceived": 1,
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "subQue",
-            "questions": [
-              {
-                "type": "open",
-                "que": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג'? (3 נק')",
-                "inputAns": "hj",
-                "id": 2,
-                "points": 3,
-                "pointsReceived": 1,
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט את שלבי התקנת המשואה לאחר התקנת האימג' (2 נק')",
-                "inputAns": "uih",
-                "id": 3,
-                "points": 2,
-                "pointsReceived": 1,
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ? (2 נק')",
-                "inputAns": "uh",
-                "id": 4,
-                "points": 2,
-                "pointsReceived": 1,
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים. (2 נק')",
-                "inputAns": "uh",
-                "id": 5,
-                "points": 2,
-                "pointsReceived": 1,
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "subQue",
-            "questions": [
-              {
-                "type": "open",
-                "que": "איזה 2 מערכות קיימות ברשת הMOIP? ומה הקונבנציה של כל מערכת? (2 נק')",
-                "inputAns": "uih",
-                "id": 6,
-                "points": 2,
-                "pointsReceived": 1,
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?(2 נק')",
-                "inputAns": "uih",
-                "id": 7,
-                "points": 2,
-                "pointsReceived": 1,
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "ציין בקצרה מה השלבים לאחר ההפצת אימג'? (2 נק')",
-                "inputAns": "ui",
-                "id": 8,
-                "points": 2,
-                "pointsReceived": 1,
-                "comments": ""
-              },
-              {
-                "type": "open",
-                "que": "מה הדומיין של MOIP? (1 נק')",
-                "inputAns": "uih",
-                "id": 9,
-                "points": 1,
-                "pointsReceived": 1,
-                "comments": ""
-              }
-            ]
-          },
-          {
-            "type": "regularQue",
-            "questions": [
-              {
-                "que": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10. (3 נק')",
-                "type": "open"
-              }
-            ],
-            "inputAns": "uih",
-            "id": 10,
-            "points": 3,
-            "pointsReceived": 1,
-            "comments": ""
-          },
-          {
-            "type": "regularQue",
-            "questions": [
-              {
-                "que": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב (2 נק')",
-                "type": "open"
-              }
-            ],
-            "inputAns": "iu",
-            "id": 11,
-            "points": 2,
-            "pointsReceived": 1,
-            "comments": "fgfgdgf"
-          },
-          {
-            "finalGrade": 12
-          }
-        ]
+        "num": 12345,
+        "userNum": "s9053078",
+        "mahlaka": "pc",
+        "permissions": {
+          "exam1": false,
+          "exam2": false,
+          "exam3": false,
+          "exam4": false,
+          "finalTest": false
+        }
+      },
+      {
+        "Title": "מאור",
+        "num": 1111,
+        "userNum": "s875454",
+        "mahlaka": "pc",
+        "permissions": {
+          "exam1": false,
+          "exam2": false
+        }
+      },
+      {
+        "Title": "לרה",
+        "num": 2222,
+        "userNum": "s545454",
+        "mahlaka": "vc",
+        "permissions": {
+          "exam1": true,
+          "exam2": false
+        }
+      },
+      {
+        "Title": "שחר",
+        "num": 33333,
+        "userNum": "s775867",
+        "mahlaka": "vc",
+        "permissions": {
+          "exam1": true,
+          "exam2": false
+        }
+      },
+      {
+        "Title": "לינוי",
+        "num": 44444,
+        "userNum": "s875545",
+        "mahlaka": "vc",
+        "permissions": {
+          "exam1": true,
+          "exam2": false
+        }
       }
     ]
   },
@@ -1156,344 +1314,283 @@
       }
     ]
   },
+
+
   "practicesData": {
     "value": [
       {
+        "Title":"2+2 ?",
         "id": 1,
         "weekId": 1,
-        "lessonName": "line",
-        "pracId": 1,
-        "data": [
-          {
-            "id": 1,
-            "type": "radio",
-            "label": "סמן את המשפט הנכון ביותר:",
-            "options": [
-              "ה-SSD הוא אמצעי אחסון בו המידע נשמר דיגיטלית והוא יקר ומהיר יותר מה-HD.",
-              "הm.2- הוא אמצעי האחסון הזול ביותר והמידע בו נשמר באמצעות צריבה על דיסקים.",
-              "ה-HD שומר מידע באופן דיגיטלי והוא זול יותר מה-M.2."
-            ],
-            "value": ""
-          },
-          {
-            "id": 1,
-            "type": "lineBetween",
-            "label": "מתח קו בין רכיב האחסון לרכיבים המחוברים אליו:",
-            "options": [
-              "ה-SSD הוא אמצעי אחסון בו המידע נשמר דיגיטלית והוא יקר ומהיר יותר מה-HD.",
-              "הm.2- הוא אמצעי האחסון הזול ביותר והמידע בו נשמר באמצעות צריבה על דיסקים.",
-              "ה-HD שומר מידע באופן דיגיטלי והוא זול יותר מה-M.2."
-            ],
-            "answers": [
-              "fgfgf",
-              "abbbb",
-              "nnfff"
-            ],
-            "value": [
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              }
-            ]
-          },
-          {
-            "id": 1,
-            "type": "complete",
-            "label": "השלם את המשפט:",
-            "qustion": "ה-HD מחובר..... ללוח האם/ל-BIOS דרך כבל..... SATA/DATA המעביר..... חשמל / מידע.",
-            "bankOptions": [
-              "ללוח האם",
-              "ל-BIOS",
-              "SATA",
-              "DATA"
-            ]
-          },
-          {
-            "id": 1,
-            "type": "bank",
-            "label": "מי אני ?",
-            "questions": [
-              {
-                "qustion": "אני לא מתחבר ללוח האם דרך כבל SATA וגם לא דרך כבל לספק כוח:",
-                "bankOptions": [
-                  "SSD",
-                  "HD",
-                  "M.2"
-                ]
-              },
-              {
-                "qustion": "המידע נשמר בי באופן מגנטי על ידי צריבה על דיסקים:",
-                "bankOptions": [
-                  "SSD",
-                  "HD",
-                  "M.2"
-                ]
-              },
-              {
-                "qustion": "אני מתחבר ישירות על חריצים ללוח האם:",
-                "bankOptions": [
-                  "SSD",
-                  "HD",
-                  "M.2"
-                ]
-              }
-            ]
-          },
-          {
-            "id": 1,
-            "type": "radio",
-            "label": "מהו תפקידו של ספק הכוח?",
-            "options": [
-              "להעביר מידע",
-              "לשמור את כל המידע שיש לנו במחשב",
-              "להמיר את המתח של רשת החשמל הארצית למתח הנדרש ע\"י המחשב",
-              "תשובות א' וב' נכונות"
-            ],
-            "value": ""
-          },
-          {
-            "id": 1,
-            "type": "lineBetween",
-            "label": "מתח קו בין רכיב החומרה  לתפקידו:",
-            "options": [
-              "כרטיס הרחבה",
-              "לוח האם",
-              "כרטיס RAM",
-              "מעבד",
-              "ספק כוח"
-            ],
-            "answers": [
-              "כרטיס שנועד להוסיף חיבורים (פורטים) למחשב או להחליף חיבורים תקולים",
-              "יחידת העיבוד המרכזית של המחשב, תפקידו לבצע את כל פעולות המחשב",
-              "כרטיס לאחסון זיכרון זמני, עליו נשמרים נתונים שרצים בזמן אמת במחשב. * בלעדיו לא יעלה המחשב.",
-              "רכיב אליו מחובר כבל המתח, תפקידו להעביר מתח חשמלי לרכיבי המחשב.",
-              "לוח אלקטרוני עליו יושבים כל הרכיבים במחשב, אותם הוא מקשר חשמלית."
-            ],
-            "value": [
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              }
-            ]
-          },
-          {
-            "id": 1,
-            "type": "radio",
-            "label": "מה לא נציין לחברה האזרחית כאשר יש לנו תקלה חומרתית במחשב?",
-            "options": [
-              "תיאור תקלה",
-              "לשמור את כל המידע שיש לנו במחשב",
-              "תאריך סיום האחריות",
-              "המספר הסידורי שעל המדבקה"
-            ],
-            "value": ""
-          },
-          {
-            "id": 1,
-            "type": "radio",
-            "label": "באילו סוגי דגמים של מחשבים אנו משתמשים בצ\"הל",
-            "options": [
-              "נייחים של HP וניידים של dell בלבד",
-              "נייחים של DELL וHP וניידים של LENOVO",
-              "נייחים של DELL וניידים של HP וLENOVO",
-              "נייחים של HP בלבד וניידים של LENOVO ו DEL"
-            ],
-            "value": ""
-          },
-          {
-            "id": 1,
-            "type": "dragDrop",
-            "label": "באילו סוגי דגמים של מחשבים אנו משתמשים בצ\"הל",
-            "dropColumns": [
-              "בלמ\"ס",
-              "סודי",
-              "סודי ביותר",
-              "סודי שותף"
-            ],
-            "dragOptions": [
-              "כפ\"ג",
-              "כפר לוקאלי",
-              "עמדה אפורה",
-              "צהלנ\"ט",
-              "שדה תעופה",
-              "Black Edition",
-              "משואה",
-              "טירת אגם",
-              "עין סערה",
-              "סיגל"
-            ],
-            "value": [
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              }
-            ]
-          }
-        ]
+        "lessonId": 3,
+        "pracId": 2,
+        "type":"radio",
+        "queNum":1,
+        "options":["3","4","5"],
+        "selectedOption":null,
+        "correctAnswer":"4",
+        "sentences":null,
+        "bankWords":null,
+        "subjects":null,
+        "correctMatches":null,
+        "table":null
       },
       {
+        "Title":"מהי עיר הבירה של צרפת ?",
         "id": 2,
         "weekId": 1,
-        "lessonName": "bbb",
-        "pracId": 1,
-        "data": [
-          {
-            "id": 1,
-            "type": "radio",
-            "label": "סמן את המשפט הנכון ביותר:",
-            "options": [
-              "ה-SSD הוא אמצעי אחסון בו המידע נשמר דיגיטלית והוא יקר ומהיר יותר מה-HD.",
-              "הm.2- הוא אמצעי האחסון הזול ביותר והמידע בו נשמר באמצעות צריבה על דיסקים.",
-              "ה-HD שומר מידע באופן דיגיטלי והוא זול יותר מה-M.2."
-            ],
-            "value": ""
-          },
-          {
-            "id": 1,
-            "type": "lineBetween",
-            "label": "מתח קו בין רכיב האחסון לרכיבים המחוברים אליו:",
-            "options": [
-              "ה-SSD הוא אמצעי אחסון בו המידע נשמר דיגיטלית והוא יקר ומהיר יותר מה-HD.",
-              "הm.2- הוא אמצעי האחסון הזול ביותר והמידע בו נשמר באמצעות צריבה על דיסקים.",
-              "ה-HD שומר מידע באופן דיגיטלי והוא זול יותר מה-M.2."
-            ],
-            "answers": [
-              "fgfgf",
-              "abbbb",
-              "nnfff"
-            ],
-            "value": [
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              },
-              {
-                "opt": "",
-                "ans": ""
-              }
-            ]
-          }
-        ]
+        "lessonId": 3,
+        "pracId": 2,
+        "type":"radio",
+        "queNum":2,
+        "options":["לונדון","פריז","ברלין"],
+        "selectedOption":null,
+        "correctAnswer":"פריז",
+        "sentences":null,
+        "bankWords":null,
+        "subjects":null,
+        "correctMatches":null,
+        "table":null
+      },
+      {
+        "Title":"בחר את כל המשתמשים:",
+        "id": 2,
+        "weekId": 1,
+        "lessonId": 3,
+        "pracId": 2,
+        "type":"checkbox",
+        "queNum":3,
+        "options":["2","3","4","5","6","7"],
+        "selectedOption":[],
+        "correctAnswer":["2","3","5","7"],
+        "sentences":null,
+        "bankWords":null,
+        "subjects":null,
+        "correctMatches":null,
+        "table":null
+      },
+      {
+        "Title":"השלם את המשפט:",
+        "id": 2,
+        "weekId": 1,
+        "lessonId": 3,
+        "pracId": 2,
+        "type":"dragDropComplete",
+        "queNum":4,
+        "selectedOption":null,
+        "correctAnswer":["the","quick","brown","fox","jumps","over","the","lazy","dog"],
+        "sentences":["the","quick","","","jumps","","the","lazy",""],
+        "bankWords":["dog","quick","brown","fox","jumps","over"],
+        "subjects":null,
+        "correctMatches":null,
+        "table":null
+      },
+      {
+        "Title":"התאם בין אופצייה לעמודה המתאימה",
+        "id": 2,
+        "weekId": 1,
+        "lessonId": 3,
+        "pracId": 2,
+        "type":"dragDropTable",
+        "queNum":5,
+        "options":["2","3","4","5","6","7"],
+        "selectedOption":null,
+        "correctAnswer":["2","3","5","7"],
+        "sentences":null,
+        "bankWords":["algebra","geomerty","biology","chemistry","ww1","ww2"],
+        "subjects":["math","science","history"],
+        "correctMatches":[{"subject":"math","concepts":["algebra"]},{"subject":"science","concepts":["biology","chemistry"]},{"subject":"history","concepts":["ww1","ww2"]}],
+        "table":[]
       }
     ]
   },
+
+
+
   "mahlakot": [
     {
       "Title": "pc",
-      "Id": 1
+      "Id": 1,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        },
+        {
+          "Title": "exam3",
+          "subject": "בוחן 3"
+        },
+        {
+          "Title": "exam4",
+          "subject": "בוחן 4"
+        },
+        {
+          "Title": "finalTest",
+          "subject": "המבחן הסופי"
+        }
+      ]
     },
     {
       "Title": "vc",
-      "Id": 2
+      "Id": 2,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
     },
     {
       "Title": "system",
-      "Id": 3
+      "Id": 3,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
     },
     {
       "Title": "vip",
-      "Id": 4
-    }
-    ,
+      "Id": 4,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
-      "Title": "תקנ\"ם",
-      "Id": 5
-    }
-    ,
+      "Title": "תקנם",
+      "Id": 5,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
-      "Title": "אג\"ם",
-      "Id": 6
-    }
-    ,
+      "Title": "אגם",
+      "Id": 6,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
       "Title": "טכנאים",
-      "Id": 7
-    }
-    ,
+      "Id": 7,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
-      "Title": "מבח\"ר",
-      "Id": 8
-    }
-    ,
+      "Title": "מבחר",
+      "Id": 8,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
-      "Title": "טכנ\"י",
-      "Id": 9
-    }
-    ,
+      "Title": "טכני",
+      "Id": 9,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
       "Title": "אדום",
-      "Id": 10
-    }
-    ,
+      "Id": 10,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
       "Title": "roip",
       "Id": 11
-    }
-    ,
+    },
     {
       "Title": "חוזי",
-      "Id": 12
-    }
-    ,
+      "Id": 12,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
+    },
     {
       "Title": "תשתיות",
-      "Id": 13
+      "Id": 13,
+      "testsNames": [
+        {
+          "Title": "exam1",
+          "subject": "בוחן 1"
+        },
+        {
+          "Title": "exam2",
+          "subject": "בוחן 2"
+        }
+      ]
     }
   ],
   "weeks": {

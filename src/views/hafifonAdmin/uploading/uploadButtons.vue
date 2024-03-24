@@ -19,19 +19,24 @@
       </q-card-section>
 
       <q-card-section>
-        <uploadForm :formType="formType" />
+        <uploadFilesForm v-if="formType == 'filesUpload'" />
+
+        <examsUploadForm v-if="formType == 'examsUpload'" />
       </q-card-section>
     </q-card>
   </q-dialog>
 </template>
 
 <script>
-import uploadForm from "@/components/uploadForm.vue";
+import uploadFilesForm from "@/components/uploadFilesForm.vue";
+import examsUploadForm from "@/components/examsUploadForm.vue";
+
 import { useRouter } from "vue-router";
 import { createApp } from "vue";
 export default {
   components: {
-    uploadForm,
+    uploadFilesForm,
+    examsUploadForm,
   },
   data() {
     return {
@@ -49,11 +54,7 @@ export default {
           title: "examsUpload",
         },
       ],
-      vm: null,
       dialogVisible: false,
-      weeksWithDetails: [],
-      selectedWeek: null,
-      selectedLesson: null,
       formType: null,
     };
   },
@@ -62,76 +63,15 @@ export default {
 
   methods: {
     opendialog(title) {
-      console.log(title);
+      this.formType = title;
+      console.log(this.formType);
+
       this.dialogVisible = true;
       console.log(this.dialogVisible);
-      this.formType = title;
     },
     colseDialog() {
+      this.formType = null;
       this.dialogVisible = false;
-    },
-
-    async getLessonsStuff() {
-      try {
-        const weeksRes = await axios.get(
-          this.$sharePointUrl + "getByTitle('weeks')/items"
-        );
-        console.log(weeksRes);
-        const weeksData = weeksRes.data.value;
-
-        const promises = weeksData.map(async (week) => {
-          const lessonsRes = await axios.get(
-            this.$sharePointUrl +
-              `getByTitle('lessons')/items?$filter=week eq ${week.ID}`
-          );
-          const lessonsData = lessonsRes.data.value;
-
-          const lessonsWithDetails = await Promise.all(
-            lessonsData.map(async (lesson) => {
-              const practicesRes = await axios.get(
-                this.$sharePointUrl +
-                  `getByTitle('practices')/items?$filter=lesson eq ${lesson.ID}`
-              );
-              const practicesData = practicesRes.data.value;
-
-              const practicesWithDetails = await Promise.all(
-                practicesData.map(async (practice) => {
-                  const practicesDataRes = await axios.get(
-                    this.$sharePointUrl +
-                      `getByTitle('practicesData')/items?$filter=practiceId eq ${practice.ID}`
-                  );
-                  const practicesData = practicesDataRes.data.value;
-
-                  return {
-                    id: practice.ID,
-                    title: practice.Title,
-                    practicesData: practicesData.map((data) => ({
-                      id: data.ID,
-                      data: data.Data,
-                    })),
-                  };
-                })
-              );
-
-              return {
-                id: lesson.ID,
-                title: lesson.Title,
-                practices: practicesWithDetails,
-              };
-            })
-          );
-
-          return {
-            id: week.ID,
-            weekNumber: week.weekNum,
-            lessons: lessonsWithDetails,
-          };
-        });
-        this.weeksWithDetails = await Promise.all(promises);
-        console.log(this.weeksWithDetails);
-      } catch (error) {
-        console.error("error fetching:", error);
-      }
     },
   },
 };
