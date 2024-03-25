@@ -334,21 +334,152 @@ export default {
         if (this.$isSharePointUrl) {
           res = await axios.get(
             this.$sharePointUrl +
-              `getByTitle('practices')/Items(${this.$route.params.numOfPrac})`
+              `getByTitle('practicesData')/Items?$filter=practiceId eq ${this.$route.params.numOfPrac}`
           );
-          var quizData = res.data.value;
+          this.quizData = res.data.value;
 
-          const promiseParse = await Promise.all(
-            this.quizData.map((item) => {
-              return this.$asyncParse(item.data).then((inner) => {
-                item.data = inner;
-                return { item };
-              });
+          const parseOptions = await Promise.all(
+            this.quizData.map((question) => {
+              if (question.type === "radio") {
+                console.log("yes, radio");
+                return this.$asyncParse(question.options).then((options) => {
+                  question.options = options;
+                  return { question };
+                });
+              } else if (question.type === "checkbox") {
+                console.log("yes, checkbox");
+                const parseOptions = this.$asyncParse(question.options).then(
+                  (options) => {
+                    question.options = options;
+                    return { question };
+                  }
+                );
+
+                const parseSelectedOption = this.$asyncParse(
+                  question.selectedOption
+                ).then((selectedOption) => {
+                  question.selectedOption = selectedOption;
+                  return { question };
+                });
+
+                const parseCorrectAnswer = this.$asyncParse(
+                  question.correctAnswer
+                ).then((correctAnswer) => {
+                  question.correctAnswer = correctAnswer;
+                  return { question };
+                });
+
+                return {
+                  parseOptions,
+                  parseSelectedOption,
+                  parseCorrectAnswer,
+                };
+              } else if (question.type === "dragDropComplete") {
+                console.log("yes, dragDropComplete");
+                const parseSentences = this.$asyncParse(
+                  question.sentences
+                ).then((sentences) => {
+                  question.sentences = sentences;
+                  return { question };
+                });
+
+                const parseBankWords = this.$asyncParse(
+                  question.bankWords
+                ).then((bankWords) => {
+                  question.bankWords = bankWords;
+                  return { question };
+                });
+
+                const parseCorrectAnswer = this.$asyncParse(
+                  question.correctAnswer
+                ).then((correctAnswer) => {
+                  question.correctAnswer = correctAnswer;
+                  return { question };
+                });
+
+                return { parseSentences, parseBankWords, parseCorrectAnswer };
+              } else if (question.type === "dragDropTable") {
+                console.log("yes, dragDropTable");
+
+                const parseSubjects = this.$asyncParse(question.subjects).then(
+                  (subjects) => {
+                    question.subjects = subjects;
+                    return { question };
+                  }
+                );
+                const parseCorrectMatches = this.$asyncParse(
+                  question.correctMatches
+                ).then((correctMatches) => {
+                  question.correctMatches = correctMatches;
+                  return { question };
+                });
+
+                const parseBankWords = this.$asyncParse(
+                  question.bankWords
+                ).then((bankWords) => {
+                  question.bankWords = bankWords;
+                  return { question };
+                });
+
+                const parseTable = this.$asyncParse(question.table).then(
+                  (table) => {
+                    question.table = table;
+                    return { question };
+                  }
+                );
+
+                return {
+                  parseSubjects,
+                  parseCorrectMatches,
+                  parseBankWords,
+                  parseTable,
+                };
+              }
             })
           );
-          this.quizData = quizData[0];
 
-          this.quizData = this.quizData.data;
+          // const parseCorrectAnswer = await Promise.all(
+          //   this.quizData.map((item) => {
+          //     console.log("yes, correctAnswer");
+          //   })
+          // );
+
+          // const parseSentences = await Promise.all(
+          //   this.quizData.map((item) => {
+          //     console.log("yes, sentences");
+          //   })
+          // );
+
+          // const parseBankWords = await Promise.all(
+          //   this.quizData.map((item) => {
+          //     console.log("yes, bankWords");
+          //   })
+          // );
+
+          // const parseSelectedOption = await Promise.all(
+          //   this.quizData.map((item) => {
+          //     console.log("yes, selectedOption");
+          //   })
+          // );
+
+          // const parseSubjects = await Promise.all(
+          //   this.quizData.map((item) => {
+          //     console.log("yes, subjects");
+          //   })
+          // );
+
+          // const parseCorrectMatches = await Promise.all(
+          //   this.quizData.map((item) => {
+          //     console.log("yes, correctMatches");
+          //   })
+          // );
+
+          // const parseTable = await Promise.all(
+          //   this.quizData.map((item) => {
+          //     console.log("yes, table");
+          //   })
+          // );
+
           console.log(this.quizData);
         } else {
           res = await axios.get(this.$sharePointUrl + `practicesData`);
