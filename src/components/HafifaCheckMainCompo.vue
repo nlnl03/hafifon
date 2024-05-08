@@ -1,112 +1,58 @@
 <template>
-  <div class="loading-spinner" v-if="!isLoad">
-    <loadingSpinner />
-  </div>
+  <div class="q-pa-md">
+    <div class="title1">ממתינים לבדיקה</div>
 
-  <div class="box-flex">
-    <div class="box">
-      <div class="box-flex-content" v-if="isLoad">
-        <div class="count-students-cicrcle">
-          <div class="count-students-items">
-            <div class="ave-title">מבחנים לבדיקה</div>
-            <div class="students-in-hafifa">{{ userData.length }}</div>
-          </div>
-        </div>
-
-        <div class="average-cicrcle">
-          <div class="average-items">
-            <div class="ave-title">ממוצע ציונים</div>
-            <div class="progress-circle">
-              <circle-progress
-                :percent="gradrPerExam"
-                :size="140"
-                :show-percent="true"
-                :fill-color="changeAveColor(gradrPerExam)"
-                :viewport="true"
-                :transition="600"
-              />
-            </div>
-
-            <div
-              class="select-to-show-ave-menu"
-              v-if="isLoad"
-              @click="toggleOptions"
-              ref="fixTitleWidth"
-            >
-              <div class="select-title">
-                <div
-                  class="select-option-arrow"
-                  :class="{ rotate: showOptions }"
-                >
-                  &#9660;
-                </div>
-                <div class="selected-option" ref="selectTitle">בחר מבחן</div>
-              </div>
-
-              <ul v-show="showOptions" class="exams-list-options">
-                <li
-                  v-for="(name, index) in testsNames"
-                  :key="index"
-                  @click="selectOption(name)"
-                >
-                  {{ name.subject }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="title" v-if="examTitlesFiltered.length && isLoad">
-        מבחנים הממתינים לבדיקה
-      </div>
-
-      <div class="accordion" v-if="isLoad && examTitlesFiltered.length > 0">
-        <div
-          class="accordion-item"
-          v-for="(item, index) in examTitlesFiltered"
-          :key="item"
-        >
-          <button
-            class="accordion-header"
-            :class="{ active: ite === index && isOpen }"
-            @click="OpenAccordion(item, index)"
-            :ref="item + index"
-            :value="item"
+    <q-list>
+      <q-expansion-item
+        class="overflow-hidden card-expansion"
+        v-for="(test, index) in testsNames"
+        :key="index"
+        :label="test.subject"
+      >
+        <q-separator />
+        <q-card class="card" style="background: rgba(240, 240, 240, 0.916)">
+          <q-card-section
+            v-for="(pending, pIndex) in filteredPending(test.subject)"
+            :key="pIndex"
+            class="card-section"
           >
-            <div
-              class="accordion-arrow"
-              :class="{ rotate: ite === index && isOpen }"
-            >
-              &#9660;
+            <div class="card-item">
+              <div class="user-name">
+                {{ pending.userName }}
+              </div>
+              <button class="watch-btn">לצפייה</button>
             </div>
-            <div class="text">{{ item }}</div>
-          </button>
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
+    </q-list>
 
-          <div class="accordion-content" v-if="isOpen && ite == index">
-            <div
-              class="name-of-hafifot"
-              v-for="info in userInfoFilterd"
-              :key="info"
-            >
-              <router-link
-                :to="{
-                  name: 'examsToCheck',
-                  path: `/examsToCheck/${info.num}/${info.type}`,
-                  params: { examType: info.type, num: info.num },
-                }"
-                @click="passName(info)"
-                >{{ info.Title }}</router-link
-              >
+    <div class="title2">ממתינים לאישור בדיקה</div>
+
+    <q-list>
+      <q-expansion-item
+        class="overflow-hidden card-expansion"
+        v-for="(test, index) in testsNames"
+        :key="index"
+        :label="test.subject"
+      >
+        <q-separator />
+        <q-card class="card" style="background: rgba(240, 240, 240, 0.916)">
+          <q-card-section
+            v-for="(pending, pIndex) in filteredPending(test.subject)"
+            :key="pIndex"
+            class="card-section"
+          >
+            <div class="card-item">
+              <div class="user-name">
+                {{ pending.userName }}
+              </div>
+              <button class="watch-btn">לצפייה</button>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="when-empty" v-if="!examTitlesFiltered.length && isLoad">
-        אין מבחנים לבדיקה
-      </div>
-    </div>
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
+    </q-list>
   </div>
 </template>
 
@@ -136,175 +82,144 @@ export default {
     };
   },
   methods: {
-    passName(info) {
-      localStorage.setItem("infoName", info.Title);
-    },
-    asyncParse(str) {
-      return new Promise((resolve) => {
-        resolve(JSON.parse(str));
-      });
-    },
-    toggleOptions() {
-      this.showOptions = !this.showOptions;
-    },
-    async getGrades(name) {
+    async getData() {
+      this.testsNames = JSON.parse(localStorage.getItem("testsNames"));
+      console.log(this.testsNames);
+
       var res = null;
-      var v = null;
+      var res2 = null;
+      var mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
       if (this.$isSharePointUrl) {
         res = await axios.get(
           this.$sharePointUrl +
-            `getByTitle('students')/items?$select=${name.Title}`
+            `getByTitle('submittedExams')/Items$?filter=mahlakaId eq ${mahlakaId}`
         );
-        v = res.data.value;
-        const promiseData = await Promise.all(
-          v.map((item) => {
-            return this.asyncParse(item[name.Title]).then((inner) => {
-              item[name.Title] = inner;
-              return { item };
-            });
+        this.userData = res.data.value;
+        const res2 = await Promise.all(
+          this.userData.map(async (item) => {
+            const res2 = await axios.get(
+              this.$sharePointUrl +
+                `getByTitle('students')/Items$?filter=num eq ${item.userId})`
+            );
+            item.userName = res2.data.value[0].Title;
           })
-        );
-        console.log(v);
-      } else {
-        res = await axios.get(this.$sharePointUrl + `students`);
-        console.log(res.data);
-        v = res.data;
-      }
-      var mapExam = v.map((data) => data[name.Title]);
-      console.log(mapExam);
-      var aveArray = mapExam
-        .map((inner) => {
-          if (inner != null) {
-            return inner
-              .map((object) => object.finalGrade)
-              .filter((grade) => grade !== undefined);
-          }
-        })
-        .flat()
-        .filter((grade) => grade !== undefined);
-
-      console.log(aveArray);
-      this.calcAve(aveArray);
-    },
-
-    selectOption(name) {
-      var selectedText = this.$refs["selectTitle"];
-      console.log(selectedText);
-      selectedText.innerHTML = name.subject;
-      var fixTitleWidth = this.$refs["fixTitleWidth"];
-      if (name.subject == "המבחן הסופי") {
-        console.log("yes");
-        fixTitleWidth.style.width = "125px";
-      } else {
-        fixTitleWidth.style.width = "100px";
-      }
-      this.getGrades(name);
-    },
-    async filterTitles() {
-      this.examTitlesFiltered = this.userData.map((data) => data.name);
-      const arr = this.examTitlesFiltered;
-      this.examTitlesFiltered = this.filterArrayOfTitles(arr);
-      console.log(this.examTitlesFiltered);
-    },
-
-    filterArrayOfTitles(arr) {
-      return arr.filter((value, index) => {
-        return arr.indexOf(value) === index;
-      });
-    },
-
-    async getData() {
-      var res = null;
-      if (this.$isSharePointUrl) {
-        res = await axios.get(
-          this.$sharePointUrl + "getByTitle('submittedExams')/Items"
         );
       } else {
         res = await axios.get(this.$sharePointUrl + "submittedExams");
+        var data = res.data.value;
+        this.data = res.data.value;
+        const res2 = await Promise.all(
+          this.data.map(async (item) => {
+            const res2 = await axios.get(this.$sharePointUrl + "students");
+            const res2Filtered = res2.data.value.filter(
+              (inner) => inner.num === item.userId
+            );
+            item.userName = res2Filtered[0].Title;
+            console.log(item.userName);
+          })
+        );
+
+        this.userData = data.filter((item) => item.mahlakaId === mahlakaId);
       }
-      this.userData = res.data.value;
+
       console.log(this.userData);
     },
 
-    async OpenAccordion(item, index) {
-      // console.log(this.isOpen)
-      this.ite = index;
-      this.getBtnVal = await this.$refs[item + index].value;
-      console.log(this.getBtnVal);
-      this.userInfoFilterd = await this.userData.filter(
-        (data) => data.name == this.getBtnVal
-      );
-      console.log(this.userInfoFilterd);
-      this.isOpen = !this.isOpen;
-    },
-
-    changeAveColor(ave) {
-      if (ave >= 80) {
-        return "#2E8B57";
-      }
-      if (ave >= 60 && ave < 80) {
-        return "var(--main-background-color)";
-      } else {
-        return "rgb(175 11 11)";
-      }
-    },
-    showAveOnEachTest(name) {
-      console.log(name);
-    },
-
-    calcAve(aveArray) {
-      console.log("yews");
-      console.log(aveArray);
-      let sum = 0;
-      let count = 0;
-      if (aveArray.length) {
-        for (let i = 0; i < aveArray.length; i++) {
-          sum += aveArray[i];
-          count++;
-        }
-        if (count === 0) {
-          return 0;
-        }
-        this.gradrPerExam = sum / count;
-        console.log(this.gradrPerExam);
-        return this.gradrPerExam;
-      } else {
-        this.gradrPerExam = 0;
-        console.log(this.gradrPerExam);
-        return this.gradrPerExam;
-      }
-    },
-
-    timeOutForSpinner() {
-      this.isLoad = true;
+    filteredPending(name) {
+      return this.userData.filter((item) => item.Title === name);
     },
   },
-
   async beforeMount() {
-    var testsNames = JSON.parse(localStorage.getItem("examsName"));
-    this.testsNames = testsNames;
-    console.log(this.testsNames);
     await this.getData();
-    await this.filterTitles();
-    const myTimeOut = setTimeout(this.timeOutForSpinner, 250);
   },
 };
 </script>
 
 <style scoped>
-.title {
+.q-pa-md {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
   position: relative;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  font-size: 30px;
+  align-items: center;
+  /* direction: rtl; */
+  padding: 0;
+}
+.q-list {
+  width: 70%;
+  max-height: 33.5%;
+  padding-right: 7px;
+  margin-right: 7px;
+
+  overflow-y: auto;
+  /* border: 1px solid #e4f3ff;
+  background-color: #f4f7f7;
+  box-shadow: -3px 2px 6px 0 rgb(0 0 0 / 13%), 0 0.3px 0.9px 0 rgb(0 0 0 / 11%); */
+}
+
+.q-list:last-child {
+  margin-top: 20px;
+}
+.card-item {
+  height: 100%;
+  height: 50px;
+  width: 85%;
+  margin-left: 7%;
+  border-radius: 15px;
+  border: 1px solid #e4f3ff;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* box-shadow: -3px 2px 6px 0 rgb(0 0 0 / 13%), 0 0.3px 0.9px 0 rgb(0 0 0 / 11%); */
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  color: black;
+  padding-top: 2px;
+  font-size: 17px;
+}
+.watch-btn {
+  width: 4vw;
+  height: 3.5vh;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  margin-left: 15%;
+}
+.card-expansion {
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: 600;
+  background: rgba(240, 240, 240, 0.916);
+}
+.card-expansion:not(:last-child) {
+  margin-bottom: 10px;
+}
+.card-section {
+  padding: 15px !important;
+}
+.card {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.title1 {
+  position: relative;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  font-size: 28px;
   font-weight: 700;
   z-index: -1;
   text-align: center;
 }
-.main-title {
-  margin-top: 40px;
+.title2 {
+  margin-top: 30px;
+  margin-bottom: 15px;
   font-size: 28px;
-  text-align: center;
+  font-weight: 700;
 }
 .box-flex {
   display: flex;
@@ -333,14 +248,6 @@ export default {
   left: 50%;
   /* margin-top: 80px; */
   transform: translateX(-50%);
-}
-button {
-  width: 100%;
-  position: relative;
-  border: none;
-  transition: all 0.2s ease-in-out;
-  min-height: 70px;
-  /* background-color: rgb(150 149 149 / 39%); */
 }
 button:hover {
   background-color: #cac8c88e;

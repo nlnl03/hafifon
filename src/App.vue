@@ -83,6 +83,14 @@ export default {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   content: "%";
 }
+.main-dialog,
+.main-form {
+  z-index: 1000 !important;
+}
+.uploaded-success .swal2-container {
+  z-index: 9999 !important;
+  background: rgba(0, 0, 0, 0.1) !important;
+}
 
 .average-items .vue3-circular-progressbar .current-counter {
   font-size: 40px;
@@ -212,6 +220,14 @@ export default {
   src: url(./assets/Assistant-Regular.ttf);
   font-family: Assistant-Regular;
 }
+@font-face {
+  src: url("./assets/uicons-regular-rounded.woff2");
+  font-family: RobotoMono;
+}
+.q-expansion-item .q-item__section--main {
+  padding: 10px !important;
+}
+
 *,
 body {
   margin: 0;
@@ -269,7 +285,7 @@ button {
   height: 370px !important;
 }
 .swal2-success-line-tip {
-    left: 2.6em !important;
+  left: 2.6em !important;
   transform: rotate(-45deg) !important;
 }
 .swal2-success-line-long {
@@ -329,7 +345,8 @@ h1 {
   max-height: 495px;
 }
 .q-timeline__subtitle {
-  font-size: 22px !important;
+  font-size: 32px !important;
+  margin-bottom: 40px !important;
   position: relative;
   left: 30px;
 }

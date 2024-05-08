@@ -719,6 +719,7 @@
     "value": [
       {
         "Title": "המבחן הסופי",
+        "mahlakaId":1,
         "test": {
           "parts": [
             {
@@ -835,12 +836,13 @@
             }
           ]
         },
-        "userId": 1,
+        "userId": 1111,
         "examId": 1,
         "status": "pending"
       },
       {
         "Title": "המבחן הסופי",
+        "mahlakaId":1,
         "test": {
           "parts": [
             {
@@ -957,13 +959,13 @@
             }
           ]
         },
-        "userId": 1,
+        "userId": 12345,
         "examId": 2,
         "status": "checked",
         "grade":50
       },
       {
-        "userId": 1,
+        "userId": 2222,
         "examId": 3,
         "status": "checked",
         "grade":70
@@ -1379,8 +1381,8 @@
         "queNum":4,
         "selectedOption":null,
         "correctAnswer":["the","quick","brown","fox","jumps","over","the","lazy","dog"],
-        "sentences":["the","quick","","","jumps","","the","lazy",""],
-        "bankWords":["dog","quick","brown","fox","jumps","over"],
+        "sentences":["","quick","","","jumps","","the","lazy",""],
+        "bankWords":["dog","quick","brown","fox","jumps","over","the"],
         "subjects":null,
         "correctMatches":null,
         "table":null
@@ -1645,7 +1647,7 @@
         "Id": 1,
         "weekId": 1,
         "Img": "printer.jpg",
-        "file": "",
+        "file": "sdsd.pptx",
         "mahlakaId": 1
       },
       {

@@ -12,11 +12,9 @@ import practiceResult from "../views/quizRoutes/practiceResult.vue";
 import MainCheckPage from "../views/hafifonAdmin/MainCheckPage.vue";
 import examsToCheck from "../views/hafifonAdmin/examsToCheck.vue";
 // import uploadEditExams from "../views/hafifonAdmin/uploadEditExams.vue";
-import uploadButtons from "../views/hafifonAdmin/uploading/uploadButtons.vue";
+import mainAdminPage from "../views/hafifonAdmin/uploading/mainAdminPage.vue";
 // import uploadForm from "../views/hafifonAdmin/uploading/uploadForm.vue";
-import editExams from "../views/hafifonAdmin/editExams.vue";
-import openPermForExams from "../views/hafifonAdmin/openPermForExams.vue";
-
+ 
 
 //exams
 import examDeletedMessage from "../views/examsAndTest/examDeletedMessage.vue";
@@ -75,16 +73,11 @@ const routes = [
     component: examsToCheck,
     props: true
   },
+  
   {
-    path: "/:selectedItem?/admin/openPermForExams",
-    name: "openPerm",
-    component: openPermForExams,
-    props: true
-  },
-  {
-    path: "/:selectedItem?/admin/uploadButtons",
-    name: "uploadButtons",
-    component: uploadButtons,
+    path: "/:selectedItem?/admin/mainAdminPage",
+    name: "mainAdminPage",
+    component: mainAdminPage,
     props: true
   },
   // {
@@ -93,11 +86,7 @@ const routes = [
   //   component: uploadForm,
   //   props: true
   // },
-  {
-    path: "/:selectedItem?/admin/:title/edit",
-    name: "editExams",
-    component: editExams
-  },
+   
   {
     path: "/:selectedItem?/examsToCheck/:num/:examType/submitted",
     name: "submitted",

@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md" v-if="isLoad">
+  <div v-if="isLoad">
     <q-btn @click="openDialog" icon="add" label="הוסף נחפף" />
     <q-table
       :sticky-header="true"

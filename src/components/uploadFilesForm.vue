@@ -1,7 +1,10 @@
 <template>
   <div class="main">
-    <q-form @submit.prevent="submitForm" class="q-ma-auto">
+    <q-form @submit.prevent="submitForm" class="main-dialog">
+      <div class="title">העלאת מצגות ותרגולים</div>
+
       <q-select
+        filled
         v-model="selectedWeek"
         :options="weekOptions"
         label="בחר שבוע"
@@ -10,10 +13,12 @@
         map-options
         option-label="label"
         option-value="value"
+        required
       >
       </q-select>
 
       <q-select
+        filled
         v-model="selectedLesson"
         :options="lessonOptions"
         label="בחר שיעור"
@@ -23,6 +28,7 @@
         map-options
         option-label="label"
         option-value="value"
+        required
       >
       </q-select>
 
@@ -33,6 +39,7 @@
         label="בחר קובץ"
         accept=".ppt, .pptx"
         class="q-mt-md"
+        required
       >
         <template v-slot:prepend>
           <q-icon name="fas fa-cloud-upload-alt" @click.stop.prevent />
@@ -204,8 +211,23 @@ export default {
           lessonUpdateRes
         );
         this.loading = false;
+
+        this.$swal({
+          title: "הועלה בהצלחה !",
+          confirmButtonColor: `var(--main-background-color)`,
+          icon: "success",
+          confirmButtonText: "סגור",
+        });
       } catch (error) {
         console.error("error uploading file and updating lessons list:", error);
+        this.loading = false;
+        this.$swal({
+          title: "שגיאה בהעלאה",
+          text: `אירעה שגיאה בהעלאה, ${error}`,
+          icon: "error",
+          confirmButtonColor: `var(--main-background-color)`,
+          confirmButtonText: "נסה שוב",
+        });
       }
     },
   },
@@ -248,6 +270,15 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.71);
+  margin-bottom: 50px;
+  margin-top: 20px;
+  font-size: 32px;
+  font-weight: 600;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -259,8 +290,8 @@ export default {
   position: relative;
   top: 100px;
 }
-.q-ma-auto {
-  width: 60%;
+.main-dialog {
+  width: 65%;
 }
 .submit-btn {
   margin-top: 20px;

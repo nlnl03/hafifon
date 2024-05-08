@@ -35,6 +35,7 @@
         type="number"
         label="בחר זמן (בדקות)"
         required
+        style="margin-bottom: 20px"
       />
 
       <!-- //מס חלקים -->
@@ -213,7 +214,7 @@ export default {
         );
 
         localStorage.setItem("testsNames", dataUpdatedStringified);
-        console.log("yesss")
+        console.log("yesss");
         console.log("the exam uploaded successfully");
         this.$swal({
           title: "המבדק הועלה בהצלחה",
@@ -303,5 +304,8 @@ export default {
   position: relative;
   top: 50px;
   margin-bottom: 70px;
+}
+.main-form {
+  width: 65%;
 }
 </style>

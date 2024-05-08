@@ -1,101 +1,140 @@
 <template>
-  <div class="main">
-    <h1>שיעורים ותרגולים</h1>
-    <div class="text-under-line"></div>
+  <div class="background" :class="{ loading: !imageLoaded }">
+    <div class="main">
+      <h1>שיעורים ותרגולים</h1>
+      <div class="text-under-line"></div>
 
-    <div class="select-timeline">
-      <q-select
-        outlined
-        v-model="selectedValue"
-        :options="weeksWithIndex"
-        map-options
-        :option-value="(option) => option.Id"
-        :option-label="(option) => `שבוע ${option.index + 1}`"
-        label="מיין לפי שבוע"
-        @update:model-value="showFilterCards"
-      >
-        <template v-if="selectedValue" v-slot:append>
-          <q-icon
-            name="far fa-times-circle"
-            @click.stop.prevent="selectedValue = null"
-            @click="returnDotAnd"
-            class="cursor-pointer"
-          />
-        </template>
-      </q-select>
-    </div>
-    <div class="loader-spinner" v-if="!isLoad">
-      <loadingSpinner />
-    </div>
-    <div class="container-cards" v-if="isLoad">
-      <div class="without-timeline">
-        <div class="timeline" ref="timeline">
-          <q-timeline color="secondary">
-            <q-timeline-entry
-              :subtitle="week.Title"
-              v-for="(week, index) in filteredWeek"
-              :key="index"
-              :value="week.Id"
-            >
-              <div class="flex-cards" v-if="showCards">
-                <div
-                  v-for="(item, midIndex) in weekLessons(week.Id)"
-                  :key="midIndex"
-                >
+      <div class="select-timeline">
+        <q-select
+          outlined
+          v-model="selectedValue"
+          :options="weeksWithIndex"
+          map-options
+          :option-value="(option) => option.Id"
+          :option-label="(option) => option.Title"
+          label="מיין לפי שבוע"
+          @update:model-value="showFilterCards"
+        >
+          <template v-if="selectedValue" v-slot:append>
+            <q-icon
+              name="far fa-times-circle"
+              @click.stop.prevent="selectedValue = null"
+              @click="returnDotAnd"
+              class="cursor-pointer"
+            />
+          </template>
+        </q-select>
+      </div>
+      <div class="loader-spinner" v-if="!isLoad">
+        <loadingSpinner />
+      </div>
+      <div class="container-cards" v-if="isLoad">
+        <div class="without-timeline">
+          <div class="timeline" ref="timeline">
+            <q-timeline color="secondary">
+              <q-timeline-entry
+                :subtitle="week.Title"
+                v-for="(week, index) in filteredWeek"
+                :key="index"
+                :value="week.Id"
+              >
+                <div class="flex-cards" v-if="showCards">
                   <div
-                    class="card"
-                    @mouseenter="expandCard(item, index, midIndex, $event)"
-                    @mouseleave="collapseCard($event)"
+                    v-for="(item, midIndex) in weekLessons(week.Id)"
+                    :key="midIndex"
                   >
-                    <div class="card-content">
-                      <div class="inner-flex">
-                        <img
-                          class="image-of-items"
-                          :src="require(`@/assets/${item.Img}`)"
-                        />
-                        <h4 class="text">
-                          {{ item.Title }}
-                        </h4>
-                        <span class="lesson-name">{{ item.description }}</span>
-                        <span class="num-of-que">מספר תרגולים: </span>
-                      </div>
+                    <div
+                      class="card"
+                      @mouseenter="expandCard(item, index, midIndex, $event)"
+                      @mouseleave="collapseCard($event)"
+                    >
+                      <div class="card-content">
+                        <div
+                          class="inner-flex"
+                          v-if="item.Title != 'הכרת הגדוד'"
+                        >
+                          <img
+                            class="image-of-items"
+                            :src="setLessonImg(item.Img)"
+                            alt="תמונת שיעור"
+                          />
+                          <h4 class="text">
+                            {{ item.Title }}
+                          </h4>
+                          <span class="lesson-name">{{
+                            item.description
+                          }}</span>
+                          <span class="num-of-que">מספר תרגולים: </span>
+                        </div>
 
-                      <div
-                        class="expanded-content"
-                        v-if="
-                          ite === index &&
-                          midIte === midIndex &&
-                          this.isFinished
-                        "
-                        :style="{
-                          maxHeight:
-                            ite === index && midIte === midIndex
-                              ? expandedHeight
-                              : '0',
-                        }"
-                      >
-                        <q-btn
-                          class="powerPoint-link"
-                          @click="powerpointUrl(index, item.file)"
-                          label="מצגת"
-                          style="background-color: #eb693e; color: white"
-                        />
-                        <q-btn
-                          class="tirgulim-link"
-                          label="תרגולים"
-                          @click="openTirgulimModal(item.Id, index)"
-                          style="
-                            background-color: var(--main-background-color);
-                            color: white;
+                        <button
+                          v-if="item.Title == 'הכרת הגדוד'"
+                          class="inner-flex"
+                          style="border: none; width: 100%; cursor: pointer"
+                          @click="powerpointUrl(index, item.file, midIndex)"
+                        >
+                          <img
+                            class="image-of-items"
+                            style="width: 65%; margin-top: 30px"
+                            :src="require(`@/assets/383.png`)"
+                          />
+                          <h4
+                            class="text"
+                            style="
+                              margin-bottom: 50px;
+                              color: rgb(102 143 197);
+                              font-size: 37px;
+                            "
+                          >
+                            {{ item.Title }}
+                          </h4>
+                        </button>
+
+                        <div
+                          class="expanded-content"
+                          v-if="
+                            ite === index &&
+                            midIte === midIndex &&
+                            this.isFinished &&
+                            item.Title != 'הכרת הגדוד'
                           "
-                        />
+                          :style="{
+                            maxHeight:
+                              ite === index && midIte === midIndex
+                                ? expandedHeight
+                                : '0',
+                          }"
+                        >
+                          <q-btn
+                            class="powerPoint-link"
+                            @click="
+                              powerpointUrl(
+                                index,
+                                item.file,
+                                midIndex,
+                                week.Title
+                              )
+                            "
+                            label="מצגת"
+                            style="background-color: #eb693e; color: white"
+                          />
+                          <q-btn
+                            class="tirgulim-link"
+                            label="תרגולים"
+                            @click="openTirgulimModal(item.Id, index)"
+                            style="
+                              background-color: var(--main-background-color);
+                              color: white;
+                            "
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </q-timeline-entry>
-          </q-timeline>
+              </q-timeline-entry>
+            </q-timeline>
+          </div>
         </div>
       </div>
     </div>
@@ -142,9 +181,18 @@ export default {
       tirgulimNames: [],
       mahlakaId: null,
       weeksWithIndex: [],
+      imageLoaded: false,
     };
   },
   methods: {
+    setLessonImg(imgName) {
+      const mahlaka = localStorage.getItem("mahlaka");
+      if (this.$isSharePointUrl) {
+        return `https://portal.army.idf/sites/hafifon383/SiteAssets/${mahlaka}/lessonsPics/${imgName}`;
+      } else {
+        return require(`@/assets/${imgName}`);
+      }
+    },
     showFilterCards() {
       const optionValue = this.selectedValue.Id;
       console.log(optionValue);
@@ -161,15 +209,17 @@ export default {
       timelineFiltered.children[1].style.display = "block";
     },
     expandCard(item, index, midIndex, event) {
-      this.ite = index;
-      this.midIte = midIndex;
-      const div = event.target.children[0].children[0];
-      // console.log(div)
-      // console.log(this.$refs[item+midIndex])
-      div.style.height = "90%";
-      // console.log(expandDiv)
+      if (item.Title !== "הכרת הגדוד") {
+        this.ite = index;
+        this.midIte = midIndex;
+        const div = event.target.children[0].children[0];
+        // console.log(div)
+        // console.log(this.$refs[item+midIndex])
+        div.style.height = "90%";
+        // console.log(expandDiv)
 
-      this.isFinished = true;
+        this.isFinished = true;
+      }
     },
 
     collapseCard(event) {
@@ -180,12 +230,16 @@ export default {
       this.isFinished = false;
     },
 
-    powerpointUrl(index, fileName) {
+    powerpointUrl(index, fileName, midIndex, title) {
       const mahlaka = localStorage.getItem("mahlaka");
       // var nameOfPowerP = this.practices[index].items[midIndex].Subject
-      const url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/${mahlaka}/שבוע ${
-        index + 1
-      }/${fileName}`;
+      var url = null;
+      if (index === 0 && midIndex === 0) {
+        console.log(fileName);
+        url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/${fileName}`;
+      } else {
+        url = `https://portal.army.idf/sites/hafifon383/_layouts/15/WopiFrame.aspx?sourcedoc=https://portal.army.idf/sites/hafifon383/SiteAssets/${mahlaka}/${title}/${fileName}`;
+      }
       window.open(url, "_blank");
     },
 
@@ -215,6 +269,8 @@ export default {
         this.dialogVisible = true;
       } else if (this.tirgulimNames.length == 1) {
         console.log(this.tirgulimNames[0]);
+        localStorage.setItem("pracTitle", this.tirgulimNames[0].Title);
+
         this.$router.push({
           name: "beforeStartQuiz",
           params: {
@@ -227,6 +283,7 @@ export default {
     },
 
     goToPrac(prac) {
+      localStorage.setItem("pracTitle", prac.Title);
       this.$router.push({
         name: "beforeStartQuiz",
         params: {
@@ -295,6 +352,16 @@ export default {
           (lesson) => lesson.mahlakaId == this.mahlakaId
         );
       }
+      if (this.weeks.length > 0) {
+        const about383 = {
+          Img: "printer.jpg",
+          Title: "הכרת הגדוד",
+          file: "מצגת הצגת הגדוד.pptx",
+          mahlakaId: this.mahlakaId,
+          weekId: this.lessons[0].weekId,
+        };
+        this.lessons.unshift(about383);
+      }
       console.log("lessons array :", this.lessons);
       this.showCards = true;
     },
@@ -326,8 +393,38 @@ export default {
 </script>
 
 <style scoped>
-.main {
+.background {
+  background-image: url(../../assets/bgrnd.png);
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+.background::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.background.loading {
+  animation: fadeIn 0.7s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.main {
   /* overflow-x: hidden; */
 }
 .loader-spinner {
@@ -341,6 +438,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  background: white;
 }
 h1 {
   font-size: 60px;
@@ -389,6 +487,7 @@ h1 {
 }
 .card {
   flex-direction: column;
+  border-radius: 10px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -453,6 +552,7 @@ h4 {
 }
 .q-select {
   width: 180px;
+  background: rgba(255, 255, 255, 0.755);
 }
 .lesson-name {
   margin-bottom: 10px;

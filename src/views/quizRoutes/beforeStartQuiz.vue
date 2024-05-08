@@ -1,10 +1,10 @@
 <template>
   <div class="main-flex">
     <div class="box">
-      <span class="title">{{ this.$route.params }}</span>
-
-      <div class="guide">
-        התרגול מורכב מכמה סוגי של שאלות למשל: אמריקאיות, בנק מילים, השלמה ועוד.
+      <span class="title">{{ pracTitle }}</span>
+      <div class="info">
+        <span class="guide-title">התרגול מורכב מכמה סוגי של שאלות למשל:</span>
+        <h6 class="guide">אמריקאיות, בנק מילים, השלמה ועוד.</h6>
       </div>
       <q-btn class="start-btn" label="התחל" @click="goToPrac" />
     </div>
@@ -13,10 +13,18 @@
 
 <script>
 export default {
+  data() {
+    return {
+      pracTitle: "",
+    };
+  },
   methods: {
     goToPrac() {
       this.$router.push({ name: "quiz", params: this.$route.params });
     },
+  },
+  beforeMount() {
+    this.pracTitle = localStorage.getItem("pracTitle");
   },
 };
 </script>
@@ -25,15 +33,16 @@ export default {
 .main-flex {
   display: flex;
   justify-content: center;
-  margin-top: 130px;
+  margin-top: 100px;
+  margin-right: 20px;
+  margin-left: 20px;
 }
 .box {
-  height: 400px;
-  width: 600px;
+  min-height: 450px;
+  width: 700px;
   box-shadow: 0 0 7px 0 rgb(0 0 0 / 21%);
   border-radius: 15px;
   display: flex;
-  justify-content: space-around;
   align-items: center;
   position: relative;
   flex-direction: column;
@@ -41,14 +50,20 @@ export default {
 }
 .title {
   font-weight: 700;
-  font-size: 65px;
+  font-size: 55px;
+  margin-bottom: 25px;
+  margin-top: 30px;
+}
+.info {
+  margin-top: 30px;
 }
 .guide {
+  margin-top: 10px;
   font-size: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  text-align: center;
+}
+.guide-title {
+  font-size: 30px;
 }
 .start-btn {
   background-color: var(--main-background-color);
@@ -56,5 +71,7 @@ export default {
   width: 75px;
   border-radius: 5px;
   font-size: 16px;
+  position: relative;
+  margin-top: 100px;
 }
 </style>

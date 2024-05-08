@@ -1,7 +1,7 @@
 <template>
   <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
   <div class="container" v-if="isLoadForSpinner">
-    <div class="question-box">
+    <div class="question-box" v-if="currentQuestion != null">
       <div class="question">
         <h2>
           <span class="que-num">{{ currentQuestionIndex + 1 }}.</span>
@@ -38,7 +38,10 @@
 
         <template v-if="currentQuestion.type === 'dragDropComplete'">
           <!-- <h2>{{ currentQuestion.title }}</h2> -->
-          <div class="sentence-container">
+          <div
+            class="sentence-container"
+            :style="{ flexDirection: setTextDirection }"
+          >
             <span
               v-for="(word, index) in currentQuestion.sentences"
               :key="index"
@@ -216,78 +219,79 @@ export default {
     submitAnswer() {
       this.currentQuestionIndex = null;
       console.log(this.quizData);
+      localStorage.setItem("pracData", JSON.stringify(this.quizData));
       this.$router.push({ name: "result" });
     },
 
-    gradeQuiz() {
-      var totalQuestions = this.quizData.length;
-      var correctAnswers = 0;
+    // gradeQuiz() {
+    //   var totalQuestions = this.quizData.length;
+    //   var correctAnswers = 0;
 
-      this.quizData.forEach((question) => {
-        switch (question.type) {
-          case "radio":
-            if (question.selectedOption === question.correctAnswer) {
-              correctAnswers++;
-              console.log("radio is correct");
-            }
-            break;
-          case "checkbox":
-            var correctOptionsCount = 0;
+    //   this.quizData.forEach((question) => {
+    //     switch (question.type) {
+    //       case "radio":
+    //         if (question.selectedOption === question.correctAnswer) {
+    //           correctAnswers++;
+    //           console.log("radio is correct");
+    //         }
+    //         break;
+    //       case "checkbox":
+    //         var correctOptionsCount = 0;
 
-            question.options.forEach((option, index) => {
-              if (
-                question.correctAnswer.includes(option) &&
-                question.selectedOption[index]
-              ) {
-                correctOptionsCount++;
-              }
-            });
+    //         question.options.forEach((option, index) => {
+    //           if (
+    //             question.correctAnswer.includes(option) &&
+    //             question.selectedOption[index]
+    //           ) {
+    //             correctOptionsCount++;
+    //           }
+    //         });
 
-            var totalPossibleCorrectOptions = question.correctAnswer.length;
-            var fracCorrect = correctOptionsCount / totalPossibleCorrectOptions;
+    //         var totalPossibleCorrectOptions = question.correctAnswer.length;
+    //         var fracCorrect = correctOptionsCount / totalPossibleCorrectOptions;
 
-            correctAnswers += fracCorrect;
-            break;
+    //         correctAnswers += fracCorrect;
+    //         break;
 
-          case "dragDropComplete":
-            var isCorrect =
-              question.sentences.join("") === question.correctAnswer.join("");
+    //       case "dragDropComplete":
+    //         var isCorrect =
+    //           question.sentences.join("") === question.correctAnswer.join("");
 
-            if (isCorrect) {
-              correctAnswers++;
-            }
-            break;
+    //         if (isCorrect) {
+    //           correctAnswers++;
+    //         }
+    //         break;
 
-          case "dragDropTable":
-            var correctConceptsCount = 0;
+    //       case "dragDropTable":
+    //         var correctConceptsCount = 0;
 
-            question.correctMatches.forEach((correctMatch) => {
-              const { subject, concepts } = correctMatch;
-              const subjectIndex = question.indexOf(subject);
-              if (subjectIndex !== -1) {
-                if (
-                  question.table[subjectIndex] &&
-                  question.table[subjectIndex].every((concept) =>
-                    concepts.includes(concept)
-                  )
-                ) {
-                  correctConceptsCount += concepts.length;
-                }
-              }
-            });
+    //         question.correctMatches.forEach((correctMatch) => {
+    //           const { subject, concepts } = correctMatch;
+    //           const subjectIndex = question.indexOf(subject);
+    //           if (subjectIndex !== -1) {
+    //             if (
+    //               question.table[subjectIndex] &&
+    //               question.table[subjectIndex].every((concept) =>
+    //                 concepts.includes(concept)
+    //               )
+    //             ) {
+    //               correctConceptsCount += concepts.length;
+    //             }
+    //           }
+    //         });
 
-            var totalPossibleConcepts = question.correctMatches.reduce(
-              (total, match) => total + match.concepts.length,
-              0
-            );
-            var fractionCorrect = correctConceptsCount / totalPossibleConcepts;
-            correctAnswers += fractionCorrect;
-            break;
-        }
-      });
+    //         var totalPossibleConcepts = question.correctMatches.reduce(
+    //           (total, match) => total + match.concepts.length,
+    //           0
+    //         );
+    //         var fractionCorrect = correctConceptsCount / totalPossibleConcepts;
+    //         correctAnswers += fractionCorrect;
+    //         break;
+    //     }
+    //   });
 
-      return (correctAnswers / totalQuestions) * 100;
-    },
+    //   return (correctAnswers / totalQuestions) * 100;
+    // },
 
     dragStart(word, event) {
       event.dataTransfer.setData("text/plain", word);
@@ -330,11 +334,24 @@ export default {
 
     async getQuiz() {
       try {
+        const fieldsToFetch = [
+          "Title",
+          "practiceIdId",
+          "lessonId",
+          "type",
+          "queNum",
+          "options",
+          "selectedOption",
+          "subjects",
+          "table",
+          "sentences",
+          "bankWords",
+        ];
         var res = null;
         if (this.$isSharePointUrl) {
           res = await axios.get(
             this.$sharePointUrl +
-              `getByTitle('practicesData')/Items?$filter=practiceId eq ${this.$route.params.numOfPrac}`
+              `getByTitle('practicesData')/Items?$filter=practiceId eq ${this.$route.params.numOfPrac}&$select=${fieldsToFetch}`
           );
           this.quizData = res.data.value;
 
@@ -362,17 +379,9 @@ export default {
                   return { question };
                 });
 
-                const parseCorrectAnswer = this.$asyncParse(
-                  question.correctAnswer
-                ).then((correctAnswer) => {
-                  question.correctAnswer = correctAnswer;
-                  return { question };
-                });
-
                 return {
                   parseOptions,
                   parseSelectedOption,
-                  parseCorrectAnswer,
                 };
               } else if (question.type === "dragDropComplete") {
                 console.log("yes, dragDropComplete");
@@ -390,14 +399,7 @@ export default {
                   return { question };
                 });
 
-                const parseCorrectAnswer = this.$asyncParse(
-                  question.correctAnswer
-                ).then((correctAnswer) => {
-                  question.correctAnswer = correctAnswer;
-                  return { question };
-                });
-
-                return { parseSentences, parseBankWords, parseCorrectAnswer };
+                return { parseSentences, parseBankWords };
               } else if (question.type === "dragDropTable") {
                 console.log("yes, dragDropTable");
 
@@ -407,12 +409,6 @@ export default {
                     return { question };
                   }
                 );
-                const parseCorrectMatches = this.$asyncParse(
-                  question.correctMatches
-                ).then((correctMatches) => {
-                  question.correctMatches = correctMatches;
-                  return { question };
-                });
 
                 const parseBankWords = this.$asyncParse(
                   question.bankWords
@@ -430,55 +426,12 @@ export default {
 
                 return {
                   parseSubjects,
-                  parseCorrectMatches,
                   parseBankWords,
                   parseTable,
                 };
               }
             })
           );
-
-          // const parseCorrectAnswer = await Promise.all(
-          //   this.quizData.map((item) => {
-          //     console.log("yes, correctAnswer");
-          //   })
-          // );
-
-          // const parseSentences = await Promise.all(
-          //   this.quizData.map((item) => {
-          //     console.log("yes, sentences");
-          //   })
-          // );
-
-          // const parseBankWords = await Promise.all(
-          //   this.quizData.map((item) => {
-          //     console.log("yes, bankWords");
-          //   })
-          // );
-
-          // const parseSelectedOption = await Promise.all(
-          //   this.quizData.map((item) => {
-          //     console.log("yes, selectedOption");
-          //   })
-          // );
-
-          // const parseSubjects = await Promise.all(
-          //   this.quizData.map((item) => {
-          //     console.log("yes, subjects");
-          //   })
-          // );
-
-          // const parseCorrectMatches = await Promise.all(
-          //   this.quizData.map((item) => {
-          //     console.log("yes, correctMatches");
-          //   })
-          // );
-
-          // const parseTable = await Promise.all(
-          //   this.quizData.map((item) => {
-          //     console.log("yes, table");
-          //   })
-          // );
 
           console.log(this.quizData);
         } else {
@@ -543,6 +496,15 @@ export default {
       } else {
         return this.currentQuestion.table.length > 0;
       }
+    },
+
+    setTextDirection() {
+      const item = this.quizData[this.currentQuestionIndex];
+      const firstWord = this.currentQuestion.sentences.find(
+        (word) => word.trim().length > 0
+      );
+      console.log(firstWord);
+      return firstWord.match(/[a-zA-Z]/) ? "row-reverse" : "row";
     },
   },
 };
@@ -647,6 +609,7 @@ button:hover {
 .sentence-container {
   display: flex;
   flex-wrap: wrap;
+
   border: 1px solid #ccc;
   padding: 0.5em;
   font-size: 22px;

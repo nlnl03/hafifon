@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="2039px" height="129px" viewBox="0 0 2039 129" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient x1="1" y1="0" x2="0" y2="1.0000001" id="gradient_1">
+      <stop offset="0" stop-color="#2C72D4" />
+      <stop offset="1" stop-color="#0E1D37" />
+    </linearGradient>
+    <linearGradient x1="1" y1="0" x2="0" y2="1.0000001" id="gradient_2">
+      <stop offset="0" stop-color="#2C71D3" />
+      <stop offset="1" stop-color="#023167" />
+    </linearGradient>
+    <linearGradient x1="0.31020766" y1="0" x2="0.30020332" y2="1.0000001" id="gradient_3">
+      <stop offset="0" stop-color="#1B427C" stop-opacity="0.67058825" />
+      <stop offset="1" stop-color="#053369" stop-opacity="0.13333334" />
+      <stop offset="1" stop-color="#023167" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <g id="headerBg">
+    <path d="M0 0L2039 0L2039 127.943L0 127.943L0 0Z" id="Rectangle-11" fill="url(#gradient_1)" fill-rule="evenodd" stroke="none" />
+    <path d="M42.6937 0.432617L843 0.432617C843 0.432617 812.438 36.9234 763.502 51.1894C714.565 65.4553 674.247 56.1587 616.258 76.4176C558.269 96.6765 538.637 128 538.637 128L42 128L42.6937 0.432617Z" id="Rectangle-13" fill="url(#gradient_2)" fill-opacity="0.1" fill-rule="evenodd" stroke="none" />
+    <path d="M0.683281 0.402344L789 0.402344C789 0.402344 758.895 36.8932 710.693 51.1591C662.49 65.4251 622.775 56.1285 565.655 76.3873C508.535 96.6462 489.197 127.97 489.197 127.97L0 127.97L0.683281 0.402344Z" id="Rectangle-12" fill="url(#gradient_2)" fill-opacity="0.3" fill-rule="evenodd" stroke="none" />
+    <path d="M1131.3 128.231C1131.3 128.231 1343.56 63.7754 1514.8 50.2625C1686.04 36.7495 1696 128.231 1696 128.231L1131.3 128.231Z" id="Rectangle-14" fill="url(#gradient_3)" fill-opacity="0.3" fill-rule="evenodd" stroke="none" />
+  </g>
+</svg>

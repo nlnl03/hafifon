@@ -6,18 +6,6 @@
 
     <div class="box" v-if="isLoadForSpinner">
       <div class="name-of-exam">{{ title }}</div>
-      <div class="edit-remove-btns" v-if="isAdmin">
-        <div class="edit-btn">
-          <router-link
-            :to="{ name: 'editExams', params: { title: name } }"
-            style="color: black"
-          >
-            <q-icon name="fas fa-edit" size="26px" />
-          </router-link>
-        </div>
-
-        <deleteExam :examName="name" />
-      </div>
 
       <h2 class="instructions-title">לפני שמתחילים אנא קרא/י את ההוראות:</h2>
       <div class="instructions">
@@ -42,11 +30,9 @@
 <script>
 import axios from "axios";
 import loadingSpinner from "@/components/loadingSpinner.vue";
-import deleteExam from "@/components/deleteExam.vue";
 export default {
   components: {
     loadingSpinner,
-    deleteExam,
   },
   data() {
     return {

@@ -4,14 +4,16 @@
       חפיפה
     </router-link>
 
-    <router-link :to="{ name: 'User' }" class="user-title">
+    <q-btn label="האיזור האישי" @click="goToUserPage" class="user-title" />
+
+    <!-- <router-link :to="{ name: 'User' }" class="user-title">
       לאיזור אישי
-    </router-link>
+    </router-link> -->
 
     <div class="menu">
       <div class="nav-bar">
         <ul>
-          <li>
+          <li v-if="checkIfHasTest">
             <div>
               <router-link
                 to="/exams/finalTest/beforeStarting"
@@ -27,33 +29,12 @@
             @mouseover="isOpen = true"
             @mouseleave="isOpen = false"
           >
-            <span>ממשק מנהלים</span>
-            <ul class="admin-drop-down-menu" v-if="isOpen">
-              <li class="admin-drop-down-list">
-                <button
-                  class="admin-routers"
-                  @click="openAdminComp('MainCheckPage')"
-                >
-                  בדיקת מבחנים
-                </button>
-              </li>
-              <li class="admin-drop-down-list">
-                <button
-                  class="admin-routers"
-                  @click="openAdminComp('openPerm')"
-                >
-                  פתיחת הרשאות
-                </button>
-              </li>
-              <li class="admin-drop-down-list">
-                <button
-                  class="admin-routers"
-                  @click="openAdminComp('uploadButtons')"
-                >
-                  העלאת מבחנים, תרגולים ומצגות
-                </button>
-              </li>
-            </ul>
+            <button
+              class="final-test-btn"
+              @click="openAdminComp('mainAdminPage')"
+            >
+              ממשק מנהלים
+            </button>
           </li>
 
           <li
@@ -62,7 +43,11 @@
             @mouseleave="isExamsDropOpen = false"
           >
             <span>בחנים</span>
-            <ul class="drop-down-menu" v-if="isExamsDropOpen">
+            <ul
+              class="drop-down-menu"
+              v-if="isExamsDropOpen"
+              :style="{ height: menuHeight + 'px' }"
+            >
               <li v-for="name in examsName" :key="name" class="drop-down-list">
                 <router-link
                   :to="`/exams/${name.Title}/beforeStarting`"
@@ -113,7 +98,7 @@ export default {
         this.examsName = this.examsName.filter(
           (name) => name.subject !== "המבחן הסופי"
         );
-        console.log(this.examsName)
+        console.log(this.examsName);
       }
     },
 
@@ -144,6 +129,16 @@ export default {
           }
         });
     },
+    checkIfHasTest() {
+      this.examsName.map((item) => {
+        if (item.subject.includes("המבחן הסופי")) {
+          return true;
+        } else return false;
+      });
+    },
+    goToUserPage() {
+      this.$router.push({ name: "User" });
+    },
   },
 
   async beforeMount() {
@@ -152,6 +147,13 @@ export default {
     this.isAdmin = await this.checkIfAdmin();
     sessionStorage.setItem("isAdmin", this.isAdmin);
     console.log("isAdmin: " + this.isAdmin);
+  },
+  computed: {
+    menuHeight() {
+      const listItem = 70;
+      const totalListItemHeight = this.examsName.length * listItem;
+      return totalListItemHeight;
+    },
   },
 };
 </script>
@@ -188,7 +190,6 @@ img {
   position: relative;
 }
 .exams-drop-down {
-  height: 52%;
   text-align: center;
   box-sizing: border-box;
 }
@@ -241,14 +242,14 @@ a {
 
 .user-title {
   /* width: 100px; */
-  height: 45px;
+  /* height: 45px;
   display: flex;
-  justify-content: center;
+  justify-content: center; */
   align-items: center;
   position: absolute;
   right: var(--user-link-pos);
   top: 40px;
-  z-index: 1;
+  /* z-index: 1; */
   text-decoration: none;
   font-size: 20px;
   padding: 0.2em 1em;
@@ -257,7 +258,7 @@ a {
   border: none;
   font-weight: bold;
   background-color: rgb(255, 255, 255);
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2); */
 }
 
 .drop-down-menu,
@@ -265,9 +266,9 @@ a {
   position: absolute;
   display: flex;
   z-index: 1000;
-  top: 65px;
-  height: 270px;
+  top: 60px;
   width: 120px;
+  max-height: 250px;
   right: -37px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   flex-direction: column;
@@ -321,6 +322,8 @@ button[class="drop-down-items"] {
 .admin-drop-down-list {
   border-bottom: 1px solid #f3f3f3;
   width: 100%;
+  min-height: 50px;
+  position: relative;
   z-index: 10000;
 }
 .drop-down-list :hover {
