@@ -20,7 +20,7 @@
             <q-btn
               ref="2"
               class="grid-btn"
-              label="העלאת מצגות ותרגולים"
+              label="העלאת תרגולים"
               @click="opendialog('2')"
             />
 
@@ -56,11 +56,15 @@
       }"
     >
       <q-card-section v-if="item === '1'">
-        <uploadWeeksLessons :weeks="weeks" />
+        <uploadWeeksLessons :weeks="weeks" :formType="formType" />
       </q-card-section>
 
       <q-card-section v-if="item === '2'">
-        <uploadFilesForm />
+        <practicesUploadForm
+          :weeks="weeks"
+          :lessons="existLessons"
+          :formType="formType"
+        />
       </q-card-section>
 
       <q-card-section v-if="item === '3'">
@@ -75,7 +79,7 @@
 </template>
 
 <script>
-import uploadFilesForm from "@/components/uploadFilesForm.vue";
+import practicesUploadForm from "@/components/practicesUploadForm.vue";
 // import examsUploadForm from "@/components/examsUploadForm.vue";
 import HafifaCheckMainCompo from "@/components/HafifaCheckMainCompo.vue";
 import examsUploadForm from "@/components/examsUploadForm.vue";
@@ -85,7 +89,7 @@ import axios from "axios";
 
 export default {
   components: {
-    uploadFilesForm,
+    practicesUploadForm,
     HafifaCheckMainCompo,
     examsUploadForm,
     uploadWeeksLessons,
@@ -110,10 +114,13 @@ export default {
     opendialog(val) {
       this.item = val;
       if (this.item === "1") {
+        this.formType = "uploadWeeksLessons";
         this.cardWidth = "720px";
         this.cardHeight = "unset";
         this.maxHeight = "450px";
       } else if (this.item === "2") {
+        this.formType = "practicesUploadForm";
+
         this.cardWidth = "650px";
         this.cardHeight = "450px";
       } else {

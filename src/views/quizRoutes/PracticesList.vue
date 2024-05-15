@@ -256,7 +256,7 @@ export default {
         return axios
           .get(this.$sharePointUrl + `practices`)
           .then((res) => res.data.value)
-          .then((results) => results.filter((item) => item.lessonId == itemId));
+          .then((results) => results.filter((item) => item.lessonID == itemId));
       }
     },
 

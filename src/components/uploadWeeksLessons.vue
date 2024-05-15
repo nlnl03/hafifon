@@ -2,129 +2,144 @@
   <div class="main">
     <q-form class="q-ma-auto" @submit.prevent="submitForm">
       <q-select
+        v-if="formType == 'uploadWeeksLessons'"
         :options="options"
         label="בחר אופצייה"
         v-model="optionChose"
         emit-value
         outlined
+        :rules="[(val) => !!val || 'אנא בחר/י באחת מהאופציות']"
         map-options
         option-label="label"
         option-value="value"
         @update:model-value="createweek"
       >
       </q-select>
+      <div v-if="formType == 'uploadWeeksLessons'">
+        <div class="week" v-for="(week, weekIndex) in newWeek" :key="weekIndex">
+          <div class="week-item">
+            <q-input
+              filled
+              v-if="optionChose !== 'בחר משבוע קיים'"
+              style="margin-top: 20px"
+              v-model.trim="week['Title']"
+              label="בחר שם לשבוע"
+              lazy-rules
+              required
+              :rules="[
+                (val) => {
+                  (val && val.trim().length > 0) || 'אנא בחר\י שם לשבוע';
+                },
+              ]"
+            />
 
-      <div class="week" v-for="(week, weekIndex) in newWeek" :key="weekIndex">
-        <div class="week-item">
-          <q-input
-            filled
-            style="margin-top: 20px"
-            v-model.trim="week['Title']"
-            label="בחר שם לשבוע"
-            lazy-rules
-            required
-            :rules="[
-              (val) => {
-                (val && val.trim().length > 0) || 'אנא בחר\י שם לשבוע';
-              },
-            ]"
-          />
-
-          <q-card
-            flat
-            bordered
-            class="add-lesson-card"
-            v-for="(lesson, lessIndex) in week.lessons"
-            :key="lessIndex"
-          >
-            <q-card-section class="card-section">
-              <div class="header-flex">
-                <div class="remove">
-                  <q-icon
-                    name="fas fa-times"
-                    class="remove-icon"
-                    size="25px"
-                    @click="removeLesson(weekIndex, lessIndex)"
-                  />
-                </div>
-                <h5 class="lesson-title">שיעור {{ lessIndex + 1 }}</h5>
-              </div>
-
-              <q-input
-                filled
-                style="margin-top: 20px"
-                v-model.trim="lesson.Title"
-                label="בחר שם לשיעור"
-                lazy-rules
-                required
-                :rules="[
-                  (val) => {
-                    (val && val.trim().length > 0) || 'אנא הוסף שיעור';
-                  },
-                ]"
-              />
-              <q-file
-                outlined
-                class="q-mt-md"
-                v-model="file[lessIndex]"
-                label="הוסף תמונת רקע"
-                accept=".jpg, .png"
-                required
-              >
-                <template v-slot:prepend>
-                  <q-icon name="fas fa-cloud-upload-alt" @click.stop.prevent />
-                </template>
-
-                <template v-slot:append v-if="file[lessIndex] != null">
-                  <q-icon
-                    name="fas fa-times"
-                    @click.stop.prevent="file[lessIndex] = null"
-                    class="cursor-pointer"
-                  />
-                </template>
-              </q-file>
-
-              <q-file
-                outlined
-                v-model="file2[lessIndex]"
-                label="הוסף מצגת"
-                accept=".ppt, .pptx"
-                class="q-mt-md"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="fas fa-cloud-upload-alt" @click.stop.prevent />
-                </template>
-
-                <template v-slot:append v-if="file2[lessIndex] != null">
-                  <q-icon
-                    name="fas fa-times"
-                    @click.stop.prevent="file2[lessIndex] = null"
-                    class="cursor-pointer"
-                  />
-                </template>
-              </q-file>
-            </q-card-section>
-          </q-card>
-
-          <div class="add-remove-lesson-div">
-            <q-btn
-              :disabled="!week['Title']"
-              color="primary"
-              label="הוסף שיעור"
-              @click="addLesson(weekIndex)"
-              class="add-lesson"
+            <q-card
+              flat
+              bordered
+              class="add-lesson-card"
+              v-for="(lesson, lessIndex) in week.lessons"
+              :key="lessIndex"
             >
-              <q-icon name="fas fa-plus-circle" style="margin-right: 10px" />
-            </q-btn>
+              <q-card-section class="card-section">
+                <div class="header-flex">
+                  <div class="remove">
+                    <q-icon
+                      name="fas fa-times"
+                      class="remove-icon"
+                      size="25px"
+                      @click="removeLesson(weekIndex, lessIndex)"
+                    />
+                  </div>
+                  <h5 class="lesson-title">שיעור {{ lessIndex + 1 }}</h5>
+                </div>
+
+                <q-input
+                  filled
+                  style="margin-top: 20px"
+                  v-model.trim="lesson.Title"
+                  label="בחר שם לשיעור"
+                  lazy-rules
+                  required
+                  :rules="[
+                    (val) => {
+                      (val && val.trim().length > 0) || 'אנא הוסף שיעור';
+                    },
+                  ]"
+                />
+                <q-file
+                  outlined
+                  class="q-mt-md"
+                  v-model="file[lessIndex]"
+                  label="הוסף תמונת רקע"
+                  accept=".jpg, .png"
+                  required
+                >
+                  <template v-slot:prepend>
+                    <q-icon
+                      name="fas fa-cloud-upload-alt"
+                      @click.stop.prevent
+                    />
+                  </template>
+
+                  <template v-slot:append v-if="file[lessIndex] != null">
+                    <q-icon
+                      name="fas fa-times"
+                      @click.stop.prevent="file[lessIndex] = null"
+                      class="cursor-pointer"
+                    />
+                  </template>
+                </q-file>
+
+                <q-file
+                  outlined
+                  v-model="file2[lessIndex]"
+                  label="הוסף מצגת"
+                  accept=".ppt, .pptx"
+                  class="q-mt-md"
+                  required
+                >
+                  <template v-slot:prepend>
+                    <q-icon
+                      name="fas fa-cloud-upload-alt"
+                      @click.stop.prevent
+                    />
+                  </template>
+
+                  <template v-slot:append v-if="file2[lessIndex] != null">
+                    <q-icon
+                      name="fas fa-times"
+                      @click.stop.prevent="file2[lessIndex] = null"
+                      class="cursor-pointer"
+                    />
+                  </template>
+                </q-file>
+              </q-card-section>
+            </q-card>
+
+            <div
+              class="add-remove-lesson-div"
+              v-if="optionChose !== 'בחר משבוע קיים'"
+            >
+              <q-btn
+                :disabled="!week['Title']"
+                color="primary"
+                label="הוסף שיעור"
+                @click="addLesson(weekIndex)"
+                class="add-lesson"
+              >
+                <q-icon name="fas fa-plus-circle" style="margin-right: 10px" />
+              </q-btn>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- //משבוע קיים -->
       <q-select
-        v-if="choseFromExist"
-        v-model="selectedLesson"
+        v-if="choseFromExist || formType == 'practicesUploadForm'"
+        v-model="selectedWeek"
         label="בחר שבוע"
+        :rules="[(val) => !!val || 'אנא בחר שבוע']"
         :options="weeks"
         class="q-mt-md"
         outlined
@@ -135,7 +150,21 @@
       >
       </q-select>
 
-      <div class="lessons-add-btns">
+      <q-select
+        v-if="formType == 'practicesUploadForm'"
+        v-model="selectedLesson"
+        label="בחר שיעור"
+        :rules="[(val) => !!val || 'אנא בחר שיעור']"
+        :options="existLessons"
+        class="q-mt-md"
+        outlined
+        emit-value
+        map-options
+        option-label="Title"
+        @update:model-value="showPrac"
+      ></q-select>
+
+      <div class="lessons-add-btns" v-if="formType == 'uploadWeeksLessons'">
         <div class="lessons-btn" v-if="!showIsEmptyArray">
           <div
             v-for="(lesson, lessIndex) in existLessons"
@@ -158,6 +187,7 @@
             </q-btn>
           </div>
         </div>
+
         <div
           v-if="showIsEmptyArray"
           style="display: flex; justify-content: center; margin-top: 35px"
@@ -173,9 +203,9 @@
         >
           <q-btn
             label="הוסף שיעור"
+            @click="addLesson(this.currentWeekIndex)"
             color="green"
-            v-if="optionChose === 'בחר משבוע קיים' && selectedLesson"
-            @click="addNewLesson"
+            v-if="optionChose === 'בחר משבוע קיים' && selectedWeek"
           >
             <q-icon
               name="fas fa-plus-circle"
@@ -191,7 +221,7 @@
         :key="lessIndex"
       >
         <q-card
-          v-if="allowEdit[lessIndex]"
+          v-if="allowEdit[lessIndex] && formType == 'uploadWeeksLessons'"
           style="
             min-height: 300px;
             background: #e8e6e61f;
@@ -219,11 +249,16 @@
                     },
                   ]"
                 />
-                <q-btn label="lesson.Img"></q-btn>
+
+                <div class="current-img" v-if="!showEditImgBtn[lessIndex]">
+                  <div style="margin-left: 125px">{{ lesson.Img }}</div>
+                  <q-btn @click="editImgBtn(lessIndex)"></q-btn>
+                </div>
                 <q-file
+                  v-if="showEditImgBtn[lessIndex]"
                   outlined
                   class="q-mt-md"
-                  v-model="lesson.Img"
+                  v-model="editedImg[lessIndex]"
                   label="החלף תמונת רקע"
                   accept=".jpg, .png"
                   required
@@ -235,18 +270,24 @@
                     />
                   </template>
 
-                  <template v-slot:append v-if="(file = null)">
+                  <template v-slot:append v-if="editedImg[lessIndex] != null">
                     <q-icon
                       name="fas fa-times"
-                      @click.stop.prevent="file = null"
+                      @click.stop.prevent="editedImg[lessIndex] = null"
                       class="cursor-pointer"
                     />
                   </template>
                 </q-file>
 
+                <div class="current-img" v-if="!showEditfileBtn[lessIndex]">
+                  <div style="margin-left: 125px">{{ lesson.file }}</div>
+                  <q-btn @click="editFileBtn(lessIndex)" />
+                </div>
+
                 <q-file
+                  v-if="showEditfileBtn[lessIndex]"
                   outlined
-                  v-model="lesson.file"
+                  v-model="editedFile[lessIndex]"
                   label="החלף מצגת"
                   accept=".ppt, .pptx"
                   class="q-mt-md"
@@ -258,10 +299,10 @@
                     />
                   </template>
 
-                  <template v-slot:append v-if="file2 != null">
+                  <template v-slot:append v-if="editedFile[lessIndex] != null">
                     <q-icon
                       name="fas fa-times"
-                      @click.stop.prevent="file2 = null"
+                      @click.stop.prevent="editedFile[lessIndex] = null"
                       class="cursor-pointer"
                     />
                   </template>
@@ -296,9 +337,65 @@
         </q-card>
       </div>
 
-      <div class="submit-btn-flex">
+      <div class="lessons-add-btns" v-if="formType === 'practicesUploadForm'">
+        <div class="lessons-btn">
+          <div
+            v-for="(prac, pracIndex) in filteredPracs"
+            :key="pracIndex"
+            class="lessons-btn-items"
+          >
+            <div>
+              <q-btn
+                :label="prac.Title"
+                class="edit-lesson-btn"
+                @click="openLessonCard(pracIndex, prac)"
+                color="primary"
+                size="15px"
+                :class="{ checked: selectedIndex === pracIndex }"
+              >
+                <q-icon
+                  name="fa-solid fa-pen"
+                  size="13px"
+                  style="margin-right: 8px; margin-top: 2px"
+                />
+              </q-btn>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="exist-item"
+        v-for="(prac, pracIndex) in filteredPracs"
+        :key="pracIndex"
+      >
+        <q-card
+          v-if="allowPracEdit[pracIndex]"
+          style="
+            min-height: 300px;
+            background: #e8e6e61f;
+            border: 1px solid #e7e5e5a6;
+          "
+        >
+          <q-card-section class="card-section">
+            <div
+              class="practice-que"
+              style=""
+              v-for="(que, queIndex) in practicesDataFiltered"
+              :key="queIndex"
+            >
+              {{ queIndex + 1 }}<q-input label="שאלה" v-model="que.Title" />
+            </div>
+          </q-card-section>
+
+          <q-inner-loading :showing="!isLoad">
+            <q-spinner-gears size="60px" color="primary" />
+          </q-inner-loading>
+        </q-card>
+      </div>
+      <div class="submit-btn-flex" v-if="showSubmitBtn">
         <q-btn
           class="submit-btn"
+          :disabled="newWeek[0].lessons.length < 1"
           type="submit"
           label="העלאה"
           :loading="progress.loading"
@@ -314,11 +411,13 @@ import axios from "axios";
 export default {
   props: {
     weeks: Array,
+    formType: String,
   },
   data() {
     return {
       options: ["הוסף שבוע", "בחר משבוע קיים"],
       optionChose: "",
+      selectedWeek: "",
       selectedLesson: "",
       newWeek: [],
       choseFromExist: false,
@@ -329,33 +428,65 @@ export default {
       interval: null,
       currentOption: null,
       existLessons: [],
+      originalExistLessons: [],
       allowEdit: [],
+      allowPracEdit: [],
+      editedFile: [],
+      editedImg: [],
       isLoad: false,
       selectedIndex: null,
       showIsEmptyArray: false,
+      currentWeekIndex: null,
+      showEditImgBtn: [],
+      showEditFileBtn: [],
+      mahlakaId: null,
+      filteredPracs: [],
+      practicesDataFiltered: [],
+      showSubmitBtn: false,
     };
   },
 
   methods: {
+    editImgBtn(lessIndex) {
+      this.showEditImgBtn[lessIndex] = true;
+      console.log(this.showEditImgBtn);
+    },
+    editFileBtn(lessIndex) {
+      this.showEditFileBtn[lessIndex] = true;
+      console.log(this.showEditFileBtn);
+    },
+
     createweek(option) {
       console.log(option);
       this.existLessons = [];
       (this.file = []), (this.file2 = []), (this.choseFromExist = false);
       this.currentOption = option;
       if (option == "הוסף שבוע") {
+        this.newWeek = [];
         this.newWeek.push({
           lessons: [],
         });
       } else {
-        this.newWeek = [];
-        this.selectedLesson = null;
+        this.newWeek = [{ lessons: [] }];
+
+        this.selectedWeek = null;
         this.choseFromExist = true;
       }
       console.log(this.newWeek);
     },
 
     addLesson(weekIndex) {
-      this.newWeek[weekIndex].lessons.push({});
+      console.log(weekIndex);
+      this.showSubmitBtn = true;
+      console.log(this.existLessons);
+      if (this.optionChose === "הוסף שבוע") {
+        this.newWeek[weekIndex].lessons.push({});
+      } else {
+        this.showIsEmptyArray = false;
+        this.existLessons.push({});
+        this.allowEdit.push(false);
+        console.log(this.existLessons);
+      }
     },
     removeLesson(weekIndex, lessIndex) {
       this.newWeek[weekIndex].lessons.splice(lessIndex, 1);
@@ -366,6 +497,21 @@ export default {
       console.log(this.file2);
       this.progress.loading = true;
       this.progress.percentage = 0;
+
+      console.log(this.originalExistLessons);
+      console.log(this.existLessons);
+      console.log(this.existLessons[0].Img.name);
+
+      const addedLessons = this.existLessons.filter(
+        (updatedItem) =>
+          !this.originalExistLessons.some(
+            (originalItem) =>
+              originalItem.Title === updatedItem.Title &&
+              originalItem.Img === updatedItem.Img.name &&
+              originalItem.file === updatedItem.file.name
+          )
+      );
+      console.log("addedLessons", addedLessons);
 
       this.interval = setInterval(async () => {
         this.progress.percentage += 1;
@@ -380,6 +526,9 @@ export default {
               this.uploadSucceeded();
             } catch (error) {
               this.uploadFailed(error);
+            }
+          } else {
+            if (this.newWeek[0].lessons < 1) {
             }
           }
           clearInterval(this.interval);
@@ -408,11 +557,10 @@ export default {
     async postWeek() {
       try {
         this.token = await this.$asyncGetToken();
-        const mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
         const url = this.$sharePointUrl + "getByTitle('weeks')/Items";
         const data = {
           Title: this.newWeek[0].Title,
-          mahlakaId: mahlakaId,
+          mahlakaId: this.mahlakaId,
         };
         const res = await axios.post(url, data, {
           headers: {
@@ -420,7 +568,7 @@ export default {
           },
         });
 
-        this.postLessons(mahlakaId);
+        this.postLessons();
       } catch (error) {
         console.log("error posting to exam list", error);
         throw error;
@@ -464,11 +612,9 @@ export default {
       }
     },
 
-    async addNewLesson(){
-      
-    },
+    async addNewLesson() {},
 
-    async postLessons(mahlakaId) {
+    async postLessons() {
       try {
         const newWeekId = await this.getNewWeekId();
         await this.addWeeksFolderToSiteAssets();
@@ -478,7 +624,7 @@ export default {
 
         this.newWeek[0].lessons.forEach((item, index) => {
           item["weekId"] = newWeekId;
-          item["mahlakaId"] = mahlakaId;
+          item["mahlakaId"] = this.mahlakaId;
           item["Img"] = this.file[index].name;
           item["file"] = this.file2[index].name;
           item["__metadata"] = {
@@ -511,7 +657,9 @@ export default {
 
     async editLesson(option) {
       this.selectedIndex = null;
+      this.selectedLesson = "";
 
+      this.currentWeekIndex = this.weeks.indexOf(option);
       console.log(option);
       try {
         var res = null;
@@ -523,7 +671,7 @@ export default {
         } else {
           res = await axios.get(this.$sharePointUrl + "lessons");
           res.data.value = res.data.value.filter(
-            (item) => item.weekId === option.Id
+            (item) => item.weekId === option.ID
           );
         }
         this.existLessons = res.data.value;
@@ -533,20 +681,72 @@ export default {
           this.showIsEmptyArray = false;
         }
         this.allowEdit = new Array(this.existLessons.length).fill(false);
+        this.showEditImgBtn = new Array(this.existLessons.length).fill(false);
+        this.showEditfileBtn = new Array(this.existLessons.length).fill(false);
+
+        this.originalExistLessons = JSON.parse(
+          JSON.stringify(this.existLessons)
+        );
+
         console.log(this.allowEdit);
         console.log(this.existLessons);
       } catch (error) {
         console.log("error", error);
       }
     },
+    async showPrac(option) {
+      console.log(option);
+      var res = null;
+      try {
+        if (this.$isSharePointUrl) {
+          res = await axios.get(
+            this.$sharePointUrl +
+              `getByTitle('practices)/items?$filter=mahlakaId eq ${this.mahlakaId}`
+          );
+        } else {
+          res = await axios.get(this.$sharePointUrl + "practices");
+          res.data.value = res.data.value.filter(
+            (prac) => prac.lessonId === option.ID
+          );
+        }
+        this.filteredPracs = res.data.value;
+        this.allowPracEdit = new Array(this.filteredPracs.length).fill(false);
+        console.log(this.filteredPracs);
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
-    openLessonCard(index) {
+    openLessonCard(index, prac) {
       this.isLoad = false;
-
       this.selectedIndex = index;
-      setTimeout(() => {
-        this.allowEdit = this.allowEdit.map((item, i) => i === index);
-        console.log(this.allowEdit);
+      setTimeout(async () => {
+        if (this.formType === "uploadWeeksLessons") {
+          this.allowEdit = this.allowEdit.map((item, i) => i === index);
+          console.log("allowEdit", this.allowEdit);
+        } else if (this.formType === "practicesUploadForm") {
+          try {
+            this.allowPracEdit = this.allowPracEdit.map(
+              (item, i) => i === index
+            );
+            console.log("allowPracEdit", this.allowPracEdit);
+            var res = null;
+
+            if (this.$isSharePointUrl) {
+              res = await axios.get(
+                this.$sharePointUrl +
+                  `getByTitle('practicesData')/items?$filter=practiceId eq ${prac.ID}`
+              );
+            } else {
+              res = await axios.get(this.$sharePointUrl + "practicesData");
+              res.data.value = res.data.value.filter(
+                (item) => item.practiceId === prac.ID
+              );
+            }
+            this.practicesDataFiltered = res.data.value;
+            console.log(this.practicesDataFiltered);
+          } catch (error) {}
+        }
         this.isLoad = true;
         console.log(this.isLoad);
       }, 300);
@@ -612,7 +812,9 @@ export default {
     },
   },
 
-  beforeMount() {},
+  beforeMount() {
+    this.mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
+  },
 };
 </script>
 
@@ -645,6 +847,15 @@ export default {
 .submit-btn {
   background-color: var(--main-background-color);
   color: white;
+}
+.current-img {
+  margin-bottom: 20px;
+  border-radius: 3px;
+  background: #dcdcdc;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.8em;
 }
 .header-flex {
   display: flex;
@@ -683,6 +894,7 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-bottom: 25px;
 }
 .add-lesson-btn.empty {
   margin-top: 25px !important;
@@ -693,6 +905,7 @@ export default {
 .lessons-btn-items {
   margin-right: 20px;
   margin-top: 10px;
+  margin-bottom: 7px;
 }
 .lessons-btn-items:last-child {
   margin-right: 0px;

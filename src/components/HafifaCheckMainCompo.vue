@@ -92,14 +92,14 @@ export default {
       if (this.$isSharePointUrl) {
         res = await axios.get(
           this.$sharePointUrl +
-            `getByTitle('submittedExams')/Items$?filter=mahlakaId eq ${mahlakaId}`
+            `getByTitle('submittedExams')/Items?$filter=mahlakaId eq ${mahlakaId}`
         );
         this.userData = res.data.value;
         const res2 = await Promise.all(
           this.userData.map(async (item) => {
             const res2 = await axios.get(
               this.$sharePointUrl +
-                `getByTitle('students')/Items$?filter=num eq ${item.userId})`
+                `getByTitle('students')/Items?$filter=num eq ${item.userId}`
             );
             item.userName = res2.data.value[0].Title;
           })

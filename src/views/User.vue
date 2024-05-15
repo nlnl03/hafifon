@@ -158,6 +158,7 @@ export default {
 
     async getCheckedExam() {
       var userId = JSON.parse(localStorage.getItem("userId"));
+      const mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
       console.log(this.userId);
       const fields = "Title,userId,examId,status";
       var res = null;
@@ -165,7 +166,7 @@ export default {
         return axios
           .get(
             this.$sharePointUrl +
-              `getByTitle('submittedExams')/Items?$select=${fields}&$filter=userId eq ${userId}`
+              `getByTitle('submittedExams')/Items?$select=${fields}&$filter=(userId eq ${userId})and(mahlakaId eq ${mahlakaId})`
           )
           .then((res) => res.data.value);
       } else {
