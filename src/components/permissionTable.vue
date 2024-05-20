@@ -1,11 +1,9 @@
 <template>
   <div v-if="isLoad">
-    <q-btn @click="openDialog" icon="add" label="הוסף נחפף" />
     <q-table
       :sticky-header="true"
       :rows="students"
       flat
-      bordered
       :columns="tableColumns"
       row-key="num"
     >
@@ -42,29 +40,35 @@
         </q-td>
       </template>
     </q-table>
+    <q-btn @click="openDialog" label="הוסף נחפף" color="primary" size="15px">
+      <q-icon class="q-icon fas fa-plus-circle" style="margin-right: 10px" />
+    </q-btn>
 
     <q-dialog v-model="addStudentDialog" @hide="resetNewStudent">
-      <q-card>
-        <q-card-section>
-          <q-input v-model="newStudent.Title" label="שם" />
-          <q-input
-            v-model="newStudent.userNum"
-            :min="1"
-            :max="9999999"
-            required
-            type="Number"
-            label="מס' אישי"
-          />
-        </q-card-section>
-
-        <q-card-section>
-          <q-btn label="ביטול" @click="closeDialog" />
-          <q-btn
-            label="הוסף"
-            @click="addNewStudent"
-            :disable="!newStudent.Title || !newStudent.userNum"
-          />
-        </q-card-section>
+      <q-card style="width: 450px; padding: 2em">
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <q-form @submit.prevent="addNewStudent" style="width: 60%">
+            <q-input
+              v-model="newStudent.userNum"
+              :min="1"
+              :max="9999999"
+              required
+              type="Number"
+              label="מס' אישי"
+            />
+            <div style="margin-top: 20px">
+              <q-btn label="ביטול" @click="closeDialog" />
+              <q-btn label="הוסף" type="submit" />
+            </div>
+          </q-form>
+        </div>
       </q-card>
     </q-dialog>
   </div>
@@ -204,6 +208,12 @@ export default {
           row.userNum.includes(this.textToFilter)
       );
     },
+    // studentsFiltered(){
+    //   return this.students.filter(
+    //     (row)=>
+
+    //   )
+    // }
 
     tableColumns() {
       return [

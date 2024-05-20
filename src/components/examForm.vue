@@ -191,7 +191,8 @@ export default {
           title: "המבדק הוגש בהצלחה",
           icon: "success",
           confirmButtonText: "סיים",
-        });
+        })
+        
         this.showExitAlertFunc();
         console.log(this.showExitAlert);
         this.$router.push({

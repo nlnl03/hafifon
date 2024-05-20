@@ -1,8 +1,6 @@
 <template>
-  <div class="main">
-    <div class="perm-table">
-      <permTable @childEvent="handleChildEvent" />
-    </div>
+  <div class="perm-table">
+    <permTable @childEvent="handleChildEvent" />
   </div>
 </template>
 

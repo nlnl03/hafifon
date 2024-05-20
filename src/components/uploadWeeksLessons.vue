@@ -93,8 +93,8 @@
                 <q-file
                   outlined
                   v-model="file2[lessIndex]"
-                  label="הוסף מצגת"
-                  accept=".ppt, .pptx"
+                  label="הוסף קובץ"
+                  accept=".ppt, .pptx, .docx , .doc, .pdf"
                   class="q-mt-md"
                   required
                 >
@@ -136,7 +136,7 @@
 
       <!-- //משבוע קיים -->
       <q-select
-        v-if="choseFromExist || formType == 'practicesUploadForm'"
+        v-if="choseFromExist || formType == 'uploadPractices'"
         v-model="selectedWeek"
         label="בחר שבוע"
         :rules="[(val) => !!val || 'אנא בחר שבוע']"
@@ -151,7 +151,7 @@
       </q-select>
 
       <q-select
-        v-if="formType == 'practicesUploadForm'"
+        v-if="formType == 'uploadPractices'"
         v-model="selectedLesson"
         label="בחר שיעור"
         :rules="[(val) => !!val || 'אנא בחר שיעור']"
@@ -174,7 +174,7 @@
             <q-btn
               :label="lesson.Title"
               class="edit-lesson-btn"
-              @click="openLessonCard(lessIndex)"
+              @click="openLessonCard(lessIndex, lesson)"
               color="primary"
               size="15px"
               :class="{ checked: selectedIndex === lessIndex }"
@@ -196,7 +196,6 @@
             >לא קיימים שיעורים בשבוע זה...</span
           >
         </div>
-
         <div
           class="add-lesson-btn"
           :class="{ empty: this.existLessons.length < 1 }"
@@ -250,63 +249,113 @@
                   ]"
                 />
 
-                <div class="current-img" v-if="!showEditImgBtn[lessIndex]">
-                  <div style="margin-left: 125px">{{ lesson.Img }}</div>
-                  <q-btn @click="editImgBtn(lessIndex)"></q-btn>
+                <!-- edit img -->
+                <div class="current-img">
+                  <div
+                    class="show-current-lesson"
+                    style="margin-left: 125px"
+                    v-if="!showEditImgBtn[lessIndex]"
+                  >
+                    {{ lesson.Img }}
+                  </div>
+
+                  <div style="width: 60%" v-if="showEditImgBtn[lessIndex]">
+                    <q-file
+                      filled
+                      v-model="editedImg[lessIndex]"
+                      label="החלף תמונת רקע"
+                      accept=".jpg, .png"
+                      required
+                    >
+                      <template v-slot:prepend>
+                        <q-icon
+                          name="fas fa-cloud-upload-alt"
+                          @click.stop.prevent
+                        />
+                      </template>
+
+                      <template
+                        v-slot:append
+                        v-if="editedImg[lessIndex] != null"
+                      >
+                        <q-icon
+                          name="fas fa-times"
+                          @click.stop.prevent="editedImg[lessIndex] = null"
+                          class="cursor-pointer"
+                        />
+                      </template>
+                    </q-file>
+                  </div>
+
+                  <div class="edit-icon">
+                    <q-icon
+                      style="margin-left: 10px"
+                      name="fa-solid fa-check"
+                      @click="
+                        (lesson.Img = editedImg[lessIndex].name) &&
+                          (showEditImgBtn[lessIndex] = false)
+                      "
+                      v-if="showEditImgBtn[lessIndex]"
+                    ></q-icon>
+                    <q-icon
+                      name="fas fa-edit"
+                      @click="editImgBtn(lessIndex)"
+                    ></q-icon>
+                  </div>
                 </div>
-                <q-file
-                  v-if="showEditImgBtn[lessIndex]"
-                  outlined
-                  class="q-mt-md"
-                  v-model="editedImg[lessIndex]"
-                  label="החלף תמונת רקע"
-                  accept=".jpg, .png"
-                  required
-                >
-                  <template v-slot:prepend>
-                    <q-icon
-                      name="fas fa-cloud-upload-alt"
-                      @click.stop.prevent
-                    />
-                  </template>
 
-                  <template v-slot:append v-if="editedImg[lessIndex] != null">
-                    <q-icon
-                      name="fas fa-times"
-                      @click.stop.prevent="editedImg[lessIndex] = null"
-                      class="cursor-pointer"
-                    />
-                  </template>
-                </q-file>
+                <!-- edit file -->
+                <div class="current-img">
+                  <div
+                    class="show-current-lesson"
+                    style="margin-left: 125px"
+                    v-if="!showEditFileBtn[lessIndex]"
+                  >
+                    {{ lesson.file }}
+                  </div>
 
-                <div class="current-img" v-if="!showEditfileBtn[lessIndex]">
-                  <div style="margin-left: 125px">{{ lesson.file }}</div>
-                  <q-btn @click="editFileBtn(lessIndex)" />
+                  <div style="width: 60%" v-if="showEditFileBtn[lessIndex]">
+                    <q-file
+                      filled
+                      v-model="editedFile[lessIndex]"
+                      label="החלף קובץ"
+                      accept=".ppt, .pptx, .docx , .doc, .pdf"
+                    >
+                      <template v-slot:prepend>
+                        <q-icon
+                          name="fas fa-cloud-upload-alt"
+                          @click.stop.prevent
+                        />
+                      </template>
+
+                      <template
+                        v-slot:append
+                        v-if="editedFile[lessIndex] != null"
+                      >
+                        <q-icon
+                          name="fas fa-times"
+                          @click.stop.prevent="editedFile[lessIndex] = null"
+                          class="cursor-pointer"
+                        />
+                      </template>
+                    </q-file>
+                  </div>
+                  <div class="edit-icon">
+                    <q-icon
+                      style="margin-left: 10px"
+                      name="fa-solid fa-check"
+                      @click="
+                        (lesson.file = editedFile[lessIndex].name) &&
+                          (showEditFileBtn[lessIndex] = false)
+                      "
+                      v-if="showEditFileBtn[lessIndex]"
+                    ></q-icon>
+                    <q-icon
+                      name="fas fa-edit"
+                      @click="editFileBtn(lessIndex)"
+                    ></q-icon>
+                  </div>
                 </div>
-
-                <q-file
-                  v-if="showEditfileBtn[lessIndex]"
-                  outlined
-                  v-model="editedFile[lessIndex]"
-                  label="החלף מצגת"
-                  accept=".ppt, .pptx"
-                  class="q-mt-md"
-                >
-                  <template v-slot:prepend>
-                    <q-icon
-                      name="fas fa-cloud-upload-alt"
-                      @click.stop.prevent
-                    />
-                  </template>
-
-                  <template v-slot:append v-if="editedFile[lessIndex] != null">
-                    <q-icon
-                      name="fas fa-times"
-                      @click.stop.prevent="editedFile[lessIndex] = null"
-                      class="cursor-pointer"
-                    />
-                  </template>
-                </q-file>
 
                 <div
                   style="
@@ -317,8 +366,22 @@
                 >
                   <q-btn
                     label="מחק שיעור"
+                    style="margin-left: 7px"
                     color="red"
                     @click="deleteLesson(lesson.Id, lessIndex)"
+                  >
+                    <q-icon
+                      name="fas fa-trash-alt"
+                      size="20px"
+                      style="margin-right: 10px"
+                    ></q-icon>
+                  </q-btn>
+
+                  <q-btn
+                    style="margin-right: 7px"
+                    label="שמור והעלה"
+                    color="primary"
+                    @click="mergeLesson(lesson)"
                   >
                     <q-icon
                       name="fas fa-trash-alt"
@@ -337,7 +400,7 @@
         </q-card>
       </div>
 
-      <div class="lessons-add-btns" v-if="formType === 'practicesUploadForm'">
+      <div class="lessons-add-btns" v-if="formType === 'uploadPractices'">
         <div class="lessons-btn">
           <div
             v-for="(prac, pracIndex) in filteredPracs"
@@ -363,6 +426,7 @@
           </div>
         </div>
       </div>
+
       <div
         class="exist-item"
         v-for="(prac, pracIndex) in filteredPracs"
@@ -383,7 +447,7 @@
               v-for="(que, queIndex) in practicesDataFiltered"
               :key="queIndex"
             >
-              {{ queIndex + 1 }}<q-input label="שאלה" v-model="que.Title" />
+              <pracUploadForm :que="que" :queIndex="queIndex" />
             </div>
           </q-card-section>
 
@@ -392,6 +456,7 @@
           </q-inner-loading>
         </q-card>
       </div>
+
       <div class="submit-btn-flex" v-if="showSubmitBtn">
         <q-btn
           class="submit-btn"
@@ -402,17 +467,23 @@
           :percentage="progress.percentage"
         />
       </div>
+
+      <q-btn @click="verifyAndSend" v-if="formType === 'uploadPractices'"
+        >סיים</q-btn
+      >
     </q-form>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import pracUploadForm from "@/components/pracUploadForm.vue";
 export default {
   props: {
     weeks: Array,
     formType: String,
   },
+  components: { pracUploadForm },
   data() {
     return {
       options: ["הוסף שבוע", "בחר משבוע קיים"],
@@ -443,17 +514,203 @@ export default {
       filteredPracs: [],
       practicesDataFiltered: [],
       showSubmitBtn: false,
+      currentPracId: null,
     };
   },
 
   methods: {
+    async verifyAndSend() {
+      for (let item = 0; item < this.practicesDataFiltered.length; item++) {
+        if (this.practicesDataFiltered[item].type == "radio") {
+          if (this.practicesDataFiltered[item].correctAnswer == null) {
+            alert(`אנא הכנס תשובה בשאלה :${item + 1}`);
+            return;
+          } else if (
+            !this.practicesDataFiltered[item].options.includes(
+              this.practicesDataFiltered[item].correctAnswer
+            )
+          ) {
+            alert(`אנא הכנס תשובה שקיימת באפשרויות :${item + 1}`);
+            return;
+          }
+        } else if (this.practicesDataFiltered[item].type == "checkbox") {
+          const exist = this.practicesDataFiltered[item].correctAnswer.every(
+            (i) => this.practicesDataFiltered[item].options.includes(i)
+          );
+          console.log(exist);
+
+          if (!exist) {
+            alert(`אנא הכנס תשובה שקיימת באפשרויות :${item + 1}`);
+            return;
+          }
+        } else if (
+          this.practicesDataFiltered[item].type == "dragDropComplete"
+        ) {
+          const fullRightAnswerArray = [
+            ...this.practicesDataFiltered[item].sentences.filter(
+              (word) => word !== ""
+            ),
+            ...this.practicesDataFiltered[item].bankWords,
+          ];
+          const isExistSelectedWords = this.practicesDataFiltered[
+            item
+          ].correctAnswer.every((i) => {
+            return fullRightAnswerArray.includes(i);
+          });
+
+          console.log(this.practicesDataFiltered[item]);
+          if (
+            this.practicesDataFiltered[item].correctAnswer.length !==
+            this.practicesDataFiltered[item].sentences.length
+          ) {
+            alert(
+              `ודא שהכנסת כמות מילים התואמת את כמות המילים במשפט הנתון: ${
+                item + 1
+              }`
+            );
+            return;
+          } else if (!isExistSelectedWords) {
+            console.log(isExistSelectedWords);
+            alert(`אנא הכנס תשובה שקיימת באפשרויות :${item + 1}`);
+            return;
+          }
+        }
+        // else if(this.practicesDataFiltered[item].type =="dragDropTable"){
+
+        // }
+      }
+      try {
+        await this.deletePrac();
+        console.log("yess");
+        await this.postNewPracticesData();
+        this.$swal({
+          title: "התרגול הועלה בהצלחה",
+          icon: "success",
+          confirmButtonText: "סיום",
+          confirmButtonColor: "var(--main-background-color)",
+        });
+      } catch (err) {
+        this.$swal({
+          title: "שגיאה בהעלאת התרגול",
+          icon: "error",
+          confirmButtonText: "נסה שוב",
+          confirmButtonColor: "var(--main-background-color)",
+        });
+      }
+    },
+
+    async deletePrac() {
+      var res = null;
+      const token = await this.$asyncGetToken();
+      for (const pracData of this.practicesDataFiltered) {
+        res = await axios.post(
+          this.$sharePointUrl +
+            `getByTitle('practicesData')/items(${pracData.Id})`,
+          {
+            __metadata: { type: "SP.Data.PracticesDataListItem" },
+          },
+          {
+            headers: {
+              "X-HTTP-Method": "DELETE",
+              "IF-MATCH": "*",
+              "X-RequestDigest": token,
+              Accept: "application/json;odata=verbose",
+              "Content-Type": "application/json;odata=verbose",
+            },
+          }
+        );
+      }
+    },
+
+    async postNewPracticesData() {
+      var token = await this.$asyncGetToken();
+      var url = this.$sharePointUrl + "getByTitle('practicesData')/items";
+
+      for (const pracData of this.practicesDataFiltered) {
+        if (pracData.type == "radio") {
+          pracData.options = JSON.stringify(pracData.options);
+        } else if (pracData.type == "checkbox") {
+          pracData.options = JSON.stringify(pracData.options);
+          pracData.correctAnswer = JSON.stringify(pracData.correctAnswer);
+        } else if (pracData.type == "dragDropComplete") {
+          pracData.sentences = JSON.stringify(pracData.sentences);
+          pracData.correctAnswer = JSON.stringify(pracData.correctAnswer);
+          pracData.bankWords = JSON.stringify(pracData.bankWords);
+        } else if (pracData.type == "dragDropTable") {
+          pracData.subjects = JSON.stringify(pracData.subjects);
+          pracData.correctMatches = JSON.stringify(pracData.correctMatches);
+          pracData.bankWords = JSON.stringify(pracData.bankWords);
+          pracData.table = [];
+          pracData.table = JSON.stringify(pracData.table);
+        }
+        console.log(this.pracData);
+
+        const res = await axios.post(
+          url,
+          {
+            __metadata: { type: "SP.Data.PracticesDataListItem" },
+            ...pracData,
+          },
+
+          {
+            headers: {
+              "X-RequestDigest": token,
+              Accept: "application/json;odata=verbose",
+              "Content-Type": "application/json;odata=verbose",
+            },
+          }
+        );
+      }
+      console.log("posted");
+    },
+
+    async mergeLesson(lesson) {
+      lesson["__metadata"] = { type: "SP.Data.LessonsListItem" };
+      console.log(lesson);
+      try {
+        const url =
+          this.$sharePointUrl + `getByTitle('lessons')/items(${lesson.Id})`;
+
+        const res = await axios.post(
+          url,
+          lesson,
+
+          {
+            headers: {
+              "X-HTTP-Method": "MERGE",
+              "IF-MATCH": "*",
+              "X-RequestDigest": await this.$asyncGetToken(),
+              Accept: "application/json;odata=verbose",
+              "Content-Type": "application/json;odata=verbose",
+            },
+          }
+        );
+
+        this.$swal({
+          title: `השיעור "${lesson.Title}" נערך בהצלחה`,
+          icon: "success",
+          confirmButtonText: "סיום",
+          confirmButtonColor: "var(--main-background-color)",
+        });
+      } catch (err) {
+        console.log(err);
+        this.$swal({
+          title: `שגיאה בעריכת "${lesson.Title}"`,
+          icon: "error",
+          confirmButtonText: "נסה\י שוב",
+          confirmButtonColor: "var(--main-background-color)",
+        });
+      }
+    },
+
     editImgBtn(lessIndex) {
-      this.showEditImgBtn[lessIndex] = true;
+      this.showEditImgBtn[lessIndex] = !this.showEditImgBtn[lessIndex];
       console.log(this.showEditImgBtn);
     },
     editFileBtn(lessIndex) {
-      this.showEditFileBtn[lessIndex] = true;
+      this.showEditFileBtn[lessIndex] = !this.showEditFileBtn[lessIndex];
       console.log(this.showEditFileBtn);
+      console.log("yesss");
     },
 
     createweek(option) {
@@ -498,20 +755,7 @@ export default {
       this.progress.loading = true;
       this.progress.percentage = 0;
 
-      console.log(this.originalExistLessons);
       console.log(this.existLessons);
-      console.log(this.existLessons[0].Img.name);
-
-      const addedLessons = this.existLessons.filter(
-        (updatedItem) =>
-          !this.originalExistLessons.some(
-            (originalItem) =>
-              originalItem.Title === updatedItem.Title &&
-              originalItem.Img === updatedItem.Img.name &&
-              originalItem.file === updatedItem.file.name
-          )
-      );
-      console.log("addedLessons", addedLessons);
 
       this.interval = setInterval(async () => {
         this.progress.percentage += 1;
@@ -557,6 +801,7 @@ export default {
     async postWeek() {
       try {
         this.token = await this.$asyncGetToken();
+
         const url = this.$sharePointUrl + "getByTitle('weeks')/Items";
         const data = {
           Title: this.newWeek[0].Title,
@@ -579,14 +824,13 @@ export default {
       return axios
         .get(
           this.$sharePointUrl +
-            `getByTitle('weeks')/items?$orderby=ID desc&$top=1&$select=ID`
+            `getByTitle('weeks')/items?$orderby=Id desc&$top=1&$select=Id`
         )
-        .then((res) => res.data.value[0].ID);
+        .then((res) => res.data.value[0].Id);
     },
 
     async deleteLesson(id, lessIndex) {
       try {
-        const token = await this.$asyncGetToken();
         const url = this.$sharePointUrl + `getByTitle('lessons')/items(${id})`;
         const res = await axios.post(
           url,
@@ -597,7 +841,7 @@ export default {
             headers: {
               "X-HTTP-Method": "DELETE",
               "IF-MATCH": "*",
-              "X-RequestDigest": token,
+              "X-RequestDigest": this.token,
               Accept: "application/json;odata=verbose",
               "Content-Type": "application/json;odata=verbose",
             },
@@ -671,7 +915,7 @@ export default {
         } else {
           res = await axios.get(this.$sharePointUrl + "lessons");
           res.data.value = res.data.value.filter(
-            (item) => item.weekId === option.ID
+            (item) => item.weekId === option.Id
           );
         }
         this.existLessons = res.data.value;
@@ -682,12 +926,8 @@ export default {
         }
         this.allowEdit = new Array(this.existLessons.length).fill(false);
         this.showEditImgBtn = new Array(this.existLessons.length).fill(false);
-        this.showEditfileBtn = new Array(this.existLessons.length).fill(false);
-
-        this.originalExistLessons = JSON.parse(
-          JSON.stringify(this.existLessons)
-        );
-
+        this.showEditFileBtn = new Array(this.existLessons.length).fill(false);
+        console.log("showEditFileBtn: ", this.showEditFileBtn);
         console.log(this.allowEdit);
         console.log(this.existLessons);
       } catch (error) {
@@ -701,12 +941,12 @@ export default {
         if (this.$isSharePointUrl) {
           res = await axios.get(
             this.$sharePointUrl +
-              `getByTitle('practices)/items?$filter=mahlakaId eq ${this.mahlakaId}`
+              `getByTitle('practices')/items?$filter=lessonId eq ${option.Id}`
           );
         } else {
           res = await axios.get(this.$sharePointUrl + "practices");
           res.data.value = res.data.value.filter(
-            (prac) => prac.lessonId === option.ID
+            (prac) => prac.lessonId === option.Id
           );
         }
         this.filteredPracs = res.data.value;
@@ -718,13 +958,20 @@ export default {
     },
 
     openLessonCard(index, prac) {
+      if (prac) {
+        this.currentPracId = prac.Id;
+        console.log("currentPracId: ", this.currentPracId);
+      }
       this.isLoad = false;
       this.selectedIndex = index;
       setTimeout(async () => {
         if (this.formType === "uploadWeeksLessons") {
+          this.originalExistLessons = JSON.parse(JSON.stringify(prac));
+          console.log(this.originalExistLessons);
+
           this.allowEdit = this.allowEdit.map((item, i) => i === index);
           console.log("allowEdit", this.allowEdit);
-        } else if (this.formType === "practicesUploadForm") {
+        } else if (this.formType === "uploadPractices") {
           try {
             this.allowPracEdit = this.allowPracEdit.map(
               (item, i) => i === index
@@ -735,21 +982,41 @@ export default {
             if (this.$isSharePointUrl) {
               res = await axios.get(
                 this.$sharePointUrl +
-                  `getByTitle('practicesData')/items?$filter=practiceId eq ${prac.ID}`
+                  `getByTitle('practicesData')/items?$filter=practiceId eq ${prac.Id}`
               );
             } else {
               res = await axios.get(this.$sharePointUrl + "practicesData");
               res.data.value = res.data.value.filter(
-                (item) => item.practiceId === prac.ID
+                (item) => item.practiceId === prac.Id
               );
             }
             this.practicesDataFiltered = res.data.value;
+            this.parsePracData();
             console.log(this.practicesDataFiltered);
           } catch (error) {}
         }
         this.isLoad = true;
         console.log(this.isLoad);
       }, 300);
+    },
+
+    parsePracData() {
+      this.practicesDataFiltered.forEach((item) => {
+        if (item.type == "radio") {
+          item.options = JSON.parse(item.options);
+        } else if (item.type == "checkbox") {
+          item.options = JSON.parse(item.options);
+          item.correctAnswer = JSON.parse(item.correctAnswer);
+        } else if (item.type == "dragDropComplete") {
+          item.correctAnswer = JSON.parse(item.correctAnswer);
+          item.sentences = JSON.parse(item.sentences);
+          item.bankWords = JSON.parse(item.bankWords);
+        } else if (item.type == "dragDropTable") {
+          item.subjects = JSON.parse(item.subjects);
+          item.correctMatches = JSON.parse(item.correctMatches);
+          item.bankWords = JSON.parse(item.bankWords);
+        }
+      });
     },
 
     async addWeeksFolderToSiteAssets() {
@@ -848,14 +1115,24 @@ export default {
   background-color: var(--main-background-color);
   color: white;
 }
+.edit-icon {
+  cursor: pointer;
+}
+.show-current-lesson {
+}
 .current-img {
   margin-bottom: 20px;
+  font-size: 20px;
   border-radius: 3px;
-  background: #dcdcdc;
+  height: 70px;
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  padding: 0.8em;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  /* background: #dcdcdc; */
+  border: 1px solid #80808066;
+  padding: 10px;
 }
 .header-flex {
   display: flex;

@@ -223,75 +223,6 @@ export default {
       this.$router.push({ name: "result" });
     },
 
-    // gradeQuiz() {
-    //   var totalQuestions = this.quizData.length;
-    //   var correctAnswers = 0;
-
-    //   this.quizData.forEach((question) => {
-    //     switch (question.type) {
-    //       case "radio":
-    //         if (question.selectedOption === question.correctAnswer) {
-    //           correctAnswers++;
-    //           console.log("radio is correct");
-    //         }
-    //         break;
-    //       case "checkbox":
-    //         var correctOptionsCount = 0;
-
-    //         question.options.forEach((option, index) => {
-    //           if (
-    //             question.correctAnswer.includes(option) &&
-    //             question.selectedOption[index]
-    //           ) {
-    //             correctOptionsCount++;
-    //           }
-    //         });
-
-    //         var totalPossibleCorrectOptions = question.correctAnswer.length;
-    //         var fracCorrect = correctOptionsCount / totalPossibleCorrectOptions;
-
-    //         correctAnswers += fracCorrect;
-    //         break;
-
-    //       case "dragDropComplete":
-    //         var isCorrect =
-    //           question.sentences.join("") === question.correctAnswer.join("");
-
-    //         if (isCorrect) {
-    //           correctAnswers++;
-    //         }
-    //         break;
-
-    //       case "dragDropTable":
-    //         var correctConceptsCount = 0;
-
-    //         question.correctMatches.forEach((correctMatch) => {
-    //           const { subject, concepts } = correctMatch;
-    //           const subjectIndex = question.indexOf(subject);
-    //           if (subjectIndex !== -1) {
-    //             if (
-    //               question.table[subjectIndex] &&
-    //               question.table[subjectIndex].every((concept) =>
-    //                 concepts.includes(concept)
-    //               )
-    //             ) {
-    //               correctConceptsCount += concepts.length;
-    //             }
-    //           }
-    //         });
-
-    //         var totalPossibleConcepts = question.correctMatches.reduce(
-    //           (total, match) => total + match.concepts.length,
-    //           0
-    //         );
-    //         var fractionCorrect = correctConceptsCount / totalPossibleConcepts;
-    //         correctAnswers += fractionCorrect;
-    //         break;
-    //     }
-    //   });
-
-    //   return (correctAnswers / totalQuestions) * 100;
-    // },
 
     dragStart(word, event) {
       event.dataTransfer.setData("text/plain", word);
@@ -438,7 +369,8 @@ export default {
           res = await axios.get(this.$sharePointUrl + `practicesData`);
           var quizData = res.data.value;
           this.quizData = quizData.filter(
-            (item) => item.pracId == JSON.parse(this.$route.params.numOfPrac)
+            (item) =>
+              item.practiceId == JSON.parse(this.$route.params.numOfPrac)
           );
         }
         console.log(this.quizData);

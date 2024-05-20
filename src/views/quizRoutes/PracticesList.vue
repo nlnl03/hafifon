@@ -10,7 +10,7 @@
           v-model="selectedValue"
           :options="weeksWithIndex"
           map-options
-          :option-value="(option) => option.Id"
+          :option-value="(option) => option.ID"
           :option-label="(option) => option.Title"
           label="מיין לפי שבוע"
           @update:model-value="showFilterCards"
@@ -36,11 +36,11 @@
                 :subtitle="week.Title"
                 v-for="(week, index) in filteredWeek"
                 :key="index"
-                :value="week.Id"
+                :value="week.ID"
               >
                 <div class="flex-cards" v-if="showCards">
                   <div
-                    v-for="(item, midIndex) in weekLessons(week.Id)"
+                    v-for="(item, midIndex) in weekLessons(week.ID)"
                     :key="midIndex"
                   >
                     <div
@@ -121,7 +121,7 @@
                           <q-btn
                             class="tirgulim-link"
                             label="תרגולים"
-                            @click="openTirgulimModal(item.Id, index)"
+                            @click="openTirgulimModal(item.ID, index)"
                             style="
                               background-color: var(--main-background-color);
                               color: white;
@@ -144,7 +144,7 @@
     <q-card style="width: 450px; height: 200px">
       <q-card-section class="flex-prac-btns">
         <div class="prac-btns" v-for="prac in tirgulimNames" :key="prac">
-          <q-btn class="practices-btn" @click="goToPrac(prac)" id="${prac.Id}">
+          <q-btn class="practices-btn" @click="goToPrac(prac)" id="${prac.ID}">
             {{ prac.Title }}</q-btn
           >
         </div>
@@ -194,7 +194,7 @@ export default {
       }
     },
     showFilterCards() {
-      const optionValue = this.selectedValue.Id;
+      const optionValue = this.selectedValue.ID;
       console.log(optionValue);
       const timelineFiltered = this.$refs["timeline"].children[0].children[0];
       timelineFiltered.children[0].style.display = "none";
@@ -256,7 +256,7 @@ export default {
         return axios
           .get(this.$sharePointUrl + `practices`)
           .then((res) => res.data.value)
-          .then((results) => results.filter((item) => item.lessonID == itemId));
+          .then((results) => results.filter((item) => item.lessonId == itemId));
       }
     },
 
@@ -275,7 +275,7 @@ export default {
           name: "beforeStartQuiz",
           params: {
             week: index + 1,
-            numOfPrac: this.tirgulimNames[0].Id,
+            numOfPrac: this.tirgulimNames[0].ID,
             lesson: lessonId,
           },
         });
@@ -288,7 +288,7 @@ export default {
         name: "beforeStartQuiz",
         params: {
           week: this.ite + 1,
-          numOfPrac: prac.Id,
+          numOfPrac: prac.ID,
           lesson: prac.lessonId,
         },
       });

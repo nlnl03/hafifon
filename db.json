@@ -151,43 +151,43 @@
     "value": [
       {
         "Title": "תרגול שיעור 2",
-        "ID": 1,
+        "Id": 1,
         "lessonId": 2,
         "routeName": "line"
       },
       {
         "Title": "תרגול שיעור 3 חלק א",
-        "ID": 2,
+        "Id": 2,
         "lessonId": 3,
         "routeName": "bbb"
       },
       {
         "Title": "תרגול שיעור 3 חלק ב",
-        "ID": 3,
+        "Id": 3,
         "lessonId": 3,
         "routeName": "ccc"
       },
       {
         "Title": "תרגול שיעור 4 חלק א",
-        "ID": 4,
+        "Id": 4,
         "lessonId": 4,
         "routeName": "ddd"
       },
       {
         "Title": "תרגול שיעור 4 חלק ב",
-        "ID": 5,
+        "Id": 5,
         "lessonId": 4,
         "routeName": "eee"
       },
       {
         "Title": "תרגול שיעור 5 חלק א",
-        "ID": 6,
+        "Id": 6,
         "lessonId": 5,
         "routeName": "fff"
       },
       {
         "Title": "תרגול שיעור 5 חלק ב",
-        "ID": 7,
+        "Id": 7,
         "lessonId": 5,
         "routeName": "ggg"
       }
@@ -1322,7 +1322,7 @@
     "value": [
       {
         "Title":"2+2 ?",
-        "ID": 1,
+        "Id": 1,
         "weekId": 1,
         "lessonId": 3,
         "practiceId": 2,
@@ -1339,7 +1339,7 @@
       },
       {
         "Title":"מהי עיר הבירה של צרפת ?",
-        "ID": 2,
+        "Id": 2,
         "weekId": 1,
         "lessonId": 3,
         "practiceId": 2,
@@ -1356,7 +1356,7 @@
       },
       {
         "Title":"בחר את כל המשתמשים:",
-        "ID": 2,
+        "Id": 2,
         "weekId": 1,
         "lessonId": 3,
         "practiceId": 2,
@@ -1373,7 +1373,7 @@
       },
       {
         "Title":"השלם את המשפט:",
-        "ID": 2,
+        "Id": 2,
         "weekId": 1,
         "lessonId": 3,
         "practiceId": 2,
@@ -1389,7 +1389,7 @@
       },
       {
         "Title":"התאם בין אופצייה לעמודה המתאימה",
-        "ID": 2,
+        "Id": 2,
         "weekId": 1,
         "lessonId": 3,
         "practiceId": 2,
@@ -1596,43 +1596,43 @@
     "value": [
       {
         "Title": "שבוע 1",
-        "ID": 1,
+        "Id": 1,
         "weekNum": 1,
         "mahlakaId": 1
       },
       {
         "Title": "שבוע 2",
-        "ID": 2,
+        "Id": 2,
         "weekNum": 2,
         "mahlakaId": 1
       },
       {
         "Title": "שבוע 3",
-        "ID": 3,
+        "Id": 3,
         "weekNum": 3,
         "mahlakaId": 1
       },
       {
         "Title": "שבוע 4",
-        "ID": 4,
+        "Id": 4,
         "weekNum": 4,
         "mahlakaId": 1
       },
       {
         "Title": "שבוע 5",
-        "ID": 5,
+        "Id": 5,
         "weekNum": 5,
         "mahlakaId": 1
       },
       {
         "Title": "שבוע 1",
-        "ID": 6,
+        "Id": 6,
         "weekNum": 1,
         "mahlakaId": 2
       },
       {
         "Title": "שבוע 2",
-        "ID": 7,
+        "Id": 7,
         "weekNum": 2,
         "mahlakaId": 2
       }
@@ -1644,7 +1644,7 @@
         "routeName": "aboutThePloga",
         "Title": "שיעור חפיפה 1",
         "description": "הכרת הגדוד",
-        "ID": 1,
+        "Id": 1,
         "weekId": 1,
         "Img": "printer.jpg",
         "file": "sdsd.pptx",
@@ -1654,7 +1654,7 @@
         "routeName": "CMD",
         "Title": "שיעור חפיפה 2",
         "description": "חומרה ומחשבים",
-        "ID": 2,
+        "Id": 2,
         "weekId": 1,
         "Img": "CMD.png",
         "file": "",
@@ -1664,7 +1664,7 @@
         "routeName": "pcOperation",
         "Title": "שיעור חפיפה 3",
         "description": "ממשקים במחשב",
-        "ID": 3,
+        "Id": 3,
         "weekId": 1,
         "Img": "pc.jpg",
         "numOfQue": "10",
@@ -1675,7 +1675,7 @@
         "routeName": "hardware&bios",
         "Title": "שיעור חפיפה 4",
         "description": "דומיין ותפעול מחשב",
-        "ID": 4,
+        "Id": 4,
         "weekId": 2,
         "Img": "pc.jpg",
         "numOfQue": "10",
@@ -1686,7 +1686,7 @@
         "routeName": "discs",
         "Title": "שיעור חפיפה 5",
         "description": "תקשורת",
-        "ID": 5,
+        "Id": 5,
         "weekId": 2,
         "Img": "disc.png",
         "numOfQue": "10",
@@ -1697,7 +1697,7 @@
         "routeName": "aaaa",
         "Title": "שיעור חפיפה 1",
         "description": "ddddaddad",
-        "ID": 6,
+        "Id": 6,
         "weekId": 6,
         "Img": "pc.jpg",
         "numOfQue": "10",
@@ -1708,7 +1708,7 @@
         "routeName": "bbbb",
         "Title": "שיעור חפיפה 2",
         "description": "sdffdfdf",
-        "ID": 7,
+        "Id": 7,
         "weekId": 7,
         "Img": "disc.png",
         "numOfQue": "10",

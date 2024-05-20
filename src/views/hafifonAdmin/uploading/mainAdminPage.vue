@@ -60,7 +60,7 @@
       </q-card-section>
 
       <q-card-section v-if="item === '2'">
-        <practicesUploadForm
+        <uploadPractices
           :weeks="weeks"
           :lessons="existLessons"
           :formType="formType"
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import practicesUploadForm from "@/components/practicesUploadForm.vue";
+import uploadPractices from "@/components/uploadPractices.vue";
 // import examsUploadForm from "@/components/examsUploadForm.vue";
 import HafifaCheckMainCompo from "@/components/HafifaCheckMainCompo.vue";
 import examsUploadForm from "@/components/examsUploadForm.vue";
@@ -89,7 +89,7 @@ import axios from "axios";
 
 export default {
   components: {
-    practicesUploadForm,
+    uploadPractices,
     HafifaCheckMainCompo,
     examsUploadForm,
     uploadWeeksLessons,
@@ -119,13 +119,13 @@ export default {
         this.cardHeight = "unset";
         this.maxHeight = "450px";
       } else if (this.item === "2") {
-        this.formType = "practicesUploadForm";
+        this.formType = "uploadPractices";
 
-        this.cardWidth = "650px";
+        this.cardWidth = "850px";
         this.cardHeight = "450px";
       } else {
-        this.cardWidth = "700px";
-        this.cardHeight = "550px";
+        this.cardWidth = "800px";
+        this.cardHeight = "450px";
       }
       console.log(this.item);
       this.showModal = true;

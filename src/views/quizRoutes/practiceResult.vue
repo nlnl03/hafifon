@@ -14,19 +14,38 @@
         </div>
       </div>
       <div class="results-table" v-if="!showMassaAllCorrect">
-        <table>
+        <q-btn
+          color="primary"
+          @click="toggler = !toggler"
+          :label="toggler ? 'לתשובות נכונות' : 'לתשובות לא נכונות'"
+        />
+
+        <br />
+        <table v-if="toggler">
           <thead>
             <tr>
               <th>השאלה</th>
-              <th>התשובה שענית</th>
-              <th>התשובה הנכונה</th>
+              <th class="bad-answer">התשובה שענית</th>
+              <th class="good-answer">התשובה הנכונה</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="result in answers" :key="result">
+            <tr v-for="(result, index) in wrongAnswer" :key="index">
               <td>
-                <div class="text">{{ result.theCorrectAns }}</div>
+                <div class="text">{{ result.Title }}</div>
+              </td>
+              <td>
+                <div class="text">{{ getWrongStrByType(result) }}</div>
+              </td>
+              <td>
+                <div class="text">{{ getcorrectStrByType(result) }}</div>
+              </td>
+              <!-- <td>{{ result.Title }}</td> -->
+            </tr>
+            <!-- <tr v-for="(result, index) in wrongAnswer" :key="index">
+              <td>
+                <div class="text">{{ result.Title }}</div>
               </td>
               <td>
                 <div class="text">{{ result.wrongAns }}</div>
@@ -34,19 +53,46 @@
               <td>
                 <div class="text">{{ result.wrongQue }}</div>
               </td>
-            </tr>
+              <td>{{ result.Title }}</td>
+            </tr> -->
+          </tbody>
+        </table>
+        <br />
 
-            <tr v-for="bankResult in userBankResults" :key="bankResult">
-              <td>
-                <div class="text">{{ bankResult.theCorrectBankAns }}</div>
-              </td>
-              <td>
-                <div class="text">{{ bankResult.wrongBankAns }}</div>
-              </td>
-              <td>
-                <div class="text">{{ bankResult.wrongBankQue }}</div>
-              </td>
+        <table v-if="!toggler">
+          <thead>
+            <tr>
+              <th>השאלה</th>
+              <!-- <th>התשובה שענית</th> -->
+              <th class="good-answer">התשובה הנכונה</th>
             </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="(result, index) in correctAnswer" :key="index">
+              <td>
+                <div class="text">{{ result.Title }}</div>
+              </td>
+              <td>
+                <div class="text">{{ getcorrectStrByType(result) }}</div>
+              </td>
+              <!-- <td>
+                <div class="text">{{ getcorrectStrByType(result) }}</div>
+              </td> -->
+              <!-- <td>{{ result.Title }}</td> -->
+            </tr>
+            <!-- <tr v-for="(result, index) in wrongAnswer" :key="index">
+              <td>
+                <div class="text">{{ result.Title }}</div>
+              </td>
+              <td>
+                <div class="text">{{ result.wrongAns }}</div>
+              </td>
+              <td>
+                <div class="text">{{ result.wrongQue }}</div>
+              </td>
+              <td>{{ result.Title }}</td>
+            </tr> -->
           </tbody>
         </table>
       </div>
@@ -71,6 +117,9 @@ export default {
   },
   data() {
     return {
+      toggler: false,
+      correctAnswer: [],
+      wrongAnswer: [],
       userResults: [],
       userBankResults: [],
       score: "",
@@ -84,6 +133,98 @@ export default {
     };
   },
   methods: {
+    getWrongStrByType(result) {
+      switch (result.type) {
+        case "radio":
+          return result.selectedOption;
+        case "checkbox":
+          const objectOptions = {};
+          result.options.forEach((option, index) => {
+            objectOptions[option] = result.selectedOption[index];
+          });
+          let str = "";
+          result.options.forEach((item) => {
+            if (objectOptions[item]) {
+              str = str + " , " + item;
+            }
+          });
+          return str;
+        case "dragDropComplete":
+          return result.sentences.join(" ");
+        case "dragDropTable":
+          let strConcepts = "";
+
+          result.correctMatches.forEach((item, index) => {
+            if (
+              JSON.stringify(item.concepts) !=
+              JSON.stringify(result.table[index])
+            ) {
+              strConcepts = `${strConcepts}
+             ${result.subjects[index]} : [${result.table[index]}]
+             , `;
+            }
+          });
+          return strConcepts;
+      }
+    },
+    getcorrectStrByType(result) {
+      switch (result.type) {
+        case "radio":
+          return result.correctAnswer;
+        case "checkbox":
+          return result.correctAnswer.join(", ");
+        case "dragDropComplete":
+          return result.correctAnswer.join(" ");
+        case "dragDropTable":
+          let strConcepts = "";
+
+          result.correctMatches.forEach((item) => {
+            strConcepts = `${strConcepts}
+             ${item.subject} : [${item.concepts}]
+             , `;
+          });
+
+          return strConcepts;
+      }
+    },
+
+    getRightAndWrongAnswers() {
+      this.pracData.forEach((answer) => {
+        if (answer.type === "radio") {
+          if (answer.selectedOption === answer.correctAnswer) {
+            this.correctAnswer.push(answer);
+          } else {
+            this.wrongAnswer.push(answer);
+          }
+        } else if (answer.type === "checkbox") {
+          const objectOptions = {};
+          answer.options.forEach((option, index) => {
+            objectOptions[option] = answer.selectedOption[index];
+          });
+          for (const correct of answer.correctAnswer) {
+            if (!objectOptions[correct]) {
+              this.wrongAnswer.push(answer);
+              return;
+            }
+          }
+          this.correctAnswer.push(answer);
+        } else if (answer.type === "dragDropComplete") {
+          answer.sentences.join("") === answer.correctAnswer.join("")
+            ? this.correctAnswer.push(answer)
+            : this.wrongAnswer.push(answer);
+        } else if (answer.type === "dragDropTable") {
+          for (const correctMatch of answer.correctMatches) {
+            const { subject, concepts } = correctMatch;
+            const subjectIndex = answer.subjects.indexOf(subject);
+            // if (subjectIndex == -1) {
+            this.wrongAnswer.push(answer);
+            break;
+            // }
+          }
+          this.correctAnswer.push(answer);
+        }
+      });
+    },
     gradeQuiz() {
       var totalQuestions = this.pracData.length;
       var correctAnswers = 0;
@@ -192,17 +333,24 @@ export default {
         } else {
           res = await axios.get(this.$sharePointUrl + `practicesData`);
           var answers = res.data.value;
+          console.log(answers);
           answers = answers.filter(
-            (item) => item.pracId == JSON.parse(this.$route.params.numOfPrac)
+            (item) =>
+              item.practiceId == JSON.parse(this.$route.params.numOfPrac)
           );
-          this.answers = answers.map(
-            (item) => item.correctAnswer || item.correctMatches
+          this.answers = answers.map((item) =>
+            item.correctAnswer
+              ? { ...item, correctAnswer: item.correctAnswer }
+              : { ...item, correctMatches: item.correctMatches }
           );
         }
 
         console.log(this.answers);
         this.pracData = JSON.parse(localStorage.getItem("pracData"));
         console.log(this.pracData);
+        this.getRightAndWrongAnswers();
+        console.log(this.wrongAnswer);
+        console.log(this.correctAnswer);
         // this.gradeQuiz();
 
         this.isLoadForSpinner = true;
@@ -234,6 +382,7 @@ export default {
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
   margin: auto;
   padding: 25px;
+  overflow: auto;
   min-height: 500px;
 }
 
@@ -278,11 +427,12 @@ tr {
 tbody tr:hover {
   background-color: rgba(192, 192, 192, 0.582);
 }
-th:nth-child(2)::after {
+.bad-answer:nth-child(2)::after {
   content: "❌";
   margin-right: 3px;
 }
-th:nth-child(3)::after {
+
+.good-answer::after {
   content: "✔";
   color: green;
   font-size: 25px;
