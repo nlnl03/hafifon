@@ -56,10 +56,10 @@ const routes = [
     component: User
   },
   {
-    path: "/:selectedItem?/user/:title/results",
+    path: "/:selectedItem?/user/:name/results",
     name: "CheckedExams",
     component: displayCheckedExams,
-    props:true
+    props: true
   },
   {
     path: "/:selectedItem?/admin/MainCheckPage",

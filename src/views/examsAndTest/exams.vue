@@ -6,7 +6,11 @@
       {{ examData.Title }}
     </div>
     <div class="timer">
-      <timer :totalTime="examData.time" :routeName="examType" />
+      <timer
+        :totalTime="examData.time"
+        :routeName="examType"
+        :deletePer="deletePer"
+      />
     </div>
   </div>
 
@@ -18,6 +22,7 @@
     @updatedExitAlertShow="updateExitAlertShow"
     v-if="isLoadForSpinner"
     :examId="examData.Id"
+    :deletePer="deletePer"
   />
 </template>
 
@@ -39,7 +44,6 @@ export default {
       isUserDataEmpty: true,
       boolIfEmpty: [],
       dataToPost: [],
-      token: "",
       examType: null,
       userName: "",
       userId: "",
@@ -49,12 +53,11 @@ export default {
       showRedWarn: false,
       showRedWarnToAmerican: false,
       showExitAlert: true,
-      urlForId:
-        "https://portal.army.idf/sites/hafifon383/_api/web/sitegroups/getbyname('מבקרי חפיפון')/id",
       groupId: null,
       isTime: true,
       questions: [],
       totalQuestions: 20,
+      currentUser: [],
     };
   },
   methods: {
@@ -117,29 +120,69 @@ export default {
       event.preventDefault();
       event.returnValue = "";
     },
-    getIdOfgroup() {
-      return axios.get(this.urlForId).then((res) => res.data.value);
-    },
-    async deletePer() {
-      this.groupId = await this.getIdOfgroup();
-      console.log(this.groupId);
-      const res = await axios.post(
+
+    async getCurrentUser(studentId) {
+      const res = await axios.get(
         this.$sharePointUrl +
-          `getByTitle('${this.$route.params.Title}')/roleassignments/getbyprincipalid('${this.groupId}')`,
-        {
-          __metadata: { type: "SP.Data.IsPermissionActiveListItem" },
-        },
-        {
-          headers: {
-            "X-HTTP-Method": "DELETE",
-            "IF-MATCH": "*",
-            "X-RequestDigest": this.token,
-            Accept: "application/json;odata=verbose",
-            "Content-Type": "application/json;odata=verbose",
-          },
-        }
+          `getByTitle('students')/Items?$filter=num eq ${studentId}`
       );
+      this.currentUser = res.data.value[0];
     },
+
+    async deletePer() {
+      try {
+        var studentId = JSON.parse(localStorage.getItem("userId"));
+        console.log("userId: ", studentId);
+        var token = await this.$asyncGetToken();
+        const res = await axios.post(
+          this.$sharePointUrl +
+            `getByTitle('testsAndExams')/items(${this.examData.Id})/roleassignments/getbyprincipalid(${studentId})`,
+          {
+            __metadata: { type: "SP.Data.testsAndExamsListItem" },
+          },
+          {
+            headers: {
+              "X-HTTP-Method": "DELETE",
+              "IF-MATCH": "*",
+              "X-RequestDigest": token,
+              Accept: "application/json;odata=verbose",
+              "Content-Type": "application/json;odata=verbose",
+            },
+          }
+        );
+        await this.getCurrentUser(studentId);
+        console.log(this.currentUser);
+        var dataStringified = this.currentUser.permissions;
+
+        dataStringified = JSON.parse(this.currentUser.permissions);
+        console.log("currentUser: ", this.currentUser);
+
+        dataStringified[this.examData.type] = false;
+        console.log("dataStringified: ", dataStringified);
+
+        const res2 = await axios.post(
+          this.$sharePointUrl +
+            `getByTitle('students')/Items(${this.currentUser.Id})`,
+          {
+            __metadata: { type: "SP.Data.StudentsListItem" },
+            permissions: JSON.stringify(dataStringified),
+          },
+          {
+            headers: {
+              "X-HTTP-Method": "MERGE",
+              "IF-MATCH": "*",
+              "X-RequestDigest": token,
+              Accept: "application/json;odata=verbose",
+              "Content-Type": "application/json;odata=verbose",
+            },
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    },
+
     getMahlakot() {
       if (this.$isSharePointUrl) {
         return axios
@@ -189,23 +232,46 @@ export default {
       }
       console.log(this.examData);
 
-      const totalParts = this.examData.parts.length;
-      const questionsPerPart = Math.floor(this.totalQuestions / totalParts);
-      var remainingQuestions = this.totalQuestions % totalParts;
-      var allQuestions = [];
+      var checkIfEnoughQuePerPart = true;
 
-      this.examData.parts.forEach((part) => {
-        const shuffledQuestions = this.shuffleArray(part.questions);
-        const numQustions = questionsPerPart + (remainingQuestions > 0 ? 1 : 0);
-        const selectedQuestions = shuffledQuestions.slice(0, numQustions);
-        part.questions = selectedQuestions;
-        // allQuestions.push(selectedQuestions);
-        remainingQuestions--;
-      });
-      // this.questions = allQuestions.flat();
+      console.log(this.examData["parts"]);
+      for (const part of this.examData.parts) {
+        totalQuestions += part.questions.length;
+        console.log(part.Title, " :", part.questions.length);
+        if ((20 / this.examData.parts.length) % part.questions.length < 0) {
+          checkIfEnoughQuePerPart = false;
+          break;
+        }
+      }
+      console.log("checkIfEnoughQuePerPart: ", checkIfEnoughQuePerPart);
+      if (checkIfEnoughQuePerPart) {
+        const totalParts = this.examData.parts.length;
+        const questionsPerPart = Math.floor(this.totalQuestions / totalParts);
+        var remainingQuestions = this.totalQuestions % totalParts;
+        var allQuestions = [];
+
+        this.examData.parts.forEach((part) => {
+          const shuffledQuestions = this.shuffleArray(part.questions);
+          const numQustions =
+            questionsPerPart + (remainingQuestions > 0 ? 1 : 0);
+          const selectedQuestions = shuffledQuestions.slice(0, numQustions);
+          part.questions = selectedQuestions;
+          // allQuestions.push(selectedQuestions);
+          remainingQuestions--;
+        });
+        this.questions = allQuestions.flat();
+      } else {
+        var totalQuestions = 0;
+        this.examData.parts.forEach((part) => {
+          totalQuestions += part.questions.length;
+        });
+        console.log(totalQuestions);
+        this.totalQuestions = totalQuestions;
+      }
       console.log(this.examData);
       this.isLoadForSpinner = true;
     },
+
     shuffleArray(array) {
       for (var i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));

@@ -75,9 +75,11 @@
 </template>
 
 <script>
-import { LocalStorage } from "quasar";
 import { computed } from "@vue/reactivity";
+import { QForm, QInput, QBtn } from "quasar";
+import addNewUserForm from "@/components/addNewUserForm.vue";
 import axios from "axios";
+import { createApp } from "vue";
 export default {
   name: "permTable",
   data() {
@@ -142,7 +144,34 @@ export default {
     },
 
     openDialog() {
-      this.addStudentDialog = true;
+      // this.addStudentDialog = true;
+      this.$swal({
+        title: "מלא/ה את הפרטים:",
+        html: `
+        <div id="quasarForm"></div>`,
+
+        showCancelButton: true,
+        confirmButtonText: "אישור",
+        cancelButtonText: "ביטול",
+        confirmButtonColor: "var(--main-background-color)",
+        didOpen: () => {
+          const formContainer = document.getElementById("quasarForm");
+          const formApp = createApp(addNewUserForm);
+
+          formApp.component("addNewUserForm", {
+            methods: {
+              addNewStudent(formData) {
+                this.$swal.close();
+                this.$q.notify({
+                  message: "form submitted !",
+                  color: "positive",
+                });
+              },
+            },
+          });
+          formApp.mount(formContainer);
+        },
+      });
     },
     closeDialog() {
       this.addStudentDialog = false;

@@ -47,6 +47,7 @@ export default {
     boolIfEmpty: Array,
     totalQue: Number,
     examId: Number,
+    deletePer: Function,
   },
 
   data() {
@@ -58,6 +59,15 @@ export default {
     };
   },
   methods: {
+    currentIndexCheck(index, queIndex) {
+      let number = 0;
+      for (let i = 0; i < index; i++) {
+        number += this.exam.parts[i].questions.length;
+      }
+      number += queIndex + 1;
+      return number;
+    },
+
     clickHandler(event, index, queIndex) {
       const currentIndex = this.currentIndexCheck(index, queIndex);
       this.showRedWarn = false;
@@ -74,11 +84,6 @@ export default {
         console.log("is empty");
         // event.target.classList.add("text-aria-placeholder")
       }
-    },
-    currentIndexCheck(partIndex, queIndex) {
-      return (
-        (partIndex * this.totalQue) / this.exam.parts.length + queIndex + 1
-      );
     },
 
     submit() {
@@ -153,11 +158,14 @@ export default {
       const examData = { parts: this.exam.parts };
       console.log(examData);
 
+      console.log("mahlakaId :", this.exam.mahlakaId);
+
       const data = {
         Title: this.exam.Title,
         test: JSON.stringify(examData),
         userId: userId,
         examId: this.examId,
+        mahlakaId: this.exam.mahlakaId,
         status: "pending",
       };
       try {
@@ -191,15 +199,16 @@ export default {
           title: "המבדק הוגש בהצלחה",
           icon: "success",
           confirmButtonText: "סיים",
-        })
-        
+        });
+
         this.showExitAlertFunc();
         console.log(this.showExitAlert);
+        this.deletePer();
+
         this.$router.push({
           name: "submitted",
           params: { Title: this.$route.params.Title },
         });
-        // this.deletePer();
         console.log(this.$route);
       } catch (error) {
         console.log("error", error);
@@ -208,6 +217,23 @@ export default {
           text: "שגיאה בהגשת המבדק",
         });
       }
+    },
+  },
+  computed: {
+    sortedQuestions() {
+      return (partIndex) => {
+        if (
+          !this.exam.parts[partIndex] ||
+          !Array.isArray(this.exam.parts[partIndex].questions)
+        ) {
+          return [];
+        }
+        return this.exam.parts[partIndex].questions.slice().sort((a, b) => {
+          const labelA = String(a.label);
+          const labelB = String(b.label);
+          return labelA.localeCompare(labelB);
+        });
+      };
     },
   },
 };

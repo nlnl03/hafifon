@@ -20,7 +20,9 @@
               <div class="user-name">
                 {{ pending.userName }}
               </div>
-              <button class="watch-btn">לצפייה</button>
+              <button @click="showPendingExamModal(pending)" class="watch-btn">
+                לצפייה
+              </button>
             </div>
           </q-card-section>
         </q-card>
@@ -39,21 +41,38 @@
         <q-separator />
         <q-card class="card" style="background: rgba(240, 240, 240, 0.916)">
           <q-card-section
-            v-for="(pending, pIndex) in filteredPending(test.subject)"
+            v-for="(awaitingExam, pIndex) in filteredAwaitChecking(
+              test.subject
+            )"
             :key="pIndex"
             class="card-section"
           >
             <div class="card-item">
               <div class="user-name">
-                {{ pending.userName }}
+                {{ awaitingExam.userName }}
               </div>
-              <button class="watch-btn">לצפייה</button>
+              <button
+                @click="showWaitingExamModal(awaitingExam)"
+                class="watch-btn"
+              >
+                לצפייה
+              </button>
             </div>
           </q-card-section>
         </q-card>
       </q-expansion-item>
     </q-list>
   </div>
+
+  <q-dialog
+    class="checking-exam-dialog"
+    style="max-width: unset"
+    v-model="showExamCheckingModal"
+    persistent
+    transition-show="scale"
+  >
+    <checkingExamForm :submittedExam="currentExamToShow" :type="type" />
+  </q-dialog>
 </template>
 
 <script>
@@ -61,11 +80,13 @@ import axios from "axios";
 import CircleProgress from "vue3-circle-progress";
 import "vue3-circle-progress/dist/circle-progress.css";
 import loadingSpinner from "./loadingSpinner.vue";
+import checkingExamForm from "./checkingExamForm.vue";
 export default {
   name: "HafifaCheckMainCompo",
   components: {
     CircleProgress,
     loadingSpinner,
+    checkingExamForm,
   },
   data() {
     return {
@@ -79,6 +100,9 @@ export default {
       testsNames: [],
       showOptions: null,
       gradrPerExam: 0,
+      showExamCheckingModal: false,
+      currentExamToShow: [],
+      type: "",
     };
   },
   methods: {
@@ -126,7 +150,37 @@ export default {
     },
 
     filteredPending(name) {
-      return this.userData.filter((item) => item.Title === name);
+      return this.userData.filter(
+        (item) => item.Title === name && item.status === "pending"
+      );
+    },
+    filteredAwaitChecking(name) {
+      return this.userData.filter(
+        (item) => item.Title === name && item.status === "waiting for approve"
+      );
+    },
+
+    async showPendingExamModal(pending) {
+      if (this.$isSharePointUrl) {
+        pending["test"] = JSON.parse(pending["test"]);
+      }
+      this.currentExamToShow = pending;
+      this.type = "pendingExam";
+      this.showExamCheckingModal = true;
+      console.log(this.showExamCheckingModal);
+    },
+
+    async showWaitingExamModal(awaitingExam) {
+      if (this.$isSharePointUrl) {
+        awaitingExam["test"] = JSON.parse(awaitingExam["test"]);
+      }
+
+      this.currentExamToShow = awaitingExam;
+      this.type = "awaitingExam";
+
+      console.log(awaitingExam);
+      this.showExamCheckingModal = true;
+      console.log(this.showExamCheckingModal);
     },
   },
   async beforeMount() {
@@ -162,10 +216,8 @@ export default {
   margin-top: 20px;
 }
 .card-item {
-  height: 100%;
-  height: 50px;
-  width: 85%;
-  margin-left: 7%;
+  height: 55px;
+  width: 75%;
   border-radius: 15px;
   border: 1px solid #e4f3ff;
   background-color: white;
@@ -174,7 +226,6 @@ export default {
   align-items: center;
   /* box-shadow: -3px 2px 6px 0 rgb(0 0 0 / 13%), 0 0.3px 0.9px 0 rgb(0 0 0 / 11%); */
   position: relative;
-  cursor: pointer;
   overflow: hidden;
   text-decoration: none;
   color: black;
@@ -182,13 +233,17 @@ export default {
   font-size: 17px;
 }
 .watch-btn {
-  width: 4vw;
-  height: 3.5vh;
+  padding: 0.5em 1.1em !important;
+
+  /* width: 4vw;
+  height: 3.5vh; */
   border: none;
   font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
   margin-left: 15%;
+  cursor: pointer;
+  padding: 0.3em;
 }
 .card-expansion {
   border-radius: 15px;
@@ -201,6 +256,8 @@ export default {
 }
 .card-section {
   padding: 15px !important;
+  display: flex;
+  justify-content: center;
 }
 .card {
   max-height: 200px;

@@ -1,6 +1,10 @@
 <template>
   <div class="main">
-    <uploadWeeksLessons :formType="formType" :weeks="weeks" />
+    <uploadWeeksLessons
+      :formType="formType"
+      :weeks="weeks"
+      title="העלאת ועריכת תרגולים"
+    />
   </div>
 </template>
 
@@ -8,11 +12,14 @@
 import axios from "axios";
 import loadingSpinner from "@/components/loadingSpinner.vue";
 import uploadWeeksLessons from "@/components/uploadWeeksLessons.vue";
+import addNewPractice from "@/components/addNewPractice.vue";
+import practiceResultVue from "../views/quizRoutes/practiceResult.vue";
 export default {
   name: "uploadForm",
   components: {
     loadingSpinner,
     uploadWeeksLessons,
+    addNewPractice,
   },
   props: {
     existLessons: Array,
@@ -29,10 +36,26 @@ export default {
       selectedLesson: null,
       loading: false,
       currentWeekIndex: null,
+      lessons: [
+        { id: 1, Title: "lesson 1" },
+        { id: 2, Title: "lesson 2" },
+      ],
     };
   },
 
-  methods: {},
+  methods: {
+    addPractice(lessonId) {
+      return (practice) => {
+        const lesson = this.lessons.find((l) => l.Id === lessonId);
+        if (lesson) {
+          if (!lesson.practices) {
+            this.$set(lesson, "practices", []);
+          }
+          lesson.practices.push(practice);
+        }
+      };
+    },
+  },
 
   beforeMount() {
     console.log(this.formType);

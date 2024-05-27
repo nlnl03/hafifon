@@ -20,34 +20,7 @@ app.config.globalProperties.$isSharePointUrl =
   process.env.NODE_ENV == "production";
 
  
-app.config.globalProperties.$getHebLetters = function (index) {
-  const hebrewLetters = [
-    "א",
-    "ב",
-    "ג",
-    "ד",
-    "ה",
-    "ו",
-    "ז",
-    "ח",
-    "ט",
-    "י",
-    "כ",
-    "ל",
-    "מ",
-    "נ",
-    "ס",
-    "ע",
-    "פ",
-    "צ",
-    "ק",
-    "ר",
-    "ש",
-    "ת",
-  ];
-  return hebrewLetters[index % hebrewLetters.length];
-};
-(app.config.globalProperties.$asyncParse = function (str) {
+ (app.config.globalProperties.$asyncParse = function (str) {
   return new Promise((resolve) => {
     resolve(JSON.parse(str));
   });
@@ -61,7 +34,8 @@ app.config.globalProperties.$getHebLetters = function (index) {
   app.config.globalProperties.$parseTestsNames = function (key) {
        return new Promise((resolve,reject) => {
         const data = localStorage.getItem(key);
-        if(data){
+         
+        if(data!=="undefined"){
           try{
                const parsedData = JSON.parse(data)
               resolve(parsedData)
@@ -79,5 +53,5 @@ app.config.globalProperties.$getHebLetters = function (index) {
 
 app.use(router);
 app.use(store);
-app.use(VueSweetalert2);
+ app.use(VueSweetalert2);
 app.mount("#app");

@@ -84,7 +84,8 @@ export default {
   content: "%";
 }
 .main-dialog,
-.main-form {
+.main-form,
+.checking-exam-dialog {
   z-index: 1000 !important;
 }
 .uploaded-success .swal2-container {
@@ -180,6 +181,11 @@ export default {
   --before-start-width: 750px;
 }
 
+@media (min-width: 600px) {
+  .checking-exam-dialog .q-dialog__inner--minimized > div {
+    max-width: none !important;
+  }
+}
 @media (max-width: 1280px) {
   :root {
     --user-link-pos: 70px;

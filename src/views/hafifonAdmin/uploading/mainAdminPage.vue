@@ -11,7 +11,7 @@
             <q-btn
               ref="1"
               class="grid-btn"
-              label="העלאת שבועות ושיעורים"
+              label="העלאה ועריכת שבועות ושיעורים"
               @click="opendialog('1')"
             >
               <q-icon name=""></q-icon>
@@ -20,7 +20,7 @@
             <q-btn
               ref="2"
               class="grid-btn"
-              label="העלאת תרגולים"
+              label="העלאת ועריכת תרגולים"
               @click="opendialog('2')"
             />
 
@@ -39,9 +39,9 @@
           </div>
         </div>
       </div>
-      <div class="history">
+      <!-- <div class="history">
         <q-btn class="history-btn" label="היסטוריית נחפפים" />
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -56,7 +56,11 @@
       }"
     >
       <q-card-section v-if="item === '1'">
-        <uploadWeeksLessons :weeks="weeks" :formType="formType" />
+        <uploadWeeksLessons
+          :weeks="weeks"
+          :formType="formType"
+          title="העלאת ועריכת שבועות ושיעורים"
+        />
       </q-card-section>
 
       <q-card-section v-if="item === '2'">
@@ -199,12 +203,12 @@ export default {
 }
 .btns-flex {
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 40px;
   background: white;
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 77%;
+  height: 85%;
   width: 75%;
   transition: color 0.5s;
   border-radius: 15px;

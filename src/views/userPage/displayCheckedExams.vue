@@ -1,62 +1,48 @@
 <template>
-  {{ data }}
-  <div class="exam">
+  <div class="exam" v-if="exam">
     <div
       class="exam-checked"
-      v-for="(item, index) in checkedExam[examType]"
-      :key="item"
+      v-for="(item, index) in exam.test.parts"
+      :key="index"
     >
-      <div class="que-index">{{ index + 1 + "." }}</div>
-
+      <h3>{{ item.Title }}</h3>
       <div
         class="exam-item"
         v-for="(question, queIndex) in item.questions"
         :key="queIndex"
       >
-        <div class="regular-que" v-if="item.type == 'regularQue'">
+        <div class="que-index">{{ queIndex + 1 }}</div>
+
+        <div class="regular-que">
           <div class="que-points">
             <div class="que-title">
-              {{ question.que }}
+              {{ question.label }}
             </div>
 
-            <div class="points">
-              {{ item.pointsReceived }}/{{ item.points }}
+            <div class="points" v-if="!question.updatedQueScore">
+              {{ question.queScore }}/{{ item.points }}
+            </div>
+            <div class="points" v-if="question.updatedQueScore">
+              {{ question.updatedQueScore }}/{{ item.points }}
             </div>
           </div>
 
           <p>התשובה שענ\תה:</p>
           <div class="ans">
-            {{ item.inputAns }}
+            {{ question.value }}
           </div>
 
           <p class="comments-title">הערות הבודק\ת:</p>
-          <div class="comments" v-if="item.Comments">
-            {{ item.comments }}
-          </div>
-          <div v-if="!item.Comments">אין הערות</div>
-        </div>
-
-        <div class="sub-que" v-if="item.type == 'subQue'">
-          <div class="que-points">
-            <div class="que-title">
-              {{ getHebLetters(queIndex) }}. {{ question.que }}
-            </div>
-
-            <div class="points">
-              {{ question.pointsReceived }}/{{ question.points }}
-            </div>
-          </div>
-
-          <p>התשובה שענ\תה:</p>
-          <div class="ans">
-            {{ question.inputAns }}
-          </div>
-
-          <p class="comments-title">הערות הבודק\ת:</p>
-          <div class="comments" v-if="question.Comments">
+          <div
+            class="comments"
+            v-if="!question.updatedQueComments && question.comments"
+          >
             {{ question.comments }}
           </div>
-          <div v-if="!question.Comments">אין הערות</div>
+          <div class="comments" v-else-if="question.updatedQueComments">
+            {{ question.updatedQueComments }}
+          </div>
+          <div v-else>אין הערות</div>
         </div>
       </div>
       <div class="under-line"></div>
@@ -65,6 +51,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import axios from "axios";
 export default {
   data() {
@@ -73,8 +60,11 @@ export default {
       examType: null,
       userId: null,
       fullcheckedExam: [],
-      exam: [],
     };
+  },
+  props: ["name"],
+  mounted() {
+    console.log(this.name);
   },
   methods: {
     async getdata() {
@@ -98,34 +88,6 @@ export default {
       console.log(this.fullcheckedExam);
     },
 
-    getHebLetters(index) {
-      const hebrewLetters = [
-        "א",
-        "ב",
-        "ג",
-        "ד",
-        "ה",
-        "ו",
-        "ז",
-        "ח",
-        "ט",
-        "י",
-        "כ",
-        "ל",
-        "מ",
-        "נ",
-        "ס",
-        "ע",
-        "פ",
-        "צ",
-        "ק",
-        "ר",
-        "ש",
-        "ת",
-      ];
-      return hebrewLetters[index % hebrewLetters.length];
-    },
-
     asyncParse(str) {
       return new Promise((resolve) => {
         resolve(JSON.parse(str));
@@ -133,12 +95,9 @@ export default {
     },
     async parseData() {
       const promiseAnswers = Promise.all(
-        this.checkedExam.map((item) => {
-          return this.asyncParse(item[this.examType]).then((inner) => {
-            this.fullcheckedExam = [...inner];
-            item[this.examType] = inner.filter(
-              (val) => Object.keys(val) != "finalGrade"
-            );
+        this.exam.map((item) => {
+          return this.$asyncParse(item.test).then((inner) => {
+            item.test = inner;
             return { item };
           });
         })
@@ -152,10 +111,24 @@ export default {
   },
 
   beforeMount() {
-    console.log(this.$route.params);
+    console.log(this.name);
     this.examType = this.$route.params.title;
     this.userId = localStorage.getItem("userId");
     // this.getdata();
+  },
+
+  computed: {
+    ...mapGetters(["getExamByName"]),
+    exam() {
+      var value = this.getExamByName(this.name);
+
+      if (this.$isSharePointUrl) {
+        value["test"] = JSON.parse(value["test"]);
+      }
+      console.log(value);
+
+      return value;
+    },
   },
 };
 </script>
@@ -204,11 +177,10 @@ export default {
   font-weight: 700;
 }
 .que-index {
-  font-size: 27px;
+  font-size: 28px;
+  top: 85px;
   position: relative;
-  right: 45%;
-  top: 40px;
-  transform: translate(-45%, 40px);
+  font-weight: 700;
 }
 .que-title {
   margin-left: 20px;
@@ -225,7 +197,7 @@ p {
 }
 .ans {
   background: #bfbfbf94;
-  min-width: 400px;
+  min-width: 50%;
   min-height: 25px;
   border-radius: 10px;
   padding: 1em;

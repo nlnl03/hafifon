@@ -367,7 +367,10 @@ export default {
     },
 
     weekLessons(weekId) {
-      return this.lessons.filter((lesson) => lesson.weekId === weekId);
+      return this.lessons
+        .filter((lesson) => lesson.weekId === weekId)
+        .slice()
+        .sort((a, b) => a.queNumber - b.queNumber);
     },
   },
   async beforeMount() {

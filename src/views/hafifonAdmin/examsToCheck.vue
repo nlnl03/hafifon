@@ -52,7 +52,7 @@
 
         <div class="sub-que" v-if="item.type == 'subQue'">
           <div class="que-text">
-            {{ getHebLetters(subIndex) }}.{{ question.que }}
+            {{ question.que }}
           </div>
 
           <p>התשובה שענ\תה:</p>
@@ -133,34 +133,6 @@ export default {
     };
   },
   methods: {
-    getHebLetters(index) {
-      const hebrewLetters = [
-        "א",
-        "ב",
-        "ג",
-        "ד",
-        "ה",
-        "ו",
-        "ז",
-        "ח",
-        "ט",
-        "י",
-        "כ",
-        "ל",
-        "מ",
-        "נ",
-        "ס",
-        "ע",
-        "פ",
-        "צ",
-        "ק",
-        "ר",
-        "ש",
-        "ת",
-      ];
-      return hebrewLetters[index % hebrewLetters.length];
-    },
-
     pushToArrToCheckGrade() {
       this.examData.forEach((data) => {
         data.questions.forEach((que) => {
@@ -450,14 +422,17 @@ export default {
       );
       this.examData = res.data.value;
       this.pendingTestId = res.data.value[0].ID;
-      const promiseAnswers = await Promise.all(
-        this.examData.map((item) => {
-          return this.asyncParse(item.exam).then((inner) => {
-            item["exam"] = inner;
-            return { item };
-          });
-        })
-      );
+      
+      if (this.$isSharePointUrl) {
+        const promiseAnswers = await Promise.all(
+          this.examData.map((item) => {
+            return this.asyncParse(item.exam).then((inner) => {
+              item["exam"] = inner;
+              return { item };
+            });
+          })
+        );
+      }
       this.examData = this.examData[0].exam;
       console.log(this.examData);
     } else {

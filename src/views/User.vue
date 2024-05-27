@@ -8,7 +8,7 @@
           <div class="personal-info">
             <div class="personal-info-items">
               <div class="inner-right-flex">
-                <div v-if="isFinished" class="name-detail">
+                <div v-if="showUserName" class="name-detail">
                   <h2>{{ userName }}</h2>
                 </div>
 
@@ -51,38 +51,60 @@
       <div class="left-side-flex">
         <div class="spinner" v-if="!isLoadForSpinner"><loadingSpinner /></div>
 
-        <div class="grid-container" v-show="isLoadForSpinner">
-          <div class="average">
-            <span class="items-title">ממוצע ציונים </span>
-            <span class="gradeAv" ref="gradeAv">{{ average }}</span>
-          </div>
+        <h1
+          style="
+            position: relative;
+            top: -50px;
+            padding: 1.5em;
+            font-size: 50px;
+          "
+          v-if="!examsNames.length && isLoadForSpinner"
+        >
+          לא קיימים מבחנים במחלקה זו
+        </h1>
 
-          <div v-for="(exam, index) in checkedExamData" :key="index">
-            <div :class="dynamicGridClass(index + 1)" style="background: white">
-              <span class="items-title">{{ exam.Title }}</span>
+        <div>
+          <div class="grid-container" v-if="isLoadForSpinner">
+            <div class="average" v-if="examsNames.length">
+              <span class="items-title">ממוצע ציונים </span>
+              <span class="gradeAv" ref="gradeAv">{{ average }}</span>
+            </div>
 
-              <span
-                v-if="exam.status == 'pending'"
-                class="the-grades-no-examdata"
-                >עוד לא הוזן</span
+            <div
+              v-for="(exam, examIndex) in filterExamCheckedDataByName"
+              :key="examIndex"
+            >
+              <div
+                :class="dynamicGridClass(examIndex + 1)"
+                style="background: white"
               >
+                <span class="items-title">{{ exam.subject }}</span>
 
-              <div class="show-exam" v-if="exam.status == 'checked'">
-                <span class="the-grades">{{ exam.grade }} </span>
+                <div class="show-exam" v-if="exam.details">
+                  <span class="the-grades"> {{ exam.details.grade }} </span>
 
-                <router-link
-                  class="exam-Checked-router"
-                  :to="{
-                    name: 'CheckedExams',
-                    params: {
-                      title: exam.examId,
-                    },
-                  }"
-                  >לצפייה במבחן</router-link
-                >
+                  <router-link
+                    class="exam-Checked-router"
+                    :to="{
+                      name: 'CheckedExams',
+                      params: {
+                        name: exam.subject,
+                      },
+                    }"
+                    >לצפייה במבחן</router-link
+                  >
+                </div>
+                <div style="background: white" v-if="!exam.details">
+                  <div class="show-exam">
+                    <span class="the-grades-no-examdata">עוד לא הוזן</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- <div v-for="(exam, index) in examCheckedData" :key="index"></div>
+        </div> -->
         </div>
       </div>
     </div>
@@ -90,6 +112,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations } from "vuex";
 import CircleProgress from "vue3-circle-progress";
 import "vue3-circle-progress/dist/circle-progress.css";
 import loadingSpinner from "../components/loadingSpinner.vue";
@@ -103,11 +126,10 @@ export default {
     return {
       userDetails: [],
       gradesAvera: [],
-      userNum: "",
+      userArmyNum: "",
       userName: "",
-      isFinished: false,
-      userId: "",
-      checkedExamData: [],
+      showUserName: false,
+      userId: null,
       onlyExamData: [],
       examsNames: [],
       hafifaProgress: null,
@@ -122,11 +144,13 @@ export default {
       imgUrl: "",
       isImg: false,
       dataParsed: [],
+      examCheckedData: [],
+      mahlakaId: null,
     };
   },
   methods: {
     imgSrc() {
-      this.imgUrl = `https://hm.mail.idf/owa/service.svc/s/GetPersonaPhoto?email=s${this.userNum}@army.idf.il&UA=0&size=HR96x96&sc=1701085407934`;
+      this.imgUrl = `https://hm.mail.idf/owa/service.svc/s/GetPersonaPhoto?email=s${this.userArmyNum}@army.idf.il&UA=0&size=HR96x96&sc=1701085407934`;
       if (this.imgUrl.split("").filter((c) => c === "?").length > 1) {
         var charToRemove = "?";
         var indexToRemove = this.imgUrl.indexOf(charToRemove);
@@ -144,7 +168,7 @@ export default {
     // async parseData() {
     //   if (this.$isSharePointUrl) {
     //     const promiseAnswers = Promise.all(
-    //       this.checkedExamData.map((item) => {
+    //       this.examCheckedData.map((item) => {
     //         return this.$asyncParse(item.test).then((inner) => {
     //           item.test = inner;
     //           return { item };
@@ -152,28 +176,32 @@ export default {
     //       })
     //     );
     //   } else {
-    //     return this.checkedExamData;
+    //     return this.examCheckedData;
     //   }
     // },
-
+    ...mapMutations(["setExams"]),
     async getCheckedExam() {
-      var userId = JSON.parse(localStorage.getItem("userId"));
-      const mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
       console.log(this.userId);
-      const fields = "Title,userId,examId,status";
       var res = null;
+
       if (this.$isSharePointUrl) {
-        return axios
-          .get(
-            this.$sharePointUrl +
-              `getByTitle('submittedExams')/Items?$select=${fields}&$filter=(userId eq ${userId})and(mahlakaId eq ${mahlakaId})`
-          )
-          .then((res) => res.data.value);
+        res = await axios.get(
+          this.$sharePointUrl +
+            `getByTitle('submittedExams')/Items?$filter=(userId eq ${this.userId})and(status eq 'approved')and(mahlakaId eq ${this.mahlakaId})`
+        );
+        this.examCheckedData = res.data.value;
       } else {
-        return axios
-          .get(this.$sharePointUrl + `submittedExams`)
-          .then((res) => res.data.value);
+        res = await axios.get(this.$sharePointUrl + `submittedExams`);
+        this.examCheckedData = res.data.value.filter(
+          (item) =>
+            item.status === "approved" &&
+            item.userId == this.userId &&
+            item.mahlakaId === this.mahlakaId
+        );
       }
+      this.setExams(this.examCheckedData);
+      this.isLoadForSpinner = true;
+      console.log(this.examCheckedData);
     },
 
     dynamicGridClass(index) {
@@ -182,7 +210,7 @@ export default {
 
     calcTotalProgress(val) {
       var counter = 0;
-      this.checkedExamData.forEach((item) => {
+      this.examCheckedData.forEach((item) => {
         if (item.status == "checked") {
           counter++;
         }
@@ -191,7 +219,7 @@ export default {
       if (counter == 0) {
         return (val = 0);
       } else {
-        return (val = (counter / this.checkedExamData.length) * 100);
+        return (val = (counter / this.examCheckedData.length) * 100);
       }
     },
 
@@ -207,20 +235,15 @@ export default {
       // console.log(this.userName)
     },
     calcGradesAve() {
-      console.log(this.checkedExamData);
+      console.log(this.examCheckedData);
       var ave = 0;
       var counter = 0;
       var ifEmptyText = "אין מידע";
-      var length = this.checkedExamData.length;
+      var length = this.examCheckedData.length;
       console.log(length);
-      console.log(this.checkedExamData);
-      this.checkedExamData.forEach((data) => {
-        if (data.status == "checked") {
-          ave += data.grade;
-        } else {
-          counter++;
-          length = this.checkedExamData.length - counter;
-        }
+
+      this.examCheckedData.forEach((data) => {
+        ave += data.grade;
       });
 
       console.log(counter);
@@ -237,18 +260,46 @@ export default {
   },
 
   async beforeMount() {
-    this.userNum = localStorage.getItem("userNum");
-    this.examsNames = JSON.parse(localStorage.getItem("testsNames"));
+    this.userArmyNum = localStorage.getItem("userNum");
+    console.log(this.userArmyNum);
+    this.userId = JSON.parse(localStorage.getItem("userId"));
+    console.log(this.userId);
+    this.mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
+    const examsNames = localStorage.getItem("testsNames");
+    if (examsNames !== "undefined") {
+      this.examsNames = JSON.parse(examsNames);
+    }
     console.log(this.examsNames);
-    this.imgSrc();
-    await this.asyncSetTimeout();
-    this.getUserName();
-    this.isFinished = true;
-    this.checkedExamData = await this.getCheckedExam();
-    console.log(this.checkedExamData);
-    this.calcGradesAve();
-    this.isLoadForSpinner = true;
-    //  this.timeOut = await setTimeout(,200)
+    try {
+      this.imgSrc();
+      await this.asyncSetTimeout();
+      this.getUserName();
+      this.showUserName = true;
+      await this.getCheckedExam();
+      console.log(this.examCheckedData);
+      if (this.examsNames.length > 0) {
+        this.calcGradesAve();
+      }
+      this.isLoadForSpinner = true;
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  computed: {
+    ...mapState(["examNames", "exams"]),
+    ...mapGetters(["getExamByName"]),
+    filterExamCheckedDataByName() {
+      return this.examsNames.map((exam) => {
+        const details = this.getExamByName(exam.subject);
+        const val = { subject: exam.subject, details };
+        console.log(val);
+        return val;
+      });
+    },
+
+    ...mapState(["examNames"]),
+    ...mapGetters(["getExamByName"]),
   },
 };
 </script>

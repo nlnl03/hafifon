@@ -13,6 +13,7 @@ export default {
       required: true,
     },
     routeName: String,
+    deletePer: Function,
   },
   data() {
     return {
@@ -23,11 +24,6 @@ export default {
       timeRemaining: this.totalTime,
       fullTimer: null,
       isLoad: false,
-       urlForId:
-        "https://portal.army.idf/sites/hafifon383/_api/web/sitegroups/getbyname('מבקרי חפיפון')/id",
-      groupId: null,
-      token: null,
-      PermListId: null,
     };
   },
 
@@ -102,86 +98,6 @@ export default {
 
     addZeroBefore(value) {
       return value < 10 ? `0${value}` : value;
-    },
-    getIdOfgroup() {
-      return axios.get(this.urlForId).then((res) => res.data.value);
-    },
-
-    async deletePer() {
-      this.token = await this.$asyncGetToken();
-      this.groupId = await this.getIdOfgroup();
-      console.log(this.groupId);
-      try {
-        const res = await axios.post(
-          this.$sharePointUrl +
-            `getByTitle('${this.routeName}')/roleassignments/getbyprincipalid('${this.groupId}')`,
-          {
-            __metadata: { type: "SP.Data.IsPermissionActiveListItem" },
-          },
-          {
-            headers: {
-              "X-HTTP-Method": "DELETE",
-              "IF-MATCH": "*",
-              "X-RequestDigest": this.token,
-              Accept: "application/json;odata=verbose",
-              "Content-Type": "application/json;odata=verbose",
-            },
-          }
-        );
-        console.log(res.status);
-        if (res.status >= 200 && res.status < 300) {
-          const updatePermList = await this.updatePerm();
-          console.log("success deletePer");
-          return true;
-        } else {
-          console.log("no success deletePer");
-          return false;
-        }
-      } catch (error) {
-        console.log("no success deletePer, catch");
-        return false;
-      }
-    },
-    getPermListId() {
-      return axios
-        .get(
-          this.$sharePointUrl +
-            `getByTitle('isPermissionActive')/items?$filter=type eq '${this.routeName}'`
-        )
-        .then((res) => res.data.value[0].ID);
-    },
-
-    async updatePerm() {
-      this.PermListId = await this.getPermListId();
-      try {
-        const res = await axios.post(
-          this.$sharePointUrl +
-            `getByTitle('isPermissionActive')/Items('${this.PermListId}')`,
-          {
-            __metadata: { type: "SP.Data.IsPermissionActiveListItem" },
-            isAllow: false,
-          },
-          {
-            headers: {
-              "X-HTTP-Method": "MERGE",
-              "IF-MATCH": "*",
-              "X-RequestDigest": this.token,
-              Accept: "application/json;odata=verbose",
-              "Content-Type": "application/json;odata=verbose",
-            },
-          }
-        );
-        if (res.status >= 200 && res.status < 300) {
-          console.log("success updatePerm");
-          return true;
-        } else {
-          console.log("no success updatePerm");
-          return false;
-        }
-      } catch (error) {
-        console.log("no success updatePerm, catch");
-        return false;
-      }
     },
   },
 

@@ -961,15 +961,10 @@
         },
         "userId": 12345,
         "examId": 2,
-        "status": "checked",
+        "status": "approved",
         "grade":50
-      },
-      {
-        "userId": 2222,
-        "examId": 3,
-        "status": "checked",
-        "grade":70
       }
+       
        
     ]
   },
@@ -1757,67 +1752,7 @@
         {
           "Title": "חלק 1",
           "id": 1,
-          "questions": [
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הצג בקצרה את שלושת הדרכים שדרכם ניתן להתקין IMAGE על מחשב וציין איזה מערכת הפעלה בכל דרך? ",
-              "points": 2,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "פרט, כיצד נפיץ אימג' משואה על מחשב? מה חשוב לוודא לפני הפצת האימג?",
-              "points": 3,
-              "value": ""
-            },
-            {
-              "label": "פרט את שלבי התקנת המשואה לאחר התקנת האימג'",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר פרט, כיצד נפיץ מפות על משואה? אילו מפות נפיץ?",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "פרט, מה ההבדל בין משואה אחודה ללקוח? ציין שני הבדלים עיקריים",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "פרט כיצד נתקין MOIP ואיזה אימג' המערכת דורשת?",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "ציין בקצרה מה השלבים לאחר ההפצת אימג'?",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "מה הדומיין של MOIP?",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "ציין 2 דרכים להתקנת WIN10 , בחר דרך אחת ופרט כיצד תתקין מחשב WIN10.",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "ציין את תפקיד המקשים F2,F8,F9,F10,F12 הבאים בהפעלת המחשב",
-              "points": 4,
-              "value": ""
-            },
+          "questions": [           
             {
               "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
               "points": 4,
@@ -1837,188 +1772,15 @@
               "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
               "points": 4,
               "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "הסבר מהו IMAGE ומדוע משתמשים בו. הסבר מהו IMAGE ייעודי וציין אילו מערכות דורשות אותו",
-              "points": 4,
-              "value": ""
-            }
+            } 
           ]
         },
         {
           "Title": "חלק 2",
           "id": 2,
           "questions": [
-            {
-              "label": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "bbbbbbbbbbbbbbbbbbbbbb",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "ccccccccccccccccccccccccc",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "fdddddddddddddddddd",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "eeeeeeeeeeeeeeeeeeeeeeee",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "ffffffffffffffff",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "ggggggggggggg",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "hhhhhhhhhhhhhhhhhhhhh",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "iiiiiiiiiiiiii",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "jjjjjjjjjjjjjj",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "kkkkkkkkkkkk",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "llllllllllllll",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "mmmmmmmmmmmmmmmmmmmm",
-              "points": 4,
-              "value": ""
-            },
-            {
-              "label": "nnnnnnnnnnnnnnnnnnn",
-              "points": 4,
-              "value": ""
-            },
+            
+             
             {
               "label": "oooooooooooooooooooooo",
               "points": 4,
@@ -2063,7 +1825,13 @@
               "label": "wwwwwwwwwwwwwwwww",
               "points": 4,
               "value": ""
+            },
+            {
+              "label": "wwwwwwwwwwwwwwwww",
+              "points": 4,
+              "value": ""
             }
+          
           ]
         }
       ],
