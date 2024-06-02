@@ -8,7 +8,7 @@
       row-key="num"
     >
       <template v-slot:top-left>
-        <q-input
+        <!-- <q-input
           borderless
           dense
           debounce="300"
@@ -18,7 +18,7 @@
           <template v-slot:append>
             <q-icon name="fas fa-search" />
           </template>
-        </q-input>
+        </q-input> -->
       </template>
 
       <template v-slot:body-cell-name="props">
@@ -43,45 +43,25 @@
     <q-btn @click="openDialog" label="הוסף נחפף" color="primary" size="15px">
       <q-icon class="q-icon fas fa-plus-circle" style="margin-right: 10px" />
     </q-btn>
-
-    <q-dialog v-model="addStudentDialog" @hide="resetNewStudent">
-      <q-card style="width: 450px; padding: 2em">
-        <div
-          style="
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-          "
-        >
-          <q-form @submit.prevent="addNewStudent" style="width: 60%">
-            <q-input
-              v-model="newStudent.userNum"
-              :min="1"
-              :max="9999999"
-              required
-              type="Number"
-              label="מס' אישי"
-            />
-            <div style="margin-top: 20px">
-              <q-btn label="ביטול" @click="closeDialog" />
-              <q-btn label="הוסף" type="submit" />
-            </div>
-          </q-form>
-        </div>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 
 <script>
 import { computed } from "@vue/reactivity";
-import { QForm, QInput, QBtn } from "quasar";
+import { defineComponent } from "vue";
+import { QPage, QBtn } from "quasar";
+import { Quasar } from "quasar";
+import quasarUserOptions from "../quasar-user-options";
 import addNewUserForm from "@/components/addNewUserForm.vue";
+import Vue from "vue";
 import axios from "axios";
-import { createApp } from "vue";
-export default {
+import { createApp, h } from "vue";
+export default defineComponent({
   name: "permTable",
+  components: {
+    QPage,
+    QBtn,
+  },
   data() {
     return {
       urlForId: "https://portal.army.idf/sites/hafifon383/_api/web/siteusers/",
@@ -148,30 +128,31 @@ export default {
       this.$swal({
         title: "מלא/ה את הפרטים:",
         html: `
-        <div id="quasarForm"></div>`,
+        <div id="input-wrapper" class="form-container"></div>`,
 
         showCancelButton: true,
         confirmButtonText: "אישור",
         cancelButtonText: "ביטול",
         confirmButtonColor: "var(--main-background-color)",
+        customClass: {
+          container: "swal2-custom-container",
+        },
         didOpen: () => {
-          const formContainer = document.getElementById("quasarForm");
-          const formApp = createApp(addNewUserForm);
-
-          formApp.component("addNewUserForm", {
-            methods: {
-              addNewStudent(formData) {
-                this.$swal.close();
-                this.$q.notify({
-                  message: "form submitted !",
-                  color: "positive",
-                });
-              },
-            },
+          const formContainer = document.getElementById("input-wrapper");
+          const app = createApp({
+            render: () =>
+              h(addNewUserForm, {
+                onSubmit: this.handleSubmit,
+              }),
           });
-          formApp.mount(formContainer);
+          app.use(Quasar, quasarUserOptions, { config: { dark: false } });
+          app.mount(formContainer);
         },
       });
+    },
+    handleSubmit({ inputUserNum, inputName }) {
+      console.log("success", inputUserNum, inputName);
+      this.$swal.close();
     },
     closeDialog() {
       this.addStudentDialog = false;
@@ -271,7 +252,7 @@ export default {
       ];
     },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -285,5 +266,11 @@ export default {
 }
 tr {
   text-align: center;
+}
+.swal2-custom-container {
+  z-index: 10060 !important;
+}
+.form-container {
+  z-index: 10060 !important;
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
-  <q-form @submit.prevent="addNewStudent" style="width: 60%">
+  <q-form @submit.prevent="addNewStudent" style="width: 60%" class="form">
+    <q-input v-model="newStudent.Title" required label="שם"> </q-input>
+
     <q-input
       v-model="newStudent.userNum"
       :min="1"
@@ -7,17 +9,18 @@
       required
       type="Number"
       label="מס' אישי"
-    >
-    </q-input>
-    <div style="margin-top: 20px">
-      <q-btn label="ביטול" @click="closeDialog"></q-btn>
-      <q-btn label="הוסף" type="submit"></q-btn>
-    </div>
+    ></q-input>
   </q-form>
 </template>
 
 <script>
 export default {
+  props: {
+    onSubmit: {
+      type: Function,
+      required: true,
+    },
+  },
   data() {
     return {
       exam: null,
@@ -34,15 +37,18 @@ export default {
       userNum: "",
       num: null,
       mahlaka: localStorage.getItem("mahlaka"),
-    //   permissions: Object.fromEntries(
-    //     this.exams.map((exam) => [exam.Title, false])
-    //   ),
+      //   permissions: Object.fromEntries(
+      //     this.exams.map((exam) => [exam.Title, false])
+      //   ),
     };
     // this.token = await this.$asyncGetToken();
   },
   methods: {
     addNewStudent() {
-      this.$emit("submit", this.newStudent);
+      this.$emit("submit", {
+        inputUserNum: this.newStudent.userNum,
+        inputName: this.newStudent.Title,
+      });
     },
   },
 };

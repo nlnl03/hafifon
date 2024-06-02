@@ -63,49 +63,47 @@
           לא קיימים מבחנים במחלקה זו
         </h1>
 
-        <div>
-          <div class="grid-container" v-if="isLoadForSpinner">
-            <div class="average" v-if="examsNames.length">
-              <span class="items-title">ממוצע ציונים </span>
-              <span class="gradeAv" ref="gradeAv">{{ average }}</span>
-            </div>
+        <div class="grid-container" v-if="isLoadForSpinner">
+          <div class="average" v-if="examsNames.length">
+            <span class="items-title">ממוצע ציונים </span>
+            <span class="gradeAv" ref="gradeAv">{{ average }}</span>
+          </div>
 
+          <div
+            v-for="(exam, examIndex) in filterExamCheckedDataByName"
+            :key="examIndex"
+          >
             <div
-              v-for="(exam, examIndex) in filterExamCheckedDataByName"
-              :key="examIndex"
+              :class="dynamicGridClass(examIndex + 1)"
+              style="background: white"
             >
-              <div
-                :class="dynamicGridClass(examIndex + 1)"
-                style="background: white"
-              >
-                <span class="items-title">{{ exam.subject }}</span>
+              <span class="items-title">{{ exam.subject }}</span>
 
-                <div class="show-exam" v-if="exam.details">
-                  <span class="the-grades"> {{ exam.details.grade }} </span>
+              <div class="show-exam" v-if="exam.details">
+                <span class="the-grades"> {{ exam.details.grade }} </span>
 
-                  <router-link
-                    class="exam-Checked-router"
-                    :to="{
-                      name: 'CheckedExams',
-                      params: {
-                        name: exam.subject,
-                      },
-                    }"
-                    >לצפייה במבחן</router-link
-                  >
-                </div>
-                <div style="background: white" v-if="!exam.details">
-                  <div class="show-exam">
-                    <span class="the-grades-no-examdata">עוד לא הוזן</span>
-                  </div>
+                <router-link
+                  class="exam-Checked-router"
+                  :to="{
+                    name: 'CheckedExams',
+                    params: {
+                      name: exam.subject,
+                    },
+                  }"
+                  >לצפייה במבחן</router-link
+                >
+              </div>
+              <div style="background: white" v-if="!exam.details">
+                <div class="show-exam">
+                  <span class="the-grades-no-examdata">עוד לא הוזן</span>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- <div v-for="(exam, index) in examCheckedData" :key="index"></div>
-        </div> -->
         </div>
+
+        <!-- <div v-for="(exam, index) in examCheckedData" :key="index"></div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -365,7 +363,7 @@ h5 {
   flex-direction: row;
   height: 100%;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .right-side-flex {
@@ -422,7 +420,7 @@ h5 {
   display: flex;
   height: 100%;
   width: 50%;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
 }
 .all-progress {

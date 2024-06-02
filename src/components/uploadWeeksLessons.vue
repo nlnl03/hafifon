@@ -537,12 +537,12 @@
               ></q-icon>
             </q-btn>
           </div>
-          <addNewPractice v-if="showAddPracComp" />
+          <addNewPractice v-if="showAddPracComp" :lessonId="currentLesson.Id" />
         </div>
       </div>
 
       <!-- edit pracs -->
-      <div>
+      <div v-if="practicesDataFiltered.length">
         <div
           class="exist-item"
           v-for="(prac, pracIndex) in filteredPracs"
@@ -582,6 +582,15 @@
         </div>
       </div>
 
+      <!-- <div
+        v-if="showNoQuestions"
+        style="display: flex; justify-content: center; margin-top: 35px"
+      >
+        <span style="font-size: 27px; font-weight: 600"
+          >לא קיימים f בשבוע זה...</span
+        >
+      </div> -->
+
       <div class="submit-btn-flex" v-if="showSubmitBtn">
         <q-btn
           class="submit-btn"
@@ -593,9 +602,14 @@
         />
       </div>
 
-      <q-btn @click="verifyAndSend" v-if="formType === 'uploadPractices'"
-        >סיים</q-btn
-      >
+      <q-card-section align="center">
+        <q-btn
+          @click="verifyAndSend"
+          v-if="formType === 'uploadPractices' && showFinishBtn"
+          color="primary"
+          >שמור והעלה</q-btn
+        >
+      </q-card-section>
     </q-form>
   </div>
 </template>
@@ -645,6 +659,8 @@ export default {
       currentPracId: null,
       currentLesson: null,
       showAddPracComp: false,
+      showFinishBtn: false,
+      showNoQuestions: false,
     };
   },
 
@@ -1184,11 +1200,17 @@ export default {
         } else if (this.formType === "uploadPractices") {
           console.log(prac);
           if (Object.keys(prac).length > 0) {
+            console.log("sdjhjsdhjh");
+            this.showFinishBtn = true;
+            this.showNoQuestions = true;
+
             this.currentPracId = prac.Id;
             console.log("currentPracId: ", this.currentPracId);
             this.showAddPracComp = false;
           } else {
             this.showAddPracComp = true;
+            this.showFinishBtn = false;
+            this.showNoQuestions = false;
           }
 
           try {
@@ -1407,8 +1429,8 @@ export default {
 }
 .lessons-btn-items {
   margin-right: 20px;
-  margin-top: 10px;
-  margin-bottom: 7px;
+  /* margin-top: 10px;
+  margin-bottom: 7px; */
 }
 .lessons-btn-items:last-child {
   margin-right: 0px;

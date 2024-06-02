@@ -10,4 +10,5 @@ export default {
   config: {},
   plugins: {},
   iconSet: iconSet,
+  components:['QIcon']
 };

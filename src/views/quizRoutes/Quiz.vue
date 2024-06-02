@@ -223,7 +223,6 @@ export default {
       this.$router.push({ name: "result" });
     },
 
-
     dragStart(word, event) {
       event.dataTransfer.setData("text/plain", word);
       console.log(event.dataTransfer);
@@ -267,10 +266,8 @@ export default {
       try {
         const fieldsToFetch = [
           "Title",
-          "practiceIdId",
-          "lessonId",
+          "practiceId",
           "type",
-          "queNum",
           "options",
           "selectedOption",
           "subjects",
