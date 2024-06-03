@@ -457,6 +457,7 @@
 
             <q-file
               outlined
+              required
               v-model="file2[lessIndex]"
               label="הוסף קובץ"
               accept=".ppt, .pptx, .docx , .doc, .pdf"
@@ -478,10 +479,11 @@
           </q-card-section>
 
           <q-btn
+            type="submit"
             style="margin-right: 7px"
             label="שמור והעלה"
             color="primary"
-            @click="postLessons(lesson)"
+            @click="postLessons(lesson, lessIndex)"
           >
             <q-icon
               name="fas fa-trash-alt"
@@ -597,8 +599,6 @@
           :disabled="newWeek[0].lessons.length < 1"
           type="submit"
           label="העלאה"
-          :loading="progress.loading"
-          :percentage="progress.percentage"
         />
       </div>
 
@@ -637,7 +637,6 @@ export default {
       file: [],
       file2: [],
       token: null,
-      progress: { loading: false, percentage: 0 },
       interval: null,
       currentOption: null,
       existLessons: [],
@@ -889,7 +888,7 @@ export default {
     createweek(option) {
       console.log(option);
       this.existLessons = [];
-      (this.file = []), (this.file2 = []), (this.choseFromExist = false);
+      this.choseFromExist = false;
       this.currentOption = option;
       if (option == "הוסף שבוע") {
         this.newWeek = [];
@@ -919,7 +918,6 @@ export default {
         this.existLessons.push({});
         this.allowEdit.push(false);
         console.log(this.existLessons);
-        console.log(this.newWeek[weekIndex].lessons);
       }
     },
     removeLesson(weekIndex, lessIndex) {
@@ -939,42 +937,38 @@ export default {
     async submitForm() {
       console.log(this.newWeek);
       console.log(this.file2);
-      this.progress.loading = true;
-      this.progress.percentage = 0;
-
+      console.log(this.file);
       console.log(this.existLessons);
 
-      this.interval = setInterval(async () => {
-        this.progress.percentage += 1;
+      if (this.currentOption === "הוסף שבוע") {
+        try {
+          this.$swal({
+            title: "מעלה שיעור...",
+            text: "אנא המתן/י",
+            allowOutsideClick: false,
+            didOpen: () => {
+              this.$swal.showLoading();
+            },
+          });
 
-        if (this.progress.percentage >= 100) {
-          this.progress.percentage = 0;
-          this.progress.loading = false;
-          if (this.currentOption === "הוסף שבוע") {
-            try {
-              this.$swal({
-                title: "מעלה שיעור...",
-                text: "אנא המתן/י",
-                allowOutsideClick: false,
-                didOpen: () => {
-                  this.$swal.showLoading();
-                },
-              });
-              await this.postWeek();
-              console.log("has finished");
-              this.$swal.close();
-              this.uploadSucceeded("השיעור הועלה בהצלחה");
-            } catch (error) {
-              this.$swal.close();
-              this.uploadFailed("שגיאה בהעלאת השיעור", error);
-            }
-          } else {
-            if (this.newWeek[0].lessons < 1) {
-            }
-          }
-          clearInterval(this.interval);
+          await this.postWeek();
+          await this.postLessons();
+
+          this.$swal.close();
+          this.$swal({
+            title: "התרגול הועלה בהצלחה",
+            icon: "success",
+            confirmButtonText: "סיום",
+            confirmButtonColor: "var(--main-background-color)",
+          });
+
+          console.log("has finished");
+          this.uploadSucceeded("השיעור הועלה בהצלחה");
+        } catch (error) {
+          this.$swal.close();
+          this.uploadFailed("שגיאה בהעלאת התרגול", error);
         }
-      }, 10);
+      }
     },
 
     uploadSucceeded(msg) {
@@ -1009,8 +1003,6 @@ export default {
             "X-RequestDigest": this.token,
           },
         });
-
-        this.postLessons();
       } catch (error) {
         throw new error("error posting to exam list", error);
       }
@@ -1066,58 +1058,123 @@ export default {
       }
     },
 
-    async addNewLesson() {},
-
-    async postLessons(lesson) {
+    async postLessons(lesson, lessIndex) {
       try {
         console.log(this.newWeek[0]);
+        var lessonToUpload = null;
         var newWeekId = null;
+        const url = this.$sharePointUrl + "getByTitle('lessons')/items";
+
         if (this.optionChose == "הוסף שבוע") {
           newWeekId = await this.getNewWeekId();
           await this.addWeeksFolderToSiteAssets();
+
+          this.newWeek[0].lessons.forEach((item, index) => {
+            console.log("yessss", item, index);
+            console.log(!this.file[index]);
+
+            item["weekId"] = newWeekId;
+            item["mahlakaId"] = this.mahlakaId;
+            item["Img"] = this.file[index] ? this.file[index].name : null;
+
+            item["file"] = this.file2[index].name;
+
+            item["__metadata"] = {
+              type: "SP.Data.LessonsListItem",
+            };
+
+            lessonToUpload = this.newWeek[0].lessons;
+          });
+          console.log("newWeek:", this.newWeek[0].lessons);
+
+          for (const [index, value] of this.newWeek[0].lessons.entries()) {
+            console.log(index, value);
+            try {
+              const res = await axios.post(url, value, {
+                headers: {
+                  "X-RequestDigest": this.token,
+                  Accept: "application/json;odata=verbose",
+                  "Content-Type": "application/json;odata=verbose",
+                },
+              });
+
+              await this.uploadFileToFolder(
+                this.file2[index],
+                this.newWeek[0].Title
+              );
+
+              this.file[index]
+                ? await this.uploadLessonsPics(this.file[index])
+                : console.log("no,undefined");
+
+              console.log(`השיעור הועלה בהצלחה ${value.Title}`);
+            } catch (error) {
+              console.error(`שגיאה בהעלאת שיעור ${value.Title}`);
+            }
+          }
+
+          console.log("lessonsForUpload: ", this.newWeek[0].lessons);
         } else {
-          newWeekId = lesson.weekId;
           console.log(this.selectedWeek);
-          console.log(this.existLessons);
-        }
+          newWeekId = this.selectedWeek.Id;
+          console.log(lesson);
 
+          await this.postLessonToExistWeek(lesson, url, newWeekId, lessIndex);
+        }
         console.log("newWeekId:", newWeekId);
-        const url = this.$sharePointUrl + "getByTitle('lessons')/items";
-
-        this.newWeek[0].lessons.forEach((item, index) => {
-          item["weekId"] = newWeekId;
-          item["mahlakaId"] = this.mahlakaId;
-          if (this.file[index] != "") {
-            item["Img"] = this.file[index].name;
-          } else {
-            item["Img"] = null;
-          }
-          item["file"] = this.file2[index].name;
-          item["__metadata"] = {
-            type: "SP.Data.LessonsListItem",
-          };
-        });
-        console.log(this.newWeek[0].lessons);
-
-        for (const [index, value] of this.newWeek[0].lessons.entries()) {
-          console.log(index, value);
-          try {
-            const res = await axios.post(url, value, {
-              headers: {
-                "X-RequestDigest": this.token,
-                Accept: "application/json;odata=verbose",
-                "Content-Type": "application/json;odata=verbose",
-              },
-            });
-            await this.uploadLessonsPics(this.file[index]);
-            await this.uploadFileToFolder(this.file2[index]);
-            console.log(`השיעור הועלה בהצלחה ${value.Title}`);
-          } catch (error) {
-            console.error(`שגיאה בהעלאת שיעור ${value.Title}`);
-          }
-        }
       } catch (error) {
         throw new error("שגיאה בהעלאת השיעורים והקבצים", error);
+      }
+    },
+
+    async postLessonToExistWeek(lesson, url, newWeekId, lessIndex) {
+      console.log("lesson index: ", lessIndex);
+
+      lesson["weekId"] = newWeekId;
+      lesson["mahlakaId"] = this.mahlakaId;
+      lesson["Img"] = this.file[lessIndex] ? this.file[lessIndex].name : null;
+      lesson["file"] = this.file2[lessIndex].name;
+      lesson["__metadata"] = {
+        type: "SP.Data.LessonsListItem",
+      };
+
+      try {
+        this.$swal({
+          title: "מעלה שיעור...",
+          text: "אנא המתן/י",
+          allowOutsideClick: false,
+          didOpen: () => {
+            this.$swal.showLoading();
+          },
+        });
+        const token = await this.$asyncGetToken();
+
+        const res = await axios.post(url, lesson, {
+          headers: {
+            "X-RequestDigest": token,
+            Accept: "application/json;odata=verbose",
+            "Content-Type": "application/json;odata=verbose",
+          },
+        });
+
+        console.log("lessIndex :", lessIndex);
+        await this.uploadFileToFolder(
+          this.file2[lessIndex],
+          this.selectedWeek.Title,
+          token
+        );
+
+        this.file[lessIndex]
+          ? await this.uploadLessonsPics(this.file[lessIndex])
+          : console.log("no,undefined");
+
+        this.$swal.close();
+        this.uploadSucceeded("השיעור הועלה בהצלחה");
+      } catch (error) {
+        this.$swal.close();
+        this.uploadFailed(`שגיאה בהעלאת השיעור`, error);
+
+        throw new error(error);
       }
     },
 
@@ -1282,17 +1339,21 @@ export default {
         const res = await axios.post(uploadUrl, null, { headers });
         console.log(`התקייה ${this.newWeek[0].Title} נוצרה בהצלחה`);
       } catch (error) {
-        console.log(`שגיאה ביצירת התקייה ${this.newWeek.Title}`, error);
+        console.log(`שגיאה ביצירת התקייה ${this.newWeek.Title}`);
+        throw new error(error);
       }
     },
 
-    async uploadFileToFolder(fileItem) {
+    async uploadFileToFolder(fileItem, weekName, token) {
       try {
         const mahlaka = localStorage.getItem("mahlaka");
+        console.log("fileItem :", fileItem);
         const fileName = fileItem.name;
-
-        console.log(fileItem);
-        const uploadUrl = `https://portal.army.idf/sites/hafifon383/_api/web/getfolderbyserverrelativeurl('/sites/hafifon383/SiteAssets/${mahlaka}/${this.newWeek[0].Title}')/Files/add(url='${fileName}',overwrite=true)`;
+        if (token) {
+          this.token = token;
+        }
+        console.log(fileName);
+        const uploadUrl = `https://portal.army.idf/sites/hafifon383/_api/web/getfolderbyserverrelativeurl('/sites/hafifon383/SiteAssets/${mahlaka}/${weekName}')/Files/add(url='${fileName}',overwrite=true)`;
 
         const uploadRes = await axios.post(uploadUrl, fileItem, {
           headers: {
@@ -1303,7 +1364,8 @@ export default {
         });
         console.log(`בוצעה בהצלחה העלאת הקובץ ${fileName}`);
       } catch (error) {
-        console.log(`שגיאה בהעלאת הקובץ ${fileName}`, error);
+        console.log(`שגיאה בהעלאת הקובץ ${fileName}`);
+        throw new error(error);
       }
     },
 
@@ -1322,7 +1384,8 @@ export default {
         });
         console.log(`בוצעה בהצלחה העלאת התמונה ${fileName}`);
       } catch (error) {
-        console.log(`שגיאה בהעלאת התמונה ${fileName}`, error);
+        console.log(`שגיאה בהעלאת התמונה ${fileName}`);
+        throw new error(error);
       }
     },
   },
@@ -1429,8 +1492,8 @@ export default {
 }
 .lessons-btn-items {
   margin-right: 20px;
-  /* margin-top: 10px;
-  margin-bottom: 7px; */
+  margin-top: 10px;
+  margin-bottom: 7px;
 }
 .lessons-btn-items:last-child {
   margin-right: 0px;

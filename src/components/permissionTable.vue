@@ -44,6 +44,8 @@
       <q-icon class="q-icon fas fa-plus-circle" style="margin-right: 10px" />
     </q-btn>
   </div>
+  
+  
 </template>
 
 <script>
