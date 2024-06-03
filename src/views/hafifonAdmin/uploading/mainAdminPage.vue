@@ -33,7 +33,7 @@
 
             <q-btn
               class="grid-btn"
-              label="פתיחת הרשאות"
+              label="ניהול הרשאות והוספת נחפפים"
               @click="opendialog('4')"
             />
           </div>
@@ -129,7 +129,7 @@ export default {
         this.cardHeight = "450px";
       } else {
         this.cardWidth = "800px";
-        this.cardHeight = "450px";
+        this.cardHeight = "510px";
       }
       console.log(this.item);
       this.showModal = true;

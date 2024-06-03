@@ -1,5 +1,7 @@
 <template>
   <div v-if="isLoad">
+    <div class="title">נחפפים והרשאות</div>
+
     <q-table
       :sticky-header="true"
       :rows="students"
@@ -44,8 +46,45 @@
       <q-icon class="q-icon fas fa-plus-circle" style="margin-right: 10px" />
     </q-btn>
   </div>
-  
-  
+
+  <q-dialog v-model="addStudentDialog" @hide="resetNewStudent">
+    <q-card style="width: 450px; padding: 2em">
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+        "
+      >
+        <q-form @submit.prevent="addNewStudent" style="width: 60%">
+          <q-input v-model="newStudent.Title" required label="שם" />
+          <q-input
+            v-model="newStudent.userNum"
+            :min="1"
+            :max="9999999"
+            required
+            type="Number"
+            label="מס' אישי"
+          />
+          <div style="margin-top: 20px; text-align: center">
+            <q-btn
+              label="ביטול"
+              @click="closeDialog"
+              color="grey"
+              style="margin-left: 5px"
+            />
+            <q-btn
+              label="הוסף"
+              type="submit"
+              color="primary"
+              style="margin-right: 5px"
+            />
+          </div>
+        </q-form>
+      </div>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
@@ -126,36 +165,9 @@ export default defineComponent({
     },
 
     openDialog() {
-      // this.addStudentDialog = true;
-      this.$swal({
-        title: "מלא/ה את הפרטים:",
-        html: `
-        <div id="input-wrapper" class="form-container"></div>`,
+      this.addStudentDialog = true;
+    },
 
-        showCancelButton: true,
-        confirmButtonText: "אישור",
-        cancelButtonText: "ביטול",
-        confirmButtonColor: "var(--main-background-color)",
-        customClass: {
-          container: "swal2-custom-container",
-        },
-        didOpen: () => {
-          const formContainer = document.getElementById("input-wrapper");
-          const app = createApp({
-            render: () =>
-              h(addNewUserForm, {
-                onSubmit: this.handleSubmit,
-              }),
-          });
-          app.use(Quasar, quasarUserOptions, { config: { dark: false } });
-          app.mount(formContainer);
-        },
-      });
-    },
-    handleSubmit({ inputUserNum, inputName }) {
-      console.log("success", inputUserNum, inputName);
-      this.$swal.close();
-    },
     closeDialog() {
       this.addStudentDialog = false;
     },
@@ -179,6 +191,17 @@ export default defineComponent({
     async addNewStudent() {
       console.log(this.newStudent.userNum);
       try {
+        this.$swal({
+          title: "מוסיף נחפף...",
+          text: "אנא המתן/י",
+          allowOutsideClick: false,
+          didOpen: () => {
+            this.$swal.showLoading();
+          },
+          customClass: {
+            container: "swal2-container-add-user",
+          },
+        });
         if (this.$isSharePointUrl) {
           const userRes = await axios.get(
             this.urlForId +
@@ -204,11 +227,41 @@ export default defineComponent({
           );
           if (res.status === 201) {
             this.students.push(res.data);
+            this.$swal.close();
+            this.$swal({
+              title: "הנחפף נוסף בהצלחה",
+              icon: "success",
+              confirmButtonText: "סיום",
+              confirmButtonColor: "var(--main-background-color)",
+              customClass: {
+                container: "swal2-container-add-user",
+              },
+            });
+          } else {
+            this.$swal.close();
+            this.$swal({
+              title: "שגיאה בהוספת הנחפף",
+              icon: "error",
+              confirmButtonText: "נסה שוב",
+              confirmButtonColor: "var(--main-background-color)",
+              customClass: {
+                container: "swal2-container-add-user",
+              },
+            });
           }
-        } else {
         }
       } catch (error) {
         console.log("error", error);
+        this.$swal.close();
+        this.$swal({
+          title: "שגיאה בהוספת הנחפף",
+          icon: "error",
+          confirmButtonText: "נסה שוב",
+          confirmButtonColor: "var(--main-background-color)",
+          customClass: {
+            container: "swal2-container-add-user",
+          },
+        });
       }
     },
   },
@@ -274,5 +327,12 @@ tr {
 }
 .form-container {
   z-index: 10060 !important;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.125rem;
+  color: rgba(128, 128, 128, 0.764);
+  font-weight: 600;
 }
 </style>

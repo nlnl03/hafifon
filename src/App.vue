@@ -83,6 +83,11 @@ export default {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   content: "%";
 }
+
+.swal2-container-add-user {
+  z-index: 90000 !important;
+}
+
 .main-dialog,
 .main-form,
 .checking-exam-dialog {
@@ -92,7 +97,6 @@ export default {
   z-index: 9999 !important;
   background: rgba(0, 0, 0, 0.1) !important;
 }
-
 .average-items .vue3-circular-progressbar .current-counter {
   font-size: 40px;
   /* top:20px */

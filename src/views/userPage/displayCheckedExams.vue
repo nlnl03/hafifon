@@ -32,11 +32,12 @@
             {{ question.value }}
           </div>
 
-          <p class="comments-title">הערות הבודק\ת:</p>
           <div
             class="comments"
             v-if="!question.updatedQueComments && question.comments"
           >
+            <div class="ans">הערות הבודק\ת:</div>
+
             {{ question.comments }}
           </div>
           <div class="comments" v-else-if="question.updatedQueComments">

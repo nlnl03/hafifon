@@ -344,6 +344,19 @@ export default {
   align-items: center;
   justify-content: center;
 }
+textarea {
+  width: 70%;
+  margin-top: 30px;
+  position: relative;
+  padding: 12px;
+  height: 120px;
+  border-radius: 5px;
+  border: 1px solid rgba(169, 169, 169, 0.774);
+  outline: none;
+  font-size: 20px;
+  font-weight: normal;
+}
+
 .send {
   display: flex;
   flex-direction: column;

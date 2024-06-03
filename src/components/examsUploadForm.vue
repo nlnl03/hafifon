@@ -1,6 +1,8 @@
 <template>
   <div class="main">
     <q-form @submit.prevent="submitForm" class="main-form">
+      <div class="title">העלאת בחנים ומבחנים</div>
+
       <!-- //שם מבחן -->
       <q-input
         filled
@@ -307,5 +309,15 @@ export default {
 }
 .main-form {
   width: 65%;
+  display: flex;
+  flex-direction: column;
+}
+.title {
+  text-align: center;
+  font-size: 2.125rem;
+  color: rgba(128, 128, 128, 0.764);
+  font-weight: 600;
+  margin-bottom: 50px;
+  margin-top: 20px;
 }
 </style>
