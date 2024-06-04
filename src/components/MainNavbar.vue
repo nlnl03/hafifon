@@ -104,7 +104,7 @@ export default {
 
     openAdminComp(nameOfRoute) {
       console.log(nameOfRoute);
-      if (this.isAdmin) {
+      if (this.isAdmin === "admin" || this.isAdmin === "rashatz") {
         this.$router.push({ name: nameOfRoute });
       } else {
         alert("מצטערים, אך אין לך גישה לעמוד זה...");
@@ -113,21 +113,23 @@ export default {
 
     async checkIfAdmin() {
       var url = null;
+      var permissionsCondition = null;
       if (this.$isSharePointUrl) {
         url = this.$sharePointUrl + "getByTitle('AdminCheck')/Items";
       } else {
         url = this.$sharePointUrl + "AdminCheck";
       }
-      return axios
-        .get(url)
-        .then((res) => res.data.value)
-        .then((results) => {
-          if (results.length) {
-            return JSON.parse(true);
-          } else {
-            return JSON.parse(false);
-          }
-        });
+      const res = await axios.get(url);
+      const value = res.data.value;
+      console.log(value);
+      if (!value.length) {
+        permissionsCondition = "false";
+      } else if (value.length == 1) {
+        permissionsCondition = "rashatz";
+      } else {
+        permissionsCondition = "admin";
+      }
+      return permissionsCondition;
     },
     checkIfHasTest() {
       this.examsName.map((item) => {

@@ -1,8 +1,8 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md" v-if="Object.keys(testsNames).length > 0">
     <div class="title1">ממתינים לבדיקה</div>
 
-    <q-list>
+    <q-list :class="isAdmin == 'rashatz' ? 'rashatz-list' : 'dd'">
       <q-expansion-item
         class="overflow-hidden card-expansion"
         v-for="(test, index) in testsNames"
@@ -29,9 +29,9 @@
       </q-expansion-item>
     </q-list>
 
-    <div class="title2">ממתינים לאישור בדיקה</div>
+    <div v-if="isAdmin === 'admin'" class="title2">ממתינים לאישור בדיקה</div>
 
-    <q-list>
+    <q-list v-if="isAdmin === 'admin'">
       <q-expansion-item
         class="overflow-hidden card-expansion"
         v-for="(test, index) in testsNames"
@@ -62,6 +62,14 @@
         </q-card>
       </q-expansion-item>
     </q-list>
+
+    <!-- <div v-else>
+      <h4>אין לך הרשאות</h4>
+    </div> -->
+  </div>
+
+  <div v-else>
+    <h4>אין בחנים ומבחנים במחלקה זו</h4>
   </div>
 
   <q-dialog
@@ -103,6 +111,7 @@ export default {
       showExamCheckingModal: false,
       currentExamToShow: [],
       type: "",
+      isAdmin: null,
     };
   },
   methods: {
@@ -184,6 +193,8 @@ export default {
     },
   },
   async beforeMount() {
+    this.isAdmin = sessionStorage.getItem("isAdmin");
+    console.log("status:", this.isAdmin ? "admin" : "checker");
     await this.getData();
   },
 };
@@ -191,10 +202,11 @@ export default {
 
 <style scoped>
 .q-pa-md {
+  height: 85%;
+
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
   position: relative;
   align-items: center;
   /* direction: rtl; */
@@ -211,7 +223,10 @@ export default {
   background-color: #f4f7f7;
   box-shadow: -3px 2px 6px 0 rgb(0 0 0 / 13%), 0 0.3px 0.9px 0 rgb(0 0 0 / 11%); */
 }
-
+.rashatz-list {
+  max-height: 100% !important;
+  height: 100%;
+}
 .q-list:last-child {
   margin-top: 20px;
 }
@@ -271,6 +286,7 @@ export default {
   font-weight: 700;
   z-index: -1;
   text-align: center;
+  color: gray;
 }
 .title2 {
   margin-top: 30px;

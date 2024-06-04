@@ -4,15 +4,15 @@ import store from "../../store";
 export async function checkExamPermissions(examType, next) {
   var userId = JSON.parse(localStorage.getItem("userId"));
   console.log(userId);
-  var isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
+  var isAdmin = sessionStorage.getItem("isAdmin");
   var res = null;
 
   var url = store.state.sharePointUrl;
   var ifSharePoint = store.state.isSharePointUrl;
 
   try {
-    if (isAdmin) {
-      console.log("He is admin");
+    if (isAdmin === "admin" ||isAdmin === "rashatz" ) {
+      console.log(`He is ${isAdmin}`);
       next();
     } else {
       console.log("not admin")
@@ -33,7 +33,7 @@ export async function checkExamPermissions(examType, next) {
 
       if (userData.length<1) {
         console.log("yessss")
-        next(`/exams/${examType}/noPermissionMessage`);
+         next({name:"noPermissionMessage", params:{Title:examType}});
       } else {
          console.log("has permission");
       }

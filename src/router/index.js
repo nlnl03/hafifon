@@ -177,33 +177,27 @@ var permissionCheckedPerformed = false;
         next()
       }
        
-    }else{
-      next()
-  
-    }
+    } 
   
   }
 
-  try{
-    if(to.meta.requirePermissionCheck){
-      const examType = to.params.Title;
-      if(!permissionCheckedPerformed){
-        permissionCheckedPerformed = true
-        console.log("aaaaa")
+  if(to.meta.requirePermissionCheck){
+    const examType = to.params.Title;
+    if(!permissionCheckedPerformed){
+      permissionCheckedPerformed = true
+      console.log("aaaaa")
 
-        await checkExamPermissions(examType, next);
-      }
-      else{
-        console.log("sdjkjd")
-        await checkExamPermissions(examType, next);
-      }
-    }else{
-      next()
+      await checkExamPermissions(examType, next);
     }
-  }catch(error){
-    console.error("error in global route guard:", error)
-    next('/error')
+    else{
+      console.log("sdjkjd")
+      await checkExamPermissions(examType, next);
+    }
+  }else{
+    next()
   }
+
+   
 })
 
  export default router;

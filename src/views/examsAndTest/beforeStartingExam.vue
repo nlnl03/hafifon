@@ -108,7 +108,7 @@ export default {
     this.name = title.Title;
     console.log(this.name);
     this.getTime();
-    this.isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
+    this.isAdmin = sessionStorage.getItem("isAdmin");
     const myTimeOut = setTimeout(this.spinner, 250);
   },
 };

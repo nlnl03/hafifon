@@ -187,6 +187,11 @@ export default {
   /* justify-content: center; */
   /* min-height: 72vh; */
   width: 60%;
+      display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+
 }
 .card-flex {
   display: flex;
