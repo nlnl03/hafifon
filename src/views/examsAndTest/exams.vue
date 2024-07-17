@@ -306,7 +306,7 @@ export default {
     console.log(prevExit);
     console.log(this.showExitAlert);
     if (this.showExitAlert && prevExit != false) {
-      this.$swal({
+      this.$swal.fire({
         title: "את/ה בטוח/ה שברצונך לצאת ממבחן זה ?",
         text: "אם תצא/י השינויים לא ישמרו !",
         icon: "warning",

@@ -191,15 +191,15 @@ export default defineComponent({
     async addNewStudent() {
       console.log(this.newStudent.userNum);
       try {
-        this.$swal({
+        this.$swal.fire({
           title: "מוסיף נחפף...",
           text: "אנא המתן/י",
           allowOutsideClick: false,
           didOpen: () => {
-            this.$swal.showLoading();
+            this.$swal.fire.showLoading();
           },
           customClass: {
-            container: "swal2-container-add-user",
+            container: "swal.fire2-container-add-user",
           },
         });
         if (this.$isSharePointUrl) {
@@ -227,39 +227,39 @@ export default defineComponent({
           );
           if (res.status === 201) {
             this.students.push(res.data);
-            this.$swal.close();
-            this.$swal({
+            this.$swal.fire.close();
+            this.$swal.fire({
               title: "הנחפף נוסף בהצלחה",
               icon: "success",
               confirmButtonText: "סיום",
               confirmButtonColor: "var(--main-background-color)",
               customClass: {
-                container: "swal2-container-add-user",
+                container: "swal.fire2-container-add-user",
               },
             });
           } else {
-            this.$swal.close();
-            this.$swal({
+            this.$swal.fire.close();
+            this.$swal.fire({
               title: "שגיאה בהוספת הנחפף",
               icon: "error",
               confirmButtonText: "נסה שוב",
               confirmButtonColor: "var(--main-background-color)",
               customClass: {
-                container: "swal2-container-add-user",
+                container: "swal.fire2-container-add-user",
               },
             });
           }
         }
       } catch (error) {
         console.log("error", error);
-        this.$swal.close();
-        this.$swal({
+        this.$swal.fire.close();
+        this.$swal.fire({
           title: "שגיאה בהוספת הנחפף",
           icon: "error",
           confirmButtonText: "נסה שוב",
           confirmButtonColor: "var(--main-background-color)",
           customClass: {
-            container: "swal2-container-add-user",
+            container: "swal.fire2-container-add-user",
           },
         });
       }
@@ -322,7 +322,7 @@ export default defineComponent({
 tr {
   text-align: center;
 }
-.swal2-custom-container {
+.swal.fire2-custom-container {
   z-index: 10060 !important;
 }
 .form-container {

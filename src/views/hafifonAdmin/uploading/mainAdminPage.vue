@@ -187,11 +187,10 @@ export default {
   /* justify-content: center; */
   /* min-height: 72vh; */
   width: 60%;
-      display: flex;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 .card-flex {
   display: flex;
@@ -208,7 +207,7 @@ export default {
 }
 .btns-flex {
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 80px;
   background: white;
   display: flex;
   align-items: center;

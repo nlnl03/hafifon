@@ -96,7 +96,7 @@
                   label="הוסף קובץ"
                   accept=".ppt, .pptx, .docx , .doc, .pdf"
                   class="q-mt-md"
-                  required
+                  :rules="[(val) => validateFileInputs(val, qIndex)]"
                 >
                   <template v-slot:prepend>
                     <q-icon
@@ -324,6 +324,7 @@
                       v-model="editedFile[lessIndex]"
                       label="החלף קובץ"
                       accept=".ppt, .pptx, .docx , .doc, .pdf"
+                      :rules="[(val) => validateFileInputs(val, qIndex)]"
                     >
                       <template v-slot:prepend>
                         <q-icon
@@ -462,7 +463,7 @@
               label="הוסף קובץ"
               accept=".ppt, .pptx, .docx , .doc, .pdf"
               class="q-mt-md"
-              :rules="[(val) => !!val || 'אנא בחר/י קובץ']"
+              :rules="[(val) => validateFileInputs(val, qIndex)]"
             >
               <template v-slot:prepend>
                 <q-icon name="fas fa-cloud-upload-alt" @click.stop.prevent />
@@ -660,7 +661,17 @@ export default {
       showAddPracComp: false,
       showFinishBtn: false,
       showNoQuestions: false,
+      showRegularFileInput: false,
     };
+  },
+  computed: {
+    validateFileInputs() {
+      return (val, qIndex) => {
+        if (!val) {
+          return "אנא הכנס/י תשובה נכונה";
+        }
+      };
+    },
   },
 
   methods: {
@@ -725,7 +736,7 @@ export default {
         // }
       }
       try {
-        this.$swal({
+        this.$swal.fire({
           title: "מעלה תרגול...",
           text: "אנא המתן/י",
           allowOutsideClick: false,
@@ -738,7 +749,7 @@ export default {
         console.log("yess");
         await this.postNewPracticesData();
         this.$swal.close();
-        this.$swal({
+        this.$swal.fire({
           title: "התרגול הועלה בהצלחה",
           icon: "success",
           confirmButtonText: "סיום",
@@ -746,7 +757,7 @@ export default {
         });
       } catch (err) {
         this.$swal.close();
-        this.$swal({
+        this.$swal.fire({
           title: "שגיאה בהעלאת התרגול",
           icon: "error",
           confirmButtonText: "נסה שוב",
@@ -858,7 +869,7 @@ export default {
           }
         );
 
-        this.$swal({
+        this.$swal.fire({
           title: `השיעור "${lesson.Title}" נערך בהצלחה`,
           icon: "success",
           confirmButtonText: "סיום",
@@ -866,7 +877,7 @@ export default {
         });
       } catch (err) {
         console.log(err);
-        this.$swal({
+        this.$swal.fire({
           title: `שגיאה בעריכת "${lesson.Title}"`,
           icon: "error",
           confirmButtonText: "נסה\י שוב",
@@ -942,7 +953,7 @@ export default {
 
       if (this.currentOption === "הוסף שבוע") {
         try {
-          this.$swal({
+          this.$swal.fire({
             title: "מעלה שיעור...",
             text: "אנא המתן/י",
             allowOutsideClick: false,
@@ -955,7 +966,7 @@ export default {
           await this.postLessons();
 
           this.$swal.close();
-          this.$swal({
+          this.$swal.fire({
             title: "התרגול הועלה בהצלחה",
             icon: "success",
             confirmButtonText: "סיום",
@@ -972,7 +983,7 @@ export default {
     },
 
     uploadSucceeded(msg) {
-      this.$swal({
+      this.$swal.fire({
         title: msg,
         icon: "success",
         confirmButtonText: "סיים",
@@ -980,7 +991,7 @@ export default {
       });
     },
     uploadFailed(msg, error) {
-      this.$swal({
+      this.$swal.fire({
         title: msg,
         text: error,
         icon: "error",
@@ -1019,7 +1030,7 @@ export default {
 
     async deleteLesson(id, lessIndex) {
       try {
-        this.$swal({
+        this.$swal.fire({
           title: "מוחק שיעור...",
           text: "אנא המתן/י",
           allowOutsideClick: false,
@@ -1139,7 +1150,7 @@ export default {
       };
 
       try {
-        this.$swal({
+        this.$swal.fire({
           title: "מעלה שיעור...",
           text: "אנא המתן/י",
           allowOutsideClick: false,
@@ -1392,6 +1403,11 @@ export default {
 
   beforeMount() {
     this.mahlakaId = JSON.parse(localStorage.getItem("mahlakaId"));
+    // const userAgent = navigator.userAgent;
+    // console.log(userAgent);
+    // if (userAgent.includes("Chrome/70")) {
+    //   this.showRegularFileInput = true;
+    // }
   },
 };
 </script>

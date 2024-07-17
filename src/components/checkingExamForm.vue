@@ -226,7 +226,7 @@ export default {
       console.log(this.submittedExam.test.parts);
 
       try {
-        this.$swal({
+        this.$swal.fire({
           title: "האם את/ה בטוח/ה ?",
           text: `"${this.submittedExam.Title}" של התלמיד/ה: ${this.submittedExam.userName}`,
           icon: "warning",
@@ -237,23 +237,23 @@ export default {
         }).then((res) => {
           if (res.isConfirmed) {
             if (this.type === "pendingExam") {
-              this.$swal({
+              this.$swal.fire({
                 title: "שולח לאישור גורם מוסמך...",
                 text: "אנא המתן/י",
                 allowOutsideClick: false,
                 didOpen: () => {
-                  this.$swal.showLoading();
+                  this.$swal.fire.showLoading();
                   this.calcTotalGrade();
                   this.updateStatus();
                 },
               });
             } else if (this.type === "awaitingExam") {
-              this.$swal({
+              this.$swal.fire({
                 title: "שולח מבדק לתלמיד/ה...",
                 text: "אנא המתן/י",
                 allowOutsideClick: false,
                 didOpen: () => {
-                  this.$swal.showLoading();
+                  this.$swal.fire.showLoading();
                   this.calcTotalGrade();
                   this.updateStatus();
                 },
@@ -321,13 +321,13 @@ export default {
         console.log(deleteRes);
         console.log("נמחק בהצלחה");
 
-        this.$swal.close();
+        this.$swal.fire.close();
         this.uploadSucceeded(
           "הבדיקה נשלחה בהצלחה וומתינה לאישור של גורם מוסמך"
         );
       } catch (err) {
         console.log("שגיאה: ", err);
-        this.$swal.close();
+        this.$swal.fire.close();
         this.uploadFailed("שגיאה בשליחת הבדיקה", err);
         this.grade = 0;
         throw err;
@@ -362,7 +362,7 @@ export default {
     },
 
     uploadSucceeded(msg) {
-      this.$swal({
+      this.$swal.fire({
         title: msg,
         icon: "success",
         confirmButtonText: "סיים",
@@ -370,7 +370,7 @@ export default {
       });
     },
     uploadFailed(msg, error) {
-      this.$swal({
+      this.$swal.fire({
         title: msg,
         text: error,
         icon: "error",

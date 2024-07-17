@@ -127,7 +127,7 @@ export default {
 
     showAlertConfirmBeforeSend() {
       console.log("exam:", this.exam);
-      this.$swal({
+      this.$swal.fire({
         title: "האם אתה בטוח שברצונך להגיש מבחן זו ?",
         text: "אם תגיש לא תוכל/י לחזור עליו...",
         icon: "warning",
@@ -136,7 +136,7 @@ export default {
         confirmButtonText: "כן, הגש מבחן",
         cancelButtonText: "ביטול",
         customClass: {
-          popup: "submit-swal",
+          popup: "submit-swal.fire",
         },
       }).then((result) => {
         if (result.value) {
@@ -195,7 +195,7 @@ export default {
             ],
           });
         }
-        this.$swal({
+        this.$swal.fire({
           title: "המבדק הוגש בהצלחה",
           icon: "success",
           confirmButtonText: "סיים",
@@ -212,7 +212,7 @@ export default {
         console.log(this.$route);
       } catch (error) {
         console.log("error", error);
-        this.$swal({
+        this.$swal.fire({
           icon: "error",
           text: "שגיאה בהגשת המבדק",
         });

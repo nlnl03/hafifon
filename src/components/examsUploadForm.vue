@@ -152,7 +152,7 @@ export default {
       console.log(mahlakaId);
       this.exam.mahlaka = mahlakaId;
 
-      this.$swal({
+      this.$swal.fire({
         title: "האם את/ה בטוח/ה שברצונך להעלות מבדק זה ?",
         icon: "warning",
         showCancelButton: true,
@@ -218,14 +218,14 @@ export default {
         localStorage.setItem("testsNames", dataUpdatedStringified);
         console.log("yesss");
         console.log("the exam uploaded successfully");
-        this.$swal({
+        this.$swal.fire({
           title: "המבדק הועלה בהצלחה",
           icon: "success",
           confirmButtonText: "סיים",
         });
       } catch (error) {
         console.log("error uploading exam :", error);
-        this.$swal({
+        this.$swal.fire({
           icon: "error",
           text: "קרתה שגיאה בהעלאת המבדק",
         });

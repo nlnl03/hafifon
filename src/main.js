@@ -2,8 +2,10 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import axios from "axios";
-import VueSweetalert2 from "vue-sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
+
+import swal2Plugin from "./plugins/swal2Plugin";
+// import 'sweetalert2/dist/sweetalert2.min.css'
+
 import { Quasar } from "quasar";
 import quasarUserOptions from "./quasar-user-options";
 // import { Quasar } from "quasar";
@@ -19,8 +21,7 @@ app.config.globalProperties.$sharePointUrl =
 app.config.globalProperties.$isSharePointUrl =
   process.env.NODE_ENV == "production";
 
- 
- (app.config.globalProperties.$asyncParse = function (str) {
+(app.config.globalProperties.$asyncParse = function (str) {
   return new Promise((resolve) => {
     resolve(JSON.parse(str));
   });
@@ -30,28 +31,24 @@ app.config.globalProperties.$isSharePointUrl =
       .post("https://portal.army.idf/sites/hafifon383/_api/contextinfo")
       .then((res) => res.data.FormDigestValue);
   }),
+  (app.config.globalProperties.$parseTestsNames = function (key) {
+    return new Promise((resolve, reject) => {
+      const data = localStorage.getItem(key);
 
-  app.config.globalProperties.$parseTestsNames = function (key) {
-       return new Promise((resolve,reject) => {
-        const data = localStorage.getItem(key);
-         
-        if(data!=="undefined"){
-          try{
-               const parsedData = JSON.parse(data)
-              resolve(parsedData)
-            }catch(error){
-            reject(error)
-          }
+      if (data !== "undefined") {
+        try {
+          const parsedData = JSON.parse(data);
+          resolve(parsedData);
+        } catch (error) {
+          reject(error);
         }
-        else{
-          resolve([])
-        }
-       
-    })
-   }
-
+      } else {
+        resolve([]);
+      }
+    });
+  });
 
 app.use(router);
 app.use(store);
- app.use(VueSweetalert2);
+app.use(swal2Plugin);
 app.mount("#app");

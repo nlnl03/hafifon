@@ -202,8 +202,7 @@ export default {
 
 <style scoped>
 .q-pa-md {
-  height: 85%;
-
+  height: 100%;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -287,12 +286,19 @@ export default {
   z-index: -1;
   text-align: center;
   color: gray;
+  padding: 0.3em 0.5em;
+  border: 1px solid #80808033;
+  border-radius: 18px;
 }
 .title2 {
   margin-top: 30px;
   margin-bottom: 15px;
   font-size: 28px;
   font-weight: 700;
+  color: gray;
+  padding: 0.4em 0.5em;
+  border: 1px solid #80808033;
+  border-radius: 18px;
 }
 .box-flex {
   display: flex;

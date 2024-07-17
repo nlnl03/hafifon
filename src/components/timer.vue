@@ -62,7 +62,7 @@ export default {
       this.deletePer()
         .then((success) => {
           if (success) {
-            this.$swal({
+            this.$swal.fire({
               title: "נגמר הזמן...",
               text: "שים לב שנגמר לך הזמן. המבחן יוגש עם כל מה שפתרת עד עכשיו !",
               icon: "warning",
@@ -75,7 +75,7 @@ export default {
               });
             });
           } else {
-            this.$swal({
+            this.$swal.fire({
               title: "שגיאה!",
               text: "נגמר לך הזמן, אך קרתה שגיאה בשליחת המבחן. אנא פנה לאחראי",
               icon: "error",
@@ -86,7 +86,7 @@ export default {
         })
         .catch((error) => {
           console.error(error);
-          this.$swal({
+          this.$swal.fire({
             title: "אין רשת!",
             text: "שים לב שנגמר לך הזמן, אך משום שאין רשת המבחן לא הוגש. אנא פנה לאחראי...",
             icon: "error",

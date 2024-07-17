@@ -250,6 +250,34 @@ body {
   font-family: "Font Awesome 5 Free" !important;
   font-weight: 900;
 }
+div:where(.swal2-container) div:where(.swal2-popup) {
+  padding: 0 0 1.25em !important;
+}
+div:where(.swal2-container) .swal2-progress-steps {
+  margin: 1.25em auto !important;
+}
+div:where(.swal2-container) button:where(.swal2-close) {
+  margin-top: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: -1.2em !important;
+  padding: 0 !important;
+}
+div:where(.swal2-icon) {
+  margin: 2.5em auto 0.6em !important;
+}
+div:where(.swal2-container) h2:where(.swal2-title) {
+  padding: 0.8em 1em 0 !important;
+}
+.div:where(.swal2-container) .swal2-html-container {
+  padding: 1em 1.6em 0.3em !important;
+}
+.div:where(.swal2-container) div:where(.swal2-actions) {
+  margin: 1.25em auto 0 !important;
+}
+.div:where(.swal2-container) button:where(.swal2-styled){
+  margin: 0.3125em !important;
+  padding: 0.625em 1.1em !important;
+}
 .material-icons,
 .material-icons-outlined,
 .material-icons-round,

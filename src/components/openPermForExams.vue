@@ -61,7 +61,7 @@ export default {
       const newVal = row.permissions;
       console.log(newVal);
 
-      this.$swal({
+      this.$swal.fire({
         title: "האם את\ה בטוח\ה שברצונך לעדכן הרשאות אלו ? ",
         icon: "warning",
         showCancelButton: true,

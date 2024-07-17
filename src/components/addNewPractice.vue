@@ -637,26 +637,26 @@ export default {
     async addPracticeAndValidate() {
       try {
         console.log(this.practice.questions);
-        this.$swal({
+        this.$swal.fire({
           title: "מעלה תרגול...",
           text: "אנא המתן/י",
           allowOutsideClick: false,
           didOpen: () => {
-            this.$swal.showLoading();
+            this.$swal.fire.showLoading();
           },
         });
 
         await this.postData();
-        this.$swal.close();
-        this.$swal({
+        this.$swal.fire.close();
+        this.$swal.fire({
           title: "התרגול הועלה בהצלחה",
           icon: "success",
           confirmButtonText: "סיום",
           confirmButtonColor: "var(--main-background-color)",
         });
       } catch (err) {
-        this.$swal.close();
-        this.$swal({
+        this.$swal.fire.close();
+        this.$swal.fire({
           title: "שגיאה בהעלאת התרגול",
           icon: "error",
           confirmButtonText: "נסה שוב",

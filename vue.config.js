@@ -21,5 +21,5 @@ proxy:{
     
   },
 
-  transpileDependencies: ['quasar']
-};
+  transpileDependencies: ['quasar'],
+ };

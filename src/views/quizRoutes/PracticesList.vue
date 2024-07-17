@@ -4,7 +4,7 @@
       <h1>שיעורים ותרגולים</h1>
       <div class="text-under-line"></div>
 
-      <div class="select-timeline">
+      <div class="select-timeline" v-if="isLoad && !showEmptyMessage">
         <q-select
           outlined
           v-model="selectedValue"
@@ -28,7 +28,8 @@
       <div class="loader-spinner" v-if="!isLoad">
         <loadingSpinner />
       </div>
-      <div class="container-cards" v-if="isLoad">
+
+      <div class="container-cards" v-if="isLoad && !showEmptyMessage">
         <div class="without-timeline">
           <div class="timeline" ref="timeline">
             <q-timeline color="secondary">
@@ -136,6 +137,15 @@
             </q-timeline>
           </div>
         </div>
+      </div>
+
+      <div class="no-data-message" v-if="isLoad && showEmptyMessage">
+        <h4>אין מידע</h4>
+        <q-btn
+          label="לחץ כאן"
+          color="primary"
+          @click="this.$router.push({ name: 'mainAdminPage' })"
+        ></q-btn>
       </div>
     </div>
   </div>
@@ -324,7 +334,10 @@ export default {
           (week) => week.mahlakaId == this.mahlakaId
         );
       }
-
+      if (this.weeks.length < 1) {
+        this.showEmptyMessage = true;
+        console.log("no data");
+      }
       console.log("weeks array :", this.weeks);
       this.loadLesson();
       this.isLoad = true;
@@ -604,5 +617,12 @@ h4 {
 }
 .prac-btns {
   margin: 0.5em;
+}
+.no-data-message {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>
